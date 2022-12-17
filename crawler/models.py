@@ -25,14 +25,13 @@ class Fount(models.Model):
         return self.name
 
 class Companies(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     city = models.OneToOneField(Cities,on_delete=models.CASCADE)
     sector = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=10)
     phone = models.IntegerField()
     site = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     personels_caount = models.IntegerField()
     fount = models.OneToOneField(Fount,on_delete=models.CASCADE)
@@ -45,3 +44,6 @@ class Companies(models.Model):
     class Meta:
         unique_together = ('short_name', 'phone',)
 
+class AccountReport(models.Model):
+    user = models.CharField(max_length=255)
+    number = models.IntegerField()

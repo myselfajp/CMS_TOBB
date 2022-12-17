@@ -5,5 +5,6 @@ from django.contrib.auth.models import Group
 admin.site.register(Status)
 admin.site.register(Cities)
 admin.site.register(Fount)
+admin.site.register(AccountReport)
 admin.site.register(Companies)
 admin.site.unregister(Group)
