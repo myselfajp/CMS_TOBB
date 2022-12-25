@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     #myapps
     'crawler.apps.CrawlerConfig',
     'users.apps.UsersConfig',
+    'reports.apps.ReportsConfig',
 ]
 
 MIDDLEWARE = [

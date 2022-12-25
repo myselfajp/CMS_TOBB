@@ -26,17 +26,18 @@ class Fount(models.Model):
 
 class Companies(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    city = models.OneToOneField(Cities,on_delete=models.CASCADE)
+    city = models.ForeignKey(Cities,on_delete=models.CASCADE)
     sector = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=10)
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=20)
     site = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     personels_caount = models.IntegerField()
-    fount = models.OneToOneField(Fount,on_delete=models.CASCADE)
-    status = models.ManyToManyField(Status)
-    note = models.TextField(blank=True)
+    fount = models.ForeignKey(Fount,on_delete=models.CASCADE)
+    status = models.ManyToManyField(Status,null=True,related_name="status")
+    last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="last_status")
+    note = models.TextField(blank=True,default='')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     def __str__(self):
@@ -47,3 +48,5 @@ class Companies(models.Model):
 class AccountReport(models.Model):
     user = models.CharField(max_length=255)
     number = models.IntegerField()
+    def __str__(self):
+        return f"{self.user}{self.number}"
