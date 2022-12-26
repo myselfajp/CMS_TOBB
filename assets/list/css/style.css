@@ -133,11 +133,11 @@ sup {
   top: -.5em; }
 
 a {
-  color: #007bff;
+  color: #000000;
   text-decoration: none;
   background-color: transparent; }
   a:hover {
-    color: #0056b3;
+    color: #323232;
     text-decoration: underline; }
 
 a:not([href]):not([tabindex]) {
@@ -478,8 +478,8 @@ pre {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  margin-right: -200px;
-  margin-left: -200px; }
+  margin-right: -20px;
+  margin-left: -20px; }
 
 .no-gutters {
   margin-right: 0;
@@ -8144,7 +8144,7 @@ a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
   transition: .3s all ease;
-  color: #1089ff; }
+  color: #000000; }
   a:hover, a:focus {
     text-decoration: none !important;
     outline: none !important;
@@ -8201,7 +8201,7 @@ h1, h2, h3, h4, h5,
     background: #fff; }
   .table tbody th, .table tbody td {
     border: none;
-    padding: 20px 30px;
+    padding: 20px 10px;
     font-size: 14px;
     vertical-align: middle; }
   .table tbody td .close span {

@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    
+
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -42,29 +42,40 @@
                                 <tr>
                                     <th>Unvan</th>
                                     <th>Telefon</th>
-                                    <th>Adres</th>
                                     <th>SİTE</th>
-                                    <th>Personel sayısı</th>
+                                    <th>Sektör</th>
                                     <th>Durum</th>
+                                    <th>Not</th>
+                                    <th></th>
                                 </tr>
                             </thead>
 
 
                             <tbody>
                                 {% for company in companies %}
-                                <tr>
-                                    <th><a href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a></th>
-                                    <td>{{company.phone}}</td>
-                                    <td>{{company.address}}</td>
-                                    <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
-                                    <td>{{company.personels_caount}}</td>
-                                    <td>
-                                        {% for tag in company.status.all %}
-                                        <a class="btn btn-{{tag.color|lower}}">
-                                            {{tag.name}}
-                                        </a>
-                                        {% endfor %}
-                                    </td>
+                                <tr style="background-color: {{company.last_status.color}};">
+                                    <form method="post" action="{% url 'reports:companies' %}">
+                                        {% csrf_token %}
+                                        <th><a
+                                                href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
+                                        </th>
+                                        <td>{{company.phone}}</td>
+                                        <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
+                                        <td>{{company.sector}}</td>
+
+                                        <td>
+                                            <select name="status_add">
+                                                <option value=""></option>
+                                                {% for status in statuses %}
+                                                <option value="{{status.id}}">{{status.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+
+                                        <td><textarea name="note" >{{company.note}}</textarea></td>
+                                        <input type="hidden" name="company_id" value="{{company.id}}">
+                                        <td><button type="submit">güncelle</button></td>
+                                    </form>
                                 </tr>
                                 {% endfor %}
                             </tbody>

@@ -35,7 +35,7 @@ class Companies(models.Model):
     address = models.CharField(max_length=255)
     personels_caount = models.IntegerField()
     fount = models.ForeignKey(Fount,on_delete=models.CASCADE)
-    status = models.ManyToManyField(Status,null=True,related_name="status")
+    status = models.ManyToManyField(Status,blank=True,related_name="status")
     last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="last_status")
     note = models.TextField(blank=True,default='')
     created_date = models.DateTimeField(auto_now_add=True)
