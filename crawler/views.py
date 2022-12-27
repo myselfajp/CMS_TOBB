@@ -12,6 +12,8 @@ def create_account_tobb():
 
     driver = webdriver.Firefox()
     driver.set_window_position(-10000,0)
+    driver.minimize_window()
+
 
     #-----get user and number from database
     account=AccountReport.objects.all()[0]
@@ -100,6 +102,8 @@ def http_crawler_tobb(request,city_slug):
             try:
                 driver = webdriver.Firefox()
                 driver.set_window_position(-10000,0)
+                driver.minimize_window()
+
                 driver.get("https://sanayi.tobb.org.tr/")
 
                 username_feild = driver.find_element(By.NAME, "user")
@@ -193,9 +197,10 @@ def http_crawler_tobb(request,city_slug):
                     company.city = Cities.objects.get(slug=city_slug)
                     company.last_status = Status.objects.get(name="Yeni")
                     try:
-                        company.save()
-                        company.status.add(Status.objects.get(name="Yeni"))
-                        company.save()
+                        if not tel[0:3] in ["444","850"]:
+                            company.save()
+                            company.status.add(Status.objects.get(name="Yeni"))
+                            company.save()
                     except :
                         pass
                 if limit>95:
@@ -208,6 +213,7 @@ def http_crawler_tobb(request,city_slug):
                             try:
                                 driver = webdriver.Firefox()
                                 driver.set_window_position(-10000,0)
+                                driver.minimize_window()
                                 driver.get("https://sanayi.tobb.org.tr/")
 
                                 username_feild = driver.find_element(By.NAME, "user")

@@ -29,7 +29,7 @@ class Companies(models.Model):
     city = models.ForeignKey(Cities,on_delete=models.CASCADE)
     sector = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=10)
+    short_name = models.CharField(max_length=11)
     phone = models.CharField(max_length=20)
     site = models.CharField(max_length=255)
     address = models.CharField(max_length=255)

@@ -29,7 +29,7 @@ a {
     font-family: Montserrat-Regular;
     font-size: 14px;
     line-height: 1.7;
-    color: #666;
+    color: rgb(255, 255, 255)255, 239, 239);
     margin: 0;
     transition: all .4s;
     -webkit-transition: all .4s;
