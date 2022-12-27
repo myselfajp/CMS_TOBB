@@ -153,3 +153,10 @@ html, body {
     word-break: keep-all;
     }
     }
+
+    [data-text] {
+        color: orange;
+      }
+      [data-text]::after {
+        content: attr(data-text);
+      }

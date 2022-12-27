@@ -217,12 +217,27 @@
       <h1>Cep telefonlu {{companies_tel|length}}</h1>
       <h1>Sabit numaralı {{companies_comtel|length}}</h1>
 
+      <ul>
+        {% for key, value in city_count_reports.items %} 
+          <li>{{key}} - {{value}}</li>
+        {% endfor %}
+      </ul>
+
       <h4>Kullancılar<span>*</span></h4>
       <div class="title-block">
         <select name="user">
           <option value=""></option>
           {% for user in users %}
           <option value="{{user.id}}">{{ user.username }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <h4>İl seçiniz:<span>*</span></h4>
+      <div class="title-block">
+        <select name="city">
+          <option value=""></option>
+          {% for city in cities %}
+          <option value="{{city.id}}">{{ city.name }}</option>
           {% endfor %}
         </select>
       </div>

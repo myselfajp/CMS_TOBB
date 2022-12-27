@@ -6,14 +6,18 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def http_companies(request):
     if request.method == 'POST':
-        company = Companies.objects.get(id=request.POST.get('company_id'))
-        company.note=request.POST.get('note')
-        new_status=request.POST.get('status_add')
-        if new_status:
+        try:
+            company = Companies.objects.get(id=request.POST.get('company_id'))
+            company.note=request.POST.get('note')
+            company.full_name = request.POST.get('fullname')
+            new_status=request.POST.get('status_add')
             new_status=Status.objects.get(id=int(new_status))
             company.status.add(new_status)
             company.last_status = new_status
-        company.save()
+            company.save()
+        except:
+            pass
+
     statuses = Status.objects.all()
     companies = Companies.objects.filter(user=request.user)
     return render(request,"companies.html",{'companies': companies,'statuses':statuses})
@@ -24,12 +28,16 @@ def http_company(request,company_id):
     if request.method == 'POST':
         company = Companies.objects.get(id=company_id)
         company.note=request.POST.get('note')
+        company.full_name = request.POST.get('fullname')
         new_status=request.POST.get('status_add')
-        if new_status:
-            new_status=Status.objects.get(id=int(new_status))
-            company.status.add(new_status)
-            company.last_status = new_status
+        new_status=Status.objects.get(id=int(new_status))
+
+        company.status.add(new_status)
+        company.last_status = new_status
         company.save()
+    
+
     company = Companies.objects.get(id=company_id)
     statuses = Status.objects.all()
-    return render(request,"company.html",{'company': company,'statuses':statuses})
+    last_status = company.last_status
+    return render(request,"company.html",{'company': company,'statuses':statuses,"last_status":last_status})

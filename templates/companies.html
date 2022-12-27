@@ -45,6 +45,7 @@
                                     <th>SİTE</th>
                                     <th>Sektör</th>
                                     <th>Durum</th>
+                                    <th>İsim Soyisim</th>
                                     <th>Not</th>
                                     <th></th>
                                 </tr>
@@ -59,19 +60,19 @@
                                         <th><a
                                                 href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
-                                        <td>{{company.phone}}</td>
+                                        <td><span data-text="{{company.phone}}"></span></td>
                                         <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
                                         <td>{{company.sector}}</td>
 
                                         <td>
                                             <select name="status_add">
-                                                <option value=""></option>
+                                                <option value="{{ company.last_status.id }}">{{ company.last_status.name }}</option>
                                                 {% for status in statuses %}
                                                 <option value="{{status.id}}">{{status.name}}</option>
                                                 {% endfor %}
                                             </select>
                                         </td>
-
+                                        <td><textarea name="fullname" >{{company.full_name}}</textarea></td>
                                         <td><textarea name="note" >{{company.note}}</textarea></td>
                                         <input type="hidden" name="company_id" value="{{company.id}}">
                                         <td><button type="submit">güncelle</button></td>

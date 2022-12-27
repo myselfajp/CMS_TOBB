@@ -12,17 +12,17 @@
     <div class="testbox">
       <form method="post" action="{% url 'reports:company' company_id=company.id %}">
         {% csrf_token %}
-        <h1>İl:  {{company.city.name}}</h1>
+        <h1>İl:  <span data-text="{{company.city.name}}"></span> </h1>
         <br>
-        <h1>Sektör:  {{company.sector}}</h1>
+        <h1>Sektör:  <span data-text="{{company.sector}}"></span> </h1>
         <br>
         <h1>Unvan:  {{company.name}}</h1>
         <br>
-        <h1>Telefon:  +90 {{company.phone}}</h1>
+        <h1>Telefon:   <span data-text="+90 {{company.phone}}"></span></h1>
         <br>
-        <h1>Adres:  {{company.address}}</h1>
+        <h1>Adres:  <span data-text="{{company.address}}"></span></h1>
         <br>
-        <h1>Site: {{company.site}}</h1>
+        <h1>Site: <span data-text="{{company.site}}"></span></h1>
         <br>
         <h1>Personel sayısı: {{company.personels_caount}}</h1>
         <br>
@@ -38,12 +38,15 @@
         <h4>Durum Ekle<span>*</span></h4>
         <div class="title-block">
         <select name="status_add">
-          <option value=""></option>
+          <option value="{{ last_status.id }}">{{ last_status.name }}</option>
           {% for status in statuses %}
           <option value="{{status.id}}">{{status.name}}</option>
           {% endfor %}
         </select>
         </div>
+        <br>
+        <h4>İsim Soyisim</h4>
+        <input name="fullname" value="{{company.full_name}}">
         <br>
         <h4>Not</h4>
           <textarea rows="5" name="note">{{company.note}}</textarea>

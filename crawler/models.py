@@ -27,6 +27,7 @@ class Fount(models.Model):
 class Companies(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     city = models.ForeignKey(Cities,on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255,blank=True)
     sector = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=11)
