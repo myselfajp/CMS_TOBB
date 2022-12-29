@@ -56,6 +56,12 @@
         <div class="btn-block">
           <button><a href="{% url 'reports:companies' %}"> Ana sayfa </a></button>
         </div>
+        <div class="btn-block">
+          <button><a  onclick="window.open('{% url 'reports:Sendmail' %}',
+            'newwindow', 
+            'width=600,height=400'); 
+ return false;"> Lansman gönder </a></button>
+        </div>
       </form>
     </div>
   </body>

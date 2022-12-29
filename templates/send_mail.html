@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Firma bilgileri</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="testbox">
+      <form method="post" action="{% url 'reports:Sendmail' %}">
+        {% csrf_token %}
+        <h1><span data-text="İsim soyisim ve mail adresini giriniz"></span> </h1>
+        <br>
+        {% if message %}
+        <h1><span data-text="{{message}}"></span> </h1>
+        <br>
+        {% endif %}
+        <h4>İsim Soyisim</h4>
+        <input name="fullname" value="" required>
+
+        <h4>Mail adresi</h4>
+        <input name="email" type="email" value="" required>
+
+        <div class="btn-block">
+          <button type="submit" href="/">Gönder</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
