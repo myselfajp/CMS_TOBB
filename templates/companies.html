@@ -22,6 +22,43 @@
                 </div>
             </div>
 
+
+            <form method="get" action="{% url 'reports:companies' %}">
+                <div style="position: fixed; ">
+                    <h5>Durumlar</h5>
+                    <select name="last_status_filter" >
+                        <option value="0">Tümü</option>
+                        {% for status in statuses %}
+                        <option value="{{status.id}}">{{status.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                </div>
+
+                <div style="position: fixed ;left: 25%;">
+                    <h5>Telefon</h5>
+                    <select name="tel_filter">
+                        <option value="0">Tümü</option>
+                        <option value="tel">Cep</option>
+                        <option value="ofice">Sabit</option>
+                    </select>
+                    <br>
+                </div>
+
+                <div style="position: fixed ;left: 50%;">
+                    <h5>Sırala</h5>
+                    <select name="order_by">
+                        <option value="last_status">Son duruma göre</option>
+                        <option value="sector">Sektöre göre</option>
+                    </select>
+                    <br>
+                </div>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 30%;" type="submit">uygula</button>
+
+            </form>
+            <br>
+            <br>
+
             <!-- <h7 class="heading-section">İl seçiniz: </h7>
             <select class="nav  navbar-brand">
                 {% for city in cities %}
@@ -51,12 +88,14 @@
                                 </tr>
                             </thead>
 
-
                             <tbody>
+
+
+
+
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
                                     <form method="post" action="{% url 'reports:companies' %}">
-                                        {% csrf_token %}
                                         <th><a
                                                 href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
@@ -66,16 +105,17 @@
 
                                         <td>
                                             <select name="status_add">
-                                                <option value="{{ company.last_status.id }}">{{ company.last_status.name }}</option>
+                                                <option value="{{ company.last_status.id }}">
+                                                    {{company.last_status.name}}</option>
                                                 {% for status in statuses %}
                                                 <option value="{{status.id}}">{{status.name}}</option>
                                                 {% endfor %}
                                             </select>
                                         </td>
-                                        <td><textarea name="fullname" >{{company.full_name}}</textarea></td>
-                                        <td><textarea name="note" >{{company.note}}</textarea></td>
+                                        <td><textarea name="fullname">{{company.full_name}}</textarea></td>
+                                        <td><textarea name="note">{{company.note}}</textarea></td>
                                         <input type="hidden" name="company_id" value="{{company.id}}">
-                                        <td><button type="submit">güncelle</button></td>
+                                        <td><button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button></td>
                                     </form>
                                 </tr>
                                 {% endfor %}

@@ -10,7 +10,7 @@
   </head>
   <body>
     <div class="testbox">
-      <form method="post" action="{% url 'reports:Sendmail' %}">
+      <form method="post" action="{% url 'reports:sendmail' %}">
         {% csrf_token %}
         <h1><span data-text="İsim soyisim ve mail adresini giriniz"></span> </h1>
         <br>

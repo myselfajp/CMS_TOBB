@@ -125,7 +125,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mx-out05.natrohost.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'info@sektorunonculeri.com'
+EMAIL_HOST_USER = 'iletisim@sektorunonculeri.com'
 EMAIL_HOST_PASSWORD = 'ForwardTm5846'
 # 'ximzoaictrxzgaip'
 
