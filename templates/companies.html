@@ -22,14 +22,18 @@
                 </div>
             </div>
 
-
-            <form method="get" action="{% url 'reports:companies' %}">
-                <div style="position: fixed; ">
+            <form method="Post" action="{% url 'reports:companies' %}">
+                <div style="position: fixed;;left: 18%; ">
                     <h5>Durumlar</h5>
                     <select name="last_status_filter" >
-                        <option value="0">Tümü</option>
+                        
+                        <option value="{{filters.last_status_filter.value}}">{{filters.last_status_filter.name}}</option>
                         {% for status in statuses %}
+                        {% if not status.id == filters.last_status_filter.value %}
                         <option value="{{status.id}}">{{status.name}}</option>
+                        {% else %}
+                        <option value="0">Tümü</option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                     <br>
@@ -38,14 +42,22 @@
                 <div style="position: fixed ;left: 25%;">
                     <h5>Telefon</h5>
                     <select name="tel_filter">
+                        <option value="{{filters.tel_filter.value}}">{{filters.tel_filter.name}}</option>
+                        {% if filters.tel_filter.value == "tel" %}
+                        <option value="0">Tümü</option>
+                        <option value="office">Sabit</option>
+                        {% elif filters.tel_filter.value == "office" %}
                         <option value="0">Tümü</option>
                         <option value="tel">Cep</option>
-                        <option value="ofice">Sabit</option>
+                        {% else %}
+                        <option value="tel">Cep</option>
+                        <option value="office">Sabit</option>
+                        {% endif %}
                     </select>
                     <br>
                 </div>
 
-                <div style="position: fixed ;left: 50%;">
+                <div style="position: fixed ;left: 30%;">
                     <h5>Sırala</h5>
                     <select name="order_by">
                         <option value="last_status">Son duruma göre</option>
@@ -53,7 +65,12 @@
                     </select>
                     <br>
                 </div>
-                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 30%;" type="submit">uygula</button>
+                
+                <div style="position: fixed ;left: 50%;top: 22%;">
+                    <h5>Telefona göre arama :</h5>
+                    <input name="search" value="{{filters.search}}">
+                </div>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 26%;" type="submit">uygula</button>
 
             </form>
             <br>
@@ -90,9 +107,6 @@
 
                             <tbody>
 
-
-
-
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
                                     <form method="post" action="{% url 'reports:companies' %}">
@@ -115,6 +129,9 @@
                                         <td><textarea name="fullname">{{company.full_name}}</textarea></td>
                                         <td><textarea name="note">{{company.note}}</textarea></td>
                                         <input type="hidden" name="company_id" value="{{company.id}}">
+                                        <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
+                                        <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
+                                        <input type="hidden" name="search" value="{{filters.search}}">
                                         <td><button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button></td>
                                     </form>
                                 </tr>

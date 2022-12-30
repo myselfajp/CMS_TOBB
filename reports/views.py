@@ -9,40 +9,58 @@ from django.views.decorators.csrf import csrf_exempt
 @login_required
 def http_companies(request):
     statuses = Status.objects.all()
-    companies = Companies.objects.filter(user=request.user)
+    companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+    filters= {
+        "last_status_filter":{"name":"Tümü","value":"0"},
+        "tel_filter":{"name":"Tümü","value":"0"},
+        "search":"",
+    }
     if request.method == 'POST':
-        try:
-            company = companies.get(id=request.POST.get('company_id'))
-            company.note=request.POST.get('note')
-            company.full_name = request.POST.get('fullname')
-            new_status=request.POST.get('status_add')
-            new_status=Status.objects.get(id=int(new_status))
-            company.status.add(new_status)
-            company.last_status = new_status
-            company.save()
-        except:
-            pass
+        if request.POST.get('company_id'):
+            try:
+                company = companies.get(id=request.POST.get('company_id'))
+                company.note=request.POST.get('note')
+                company.full_name = request.POST.get('fullname')
+                new_status=request.POST.get('status_add')
+                new_status=Status.objects.get(id=int(new_status))
+                company.status.add(new_status)
+                company.last_status = new_status
+                company.save()
+            except:
+                pass
 
-    if request.GET.get('last_status_filter'):
-        if request.GET.get('last_status_filter') != "0":
-            companies = companies.filter(last_status__id = request.GET.get('last_status_filter'))
+        if request.POST.get('search'):
+            s=request.POST.get('search')
+            companies = companies.filter(phone__contains=s)
+            filters["search"]=s
 
+        if not filters["search"]:
+            if request.POST.get('last_status_filter'):
+                if request.POST.get('last_status_filter') != "0":
+                    companies = companies.filter(last_status__id = request.POST.get('last_status_filter'))
+                    x=Status.objects.get(id=request.POST.get('last_status_filter'))
+                    filters["last_status_filter"]["name"]=x.name
+                    filters["last_status_filter"]["value"]=x.id
+
+            if request.POST.get('tel_filter'):
+                if request.POST.get('tel_filter') != "0":
+                    if request.POST.get('tel_filter')=="tel":
+                        companies = companies.filter(phone__istartswith="5")
+                        filters["tel_filter"]["value"]="tel"
+                        filters["tel_filter"]["name"]="Cep"
+                    else:
+                        companies = companies.exclude(phone__istartswith="5")
+                        filters["tel_filter"]["value"]="office"
+                        filters["tel_filter"]["name"]="Sabit"
+
+
+        if request.POST.get('order_by')=="sector":
+            companies = companies.order_by("sector")
+        else :
+            companies = companies.order_by("-last_status")
             
-    if request.GET.get('tel_filter'):
-        if request.GET.get('tel_filter') != "0":
-            if request.GET.get('tel_filter')=="tel":
-                companies = companies.filter(phone__istartswith="5")
-            else:
-                companies = companies.exclude(phone__istartswith="5")
 
-
-    if request.GET.get('order_by')=="sector":
-        companies = companies.order_by("sector")
-    else :
-        companies = companies.order_by("-last_status")
-    
-
-    return render(request,"companies.html",{'companies': companies,'statuses':statuses})
+    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters})
 
 
 @login_required
