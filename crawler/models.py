@@ -54,6 +54,7 @@ class Companies(models.Model):
     note = models.TextField(blank=True,default='')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    reminder = models.DateTimeField(null=True, default=None)
     def __str__(self):
         return f"{self.city}--{self.name}"
     class Meta:
@@ -70,3 +71,5 @@ class AccountReport(models.Model):
     class Meta:
         verbose_name = "Hesap raporu"
         verbose_name_plural = "Hesap raporları"
+
+

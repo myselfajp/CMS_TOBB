@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from crawler.models import Companies,Status
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
+from crawler.models import Companies,Status
+from django.shortcuts import render
+import datetime
 
 # Create your views here.
 @csrf_exempt
@@ -10,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 def http_companies(request):
     statuses = Status.objects.all()
     companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+    now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    remine_companies = companies.filter(reminder__lte=now)
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
@@ -60,7 +63,7 @@ def http_companies(request):
             companies = companies.order_by("-last_status")
             
 
-    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters})
+    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters,"remine_companies":remine_companies})
 
 
 @login_required
@@ -82,7 +85,7 @@ def http_company(request,company_id):
 
 
 @login_required
-def http_test_send_mail(request):
+def http_send_mail(request):
     message=''
     if request.method == "POST":
         fullname=request.POST.get('fullname')
@@ -104,3 +107,16 @@ def http_test_send_mail(request):
             message = "Boşlukları doldurmanız gerekiyor"
 
     return render(request,"send_mail.html",{"message":message})
+
+@csrf_exempt
+@login_required
+def http_reminder(request,company_id):
+    message=''
+    if request.method == "POST":
+        message='Hatırlatma kaydedildi'
+        company = Companies.objects.get(id=company_id)
+        company.reminder = request.POST.get('time')
+        company.save()
+        message='Hatırlatma kaydedildi'
+    now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    return render(request,"reminder.html",{"message":message,"now":now,"company":company_id})

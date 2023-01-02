@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-b_5fohga*oucf^21i8i3vgw_nl+$)6i^x0iiaf)vp!c)nos_c^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["192.168.1.111","127.0.0.1","sektorunonculeri.data"]
 
@@ -99,6 +99,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'tr-tr'
 
 TIME_ZONE = 'UTC'
+
+USE_TZ = False
 
 USE_I18N = True
 

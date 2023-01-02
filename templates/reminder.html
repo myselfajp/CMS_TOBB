@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Firma bilgileri</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="testbox">
+      {% if message %}
+      <script>alert('{{message}}');window.close();</script>
+      {% endif %}
+      <form method="post" action="{% url 'reports:reminder' company_id=company %}">
+        <h4>Tarih giriniz</h4>
+        <input type="datetime-local" name="time" datetime-local="MM-DD-YYYY HH:mm" value="{{now}}">
+        <div class="btn-block">
+          <button type="submit" >Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

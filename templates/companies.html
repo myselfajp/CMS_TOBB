@@ -70,6 +70,16 @@
                     <h5>Telefona göre arama :</h5>
                     <input name="search" value="{{filters.search}}">
                 </div>
+                
+                {% if remine_companies %}
+                <div style="position: fixed ;left: 82%;top: 25%;">
+                    <a href="#" class="notification">
+                        <span>Hatırlatma</span>
+                        <span class="badge">{{ remine_companies|length }}</span>
+                    </a>
+                </div>
+                {% endif %}
+
                 <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 26%;" type="submit">uygula</button>
 
             </form>
@@ -109,7 +119,7 @@
 
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
-                                    <form method="post" action="{% url 'reports:companies' %}">
+                                    <form method="post" action="{% url 'reports:companies' %}" >
                                         <th><a
                                                 href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
@@ -132,7 +142,10 @@
                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                                         <input type="hidden" name="search" value="{{filters.search}}">
-                                        <td><button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button></td>
+                                        <td>
+                                            <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button>
+                                            <button onclick="window.open('{% url 'reports:reminder' company_id=company.id %}','newwindow','width=600,height=400'); return false;" > Hatırlat </button>
+                                        </td>
                                     </form>
                                 </tr>
                                 {% endfor %}
