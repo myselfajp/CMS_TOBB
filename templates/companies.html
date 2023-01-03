@@ -72,12 +72,14 @@
                 <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 25%;" type="submit" class="notification">  uygula  </button>
 
             </form>
+                {% if reminder_report %}
                 <div  style="position: fixed ;left: 82%;top: 25%;">
                     <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
                         <span>Hatırlatma</span>
                         <span class="badge">{{ remine_companies|length }}</span>
                     </button>
                 </div>
+                {% endif %}
             <br>
             <br>
 
