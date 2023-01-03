@@ -26,7 +26,6 @@
                 <div style="position: fixed;;left: 18%; ">
                     <h5>Durumlar</h5>
                     <select name="last_status_filter" >
-                        
                         <option value="{{filters.last_status_filter.value}}">{{filters.last_status_filter.name}}</option>
                         {% for status in statuses %}
                         {% if not status.id == filters.last_status_filter.value %}
@@ -70,19 +69,15 @@
                     <h5>Telefona göre arama :</h5>
                     <input name="search" value="{{filters.search}}">
                 </div>
-                
-                {% if remine_companies %}
-                <div style="position: fixed ;left: 82%;top: 25%;">
-                    <a href="#" class="notification">
-                        <span>Hatırlatma</span>
-                        <span class="badge">{{ remine_companies|length }}</span>
-                    </a>
-                </div>
-                {% endif %}
-
-                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 26%;" type="submit">uygula</button>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 25%;" type="submit" class="notification">  uygula  </button>
 
             </form>
+                <div  style="position: fixed ;left: 82%;top: 25%;">
+                    <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
+                        <span>Hatırlatma</span>
+                        <span class="badge">{{ remine_companies|length }}</span>
+                    </button>
+                </div>
             <br>
             <br>
 

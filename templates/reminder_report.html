@@ -1,0 +1,79 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Hatırlatma</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'list/css/style.css'  %}">
+</head>
+
+<body>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">Hatırlatmalar ({{ companies|length }})</h2>
+                </div>
+            </div>
+
+
+            <br><br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-wrap">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Unvan</th>
+                                    <th>Telefon</th>
+                                    <th>SİTE</th>
+                                    <th>Sektör</th>
+                                    <th>Not</th>
+                                    <th>Hatırlatma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for company in companies %}
+                                <tr style="background-color: {{company.last_status.color}};">
+                                    <th>
+                                    {{company.name}}
+                                    </th>
+                                    <td><span data-text="{{company.phone}}"></span></td>
+                                    <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
+                                    <td>{{company.sector}}</td>
+                                    <td>{{company.note}}</td>
+                                    <td>{{company.reminder}}</td>
+
+                                    <td>
+                                    <form method="post" action="{% url 'reports:reminder_report' %}">
+                                        <input type="hidden" name="company_id" value="{{company.id}}">
+                                        <button type="submit" >  Sil  </button>
+                                    </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{% static 'list/js/jquery.min.js'  %}"></script>
+    <script src="{% static 'list/js/popper.js'  %}"></script>
+    <script src="{% static 'list/js/bootstrap.min.js'  %}"></script>
+    <script src="{% static 'list/js/main.js'  %}"></script>
+    <script defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993"
+        integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA=="
+        data-cf-beacon='{"rayId":"77f27e1a7e9d50ac","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2022.11.3","si":100}'
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

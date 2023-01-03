@@ -16,8 +16,7 @@ def http_companies(request):
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
-        "search":"",
-    }
+        "search":"",}
     if request.method == 'POST':
         if request.POST.get('company_id'):
             try:
@@ -41,9 +40,7 @@ def http_companies(request):
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
                     companies = companies.filter(last_status__id = request.POST.get('last_status_filter'))
-                    x=Status.objects.get(id=request.POST.get('last_status_filter'))
-                    filters["last_status_filter"]["name"]=x.name
-                    filters["last_status_filter"]["value"]=x.id
+
 
             if request.POST.get('tel_filter'):
                 if request.POST.get('tel_filter') != "0":
@@ -113,10 +110,22 @@ def http_send_mail(request):
 def http_reminder(request,company_id):
     message=''
     if request.method == "POST":
-        message='Hatırlatma kaydedildi'
         company = Companies.objects.get(id=company_id)
         company.reminder = request.POST.get('time')
         company.save()
         message='Hatırlatma kaydedildi'
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     return render(request,"reminder.html",{"message":message,"now":now,"company":company_id})
+
+
+@csrf_exempt
+@login_required
+def http_reminder_report(request):
+    if request.method == "POST":
+        company = Companies.objects.get(id=request.POST.get("company_id"))
+        company.reminder = None
+        company.save()
+
+    companies = Companies.objects.filter(user=request.user).exclude(reminder__isnull=True)
+    return render(request,"reminder_report.html",{"companies":companies})
+    
