@@ -40,7 +40,9 @@ def http_companies(request):
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
                     companies = companies.filter(last_status__id = request.POST.get('last_status_filter'))
-
+                    x=Status.objects.get(id=request.POST.get('last_status_filter'))
+                    filters["last_status_filter"]["name"]=x.name
+                    filters["last_status_filter"]["value"]=x.id
 
             if request.POST.get('tel_filter'):
                 if request.POST.get('tel_filter') != "0":
