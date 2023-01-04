@@ -38,7 +38,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for company in companies %}
+                                {% for company in lte %}
+                                <tr style="background-color: {{company.last_status.color}};">
+                                    <th>
+                                    {{company.name}}
+                                    </th>
+                                    <td><span data-text="{{company.phone}}"></span></td>
+                                    <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
+                                    <td>{{company.sector}}</td>
+                                    <td>{{company.note}}</td>
+                                    <td>{{company.reminder}}</td>
+
+                                    <td>
+                                    <form method="post" action="{% url 'reports:reminder_report' %}">
+                                        <input type="hidden" name="company_id" value="{{company.id}}">
+                                        <button type="submit" >  Sil  </button>
+                                    </form>
+                                    </td>
+                                    <td ><h3 style="color: red;">*</h3></td>
+                                </tr>
+                                {% endfor %}
+                                {% for company in gte %}
                                 <tr style="background-color: {{company.last_status.color}};">
                                     <th>
                                     {{company.name}}

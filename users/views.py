@@ -64,7 +64,7 @@ def http_share(request):
         users = User.objects.all()
 
         for city in cities:
-            city_count_reports[city.name]=companies.filter(city=city).count()
+            city_count_reports[city.name]=(companies_tel.filter(city=city).count(),companies_comtel.filter(city=city).count())
 
         context={
             "cities":cities,
@@ -77,3 +77,6 @@ def http_share(request):
 
         return render(request,"user/share.html",context=context)
 
+def http_logout(request):
+    logout(request)
+    return redirect('/')

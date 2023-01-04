@@ -128,6 +128,8 @@ def http_reminder_report(request):
         company.reminder = None
         company.save()
 
+    now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") 
     companies = Companies.objects.filter(user=request.user).exclude(reminder__isnull=True)
-    return render(request,"reminder_report.html",{"companies":companies})
-    
+    lte = companies.filter(reminder__lte=now)
+    gte = companies.exclude(reminder__lte=now)
+    return render(request,"reminder_report.html",{"lte":lte,"gte":gte})

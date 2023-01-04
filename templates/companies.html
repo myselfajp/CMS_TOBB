@@ -3,8 +3,8 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <title>Firmalar</title>
+    <head>
+        <title>Firmalar</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
@@ -19,6 +19,11 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
                     <h2 class="heading-section">Firmalar ({{ companies|length }})</h2>
+                </div>
+                <div  style="position: fixed ;left: 57%;top: 14%;">
+                    <a href="{% url 'users:logout' %}" class="notification">
+                        <span>Çıkış</span>
+                    </a>
                 </div>
             </div>
 
@@ -65,14 +70,14 @@
                     <br>
                 </div>
                 
-                <div style="position: fixed ;left: 50%;top: 22%;">
+                <div style="position: fixed ;left: 40%;top: 25%;">
                     <h5>Telefona göre arama :</h5>
                     <input name="search" value="{{filters.search}}">
                 </div>
-                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 70%;top: 25%;" type="submit" class="notification">  uygula  </button>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 55%;top: 29%;" type="submit" class="notification">  uygula  </button>
 
             </form>
-                <div  style="position: fixed ;left: 82%;top: 25%;">
+                <div  style="position: fixed ;left: 80%;top: 30%;">
                     <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
                         <span>Hatırlatma</span>
                         {% if remine_companies %}
@@ -141,7 +146,9 @@
                                         <input type="hidden" name="search" value="{{filters.search}}">
                                         <td>
                                             <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button>
+                                            {% if company.reminder == None %}
                                             <button onclick="window.open('{% url 'reports:reminder' company_id=company.id %}','newwindow','width=600,height=400'); return false;" > Hatırlat </button>
+                                            {%endif%}
                                         </td>
                                     </form>
                                 </tr>

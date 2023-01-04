@@ -219,7 +219,13 @@
 
       <ul>
         {% for key, value in city_count_reports.items %} 
-          <li>{{key}} - {{value}}</li>
+          <li>{{key}} : 
+            
+            <li>cep - {{value.0}}</li>
+            <li>sabit - {{value.1}}</li>
+
+          </li>
+          <br>
         {% endfor %}
       </ul>
 
