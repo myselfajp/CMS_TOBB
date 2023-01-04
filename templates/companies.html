@@ -20,7 +20,7 @@
                 <div class="col-md-6 text-center mb-5">
                     <h2 class="heading-section">Firmalar ({{ companies|length }})</h2>
                 </div>
-                <div  style="position: fixed ;left: 57%;top: 14%;">
+                <div  style="position: fixed ;left: 60%;top: 18%;">
                     <a href="{% url 'users:logout' %}" class="notification">
                         <span>Çıkış</span>
                     </a>
@@ -28,6 +28,20 @@
             </div>
 
             <form method="Post" action="{% url 'reports:companies' %}">
+                <div style="position: fixed;;left: 5%; ">
+                    <h5>İller</h5>
+                    <select name="city_filter" >
+                        <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
+                        {% for city in cities %}
+                        {% if not city.id == filters.city_filter.value %}
+                        <option value="{{city.id}}">{{city.name}}</option>
+                        {% else %}
+                        <option value="0">Tümü</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <br>
+                </div>
                 <div style="position: fixed;;left: 18%; ">
                     <h5>Durumlar</h5>
                     <select name="last_status_filter" >
@@ -42,8 +56,7 @@
                     </select>
                     <br>
                 </div>
-
-                <div style="position: fixed ;left: 25%;">
+                <div style="position: fixed ;left: 28%;">
                     <h5>Telefon</h5>
                     <select name="tel_filter">
                         <option value="{{filters.tel_filter.value}}">{{filters.tel_filter.name}}</option>
@@ -60,21 +73,12 @@
                     </select>
                     <br>
                 </div>
-
-                <div style="position: fixed ;left: 30%;">
-                    <h5>Sırala</h5>
-                    <select name="order_by">
-                        <option value="last_status">Son duruma göre</option>
-                        <option value="sector">Sektöre göre</option>
-                    </select>
-                    <br>
-                </div>
                 
-                <div style="position: fixed ;left: 40%;top: 25%;">
+                <div style="position: fixed ;left: 38%;top: 25%;">
                     <h5>Telefona göre arama :</h5>
                     <input name="search" value="{{filters.search}}">
                 </div>
-                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 55%;top: 29%;" type="submit" class="notification">  uygula  </button>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 60%;top: 29%;" type="submit" class="notification">  uygula  </button>
 
             </form>
                 <div  style="position: fixed ;left: 80%;top: 30%;">
@@ -87,13 +91,6 @@
                 </div>
             <br>
             <br>
-
-            <!-- <h7 class="heading-section">İl seçiniz: </h7>
-            <select class="nav  navbar-brand">
-                {% for city in cities %}
-                <option><a href="{% url 'reports:companies' city_id=city.id %}">{{city.name}}</a></option>
-                {% endfor %}
-            </select> -->
 
             <br><br>
             <div class="row">
@@ -142,6 +139,7 @@
                                         <td><textarea name="note">{{company.note}}</textarea></td>
                                         <input type="hidden" name="company_id" value="{{company.id}}">
                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
+                                        <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                                         <input type="hidden" name="search" value="{{filters.search}}">
                                         <td>

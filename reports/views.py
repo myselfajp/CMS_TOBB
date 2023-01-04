@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
-from crawler.models import Companies,Status
+from crawler.models import Companies,Status,Cities
 from django.shortcuts import render
 import datetime
 
@@ -10,12 +10,14 @@ import datetime
 @login_required
 def http_companies(request):
     statuses = Status.objects.all()
+    cities = Cities.objects.all()
     companies = Companies.objects.filter(user=request.user).order_by("-last_status")
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     remine_companies = companies.filter(reminder__lte=now)
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
+        "city_filter":{"name":"Tümü","value":"0"},
         "search":"",}
     if request.method == 'POST':
         if request.POST.get('company_id'):
@@ -55,14 +57,14 @@ def http_companies(request):
                         filters["tel_filter"]["value"]="office"
                         filters["tel_filter"]["name"]="Sabit"
 
+            if request.POST.get('city_filter'):
+                if request.POST.get('city_filter') != "0":
+                    companies = companies.filter(city__id = request.POST.get('city_filter'))
+                    x=cities.get(id=request.POST.get('city_filter'))
+                    filters["city_filter"]["name"]=x.name
+                    filters["city_filter"]["value"]=x.id
 
-        if request.POST.get('order_by')=="sector":
-            companies = companies.order_by("sector")
-        else :
-            companies = companies.order_by("-last_status")
-            
-
-    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters,"remine_companies":remine_companies})
+    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters,"cities":cities,"remine_companies":remine_companies})
 
 
 @login_required
