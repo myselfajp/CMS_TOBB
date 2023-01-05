@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.contrib.auth import logout,login,authenticate
-from crawler.models import Companies,User,Cities,Status
+from django.views.decorators.csrf import csrf_exempt
+from crawler.models import Companies,User,Cities
 
 # Create your views here.
 def http_login(request):
@@ -22,8 +23,6 @@ def http_login(request):
         if request.user.username=="Ali" or request.user.username=="admin":
             return render(request,"user/index.html",{"message":message})
         return HttpResponseRedirect("/companies")
-
-
 
 def http_share(request):
     if request.user.username=="Ali" or request.user.username=="admin":
@@ -71,6 +70,10 @@ def http_share(request):
             }
 
         return render(request,"user/share.html",context=context)
+
+@csrf_exempt
+def http_take(request):
+    return redirect("/companies")
 
 def http_logout(request):
     logout(request)

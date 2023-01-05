@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
 from crawler.models import Companies,Status,Cities
+from django.contrib.auth.models import User
 from django.shortcuts import render
 import datetime
 
@@ -11,15 +12,19 @@ import datetime
 def http_companies(request):
     statuses = Status.objects.all()
     cities = Cities.objects.all()
-    companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+    users = User.objects.all()
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    remine_companies = companies.filter(reminder__lte=now)
+    if request.method == 'GET':
+        companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+        remine_companies = companies.filter(reminder__lte=now)
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
         "city_filter":{"name":"Tümü","value":"0"},
+        "user_filter":{"name":"Tümü","value":"0"},
         "search":"",}
     if request.method == 'POST':
+
         if request.POST.get('company_id'):
             try:
                 company = companies.get(id=request.POST.get('company_id'))
@@ -32,6 +37,21 @@ def http_companies(request):
                 company.save()
             except:
                 pass
+  
+
+
+        #----------------------------------------------------------filters--------------------------------------------
+        if request.POST.get('user_filter'):
+            if request.POST.get('user_filter') != "0":
+                companies = Companies.objects.filter(user__id = request.POST.get('user_filter'))
+                x=users.get(id=request.POST.get('user_filter'))
+                filters["user_filter"]["name"]=x.username
+                filters["user_filter"]["value"]=x.id
+        else:
+            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+        
+
+        remine_companies = companies.filter(reminder__lte=now)
 
         if request.POST.get('search'):
             s=request.POST.get('search')
@@ -63,8 +83,10 @@ def http_companies(request):
                     x=cities.get(id=request.POST.get('city_filter'))
                     filters["city_filter"]["name"]=x.name
                     filters["city_filter"]["value"]=x.id
+            
+        #----------------------------------------------------------filters--------------------------------------------
 
-    return render(request,"companies.html",{'companies': companies,'statuses':statuses,"filters":filters,"cities":cities,"remine_companies":remine_companies})
+    return render(request,"companies.html",{'companies': companies,'users':users,'statuses':statuses,"cities":cities,"remine_companies":remine_companies,"filters":filters})
 
 
 @login_required

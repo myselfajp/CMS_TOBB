@@ -1,44 +1,33 @@
 {% load static %}
-
 <!doctype html>
 <html lang="en">
-
-    <head>
-        <title>Firmalar</title>
-        <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'list/css/style.css'  %}">
+<head>
+<title>Firmalar</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'list/css/style.css'  %}">
 </head>
 
 <body>
-    
+
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
                     <h2 class="heading-section">Firmalar ({{ companies|length }})</h2>
+                </div>
+                <div  style="position: fixed ;left: 60%;top: 18%;">
                     <a href="{% url 'users:logout' %}" class="notification">
-                        <span>    Çıkış    </span>
+                        <span>Çıkış</span>
                     </a>
                 </div>
-                
-                <form method="Post" action="{% url 'reports:companies' %}">
-                    {% if user.is_superuser %}
-                    Kullanıcı :
-                    <select name="user_filter" >
-                        <option value="{{filters.user_filter.value}}">{{filters.user_filter.name}}</option>
-                        {% for user in users %}
-                        {% if user.id == filters.user_filter.value %}
-                        <option value="0">Tümü</option>
-                        {% else %}
-                        <option value="{{user.id}}">{{user.username}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% endif %}
-                    İller:
+            </div>
+
+            <form method="Post" action="{% url 'reports:companies' %}">
+                <div style="position: fixed;;left: 5%; ">
+                    <h5>İller</h5>
                     <select name="city_filter" >
                         <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
                         {% for city in cities %}
@@ -49,7 +38,10 @@
                         {% endif %}
                         {% endfor %}
                     </select>
-                    Durumlar :
+                    <br>
+                </div>
+                <div style="position: fixed;;left: 18%; ">
+                    <h5>Durumlar</h5>
                     <select name="last_status_filter" >
                         <option value="{{filters.last_status_filter.value}}">{{filters.last_status_filter.name}}</option>
                         {% for status in statuses %}
@@ -60,7 +52,10 @@
                         {% endif %}
                         {% endfor %}
                     </select>
-                    Telefon:
+                    <br>
+                </div>
+                <div style="position: fixed ;left: 28%;">
+                    <h5>Telefon</h5>
                     <select name="tel_filter">
                         <option value="{{filters.tel_filter.value}}">{{filters.tel_filter.name}}</option>
                         {% if filters.tel_filter.value == "tel" %}
@@ -74,26 +69,25 @@
                         <option value="office">Sabit</option>
                         {% endif %}
                     </select>
-                    Telefona göre arama :
+                    <br>
+                </div>
+                
+                <div style="position: fixed ;left: 38%;top: 25%;">
+                    <h5>Telefona göre arama :</h5>
                     <input name="search" value="{{filters.search}}">
-                    <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
-                </form>
-            </div>
-            <div class="row justify-content-center">
-                <br>
-                <br>
-            </div>
-            {% if not user.is_superuser %}
-            <div class="row justify-content-center">
-            <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
-                <span>Hatırlatma</span>
-                {% if remine_companies %}
-                <span class="badge">{{ remine_companies|length }}</span>
-                {% endif %}
-            </button>
-            </div>
-            {% endif %}
-            
+                </div>
+                <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" style="position: fixed ;left: 60%;top: 29%;" type="submit" class="notification">  uygula  </button>
+
+            </form>
+                <div  style="position: fixed ;left: 80%;top: 30%;">
+                    <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
+                        <span>Hatırlatma</span>
+                        {% if remine_companies %}
+                        <span class="badge">{{ remine_companies|length }}</span>
+                        {% endif %}
+                    </button>
+                </div>
+            <br>
             <br>
 
             <br><br>
@@ -101,7 +95,10 @@
                 <div class="col-md-12">
                     <div class="table-wrap">
 
+
                         <table class="table table-striped">
+
+
                             <thead>
                                 <tr>
                                     <th>Unvan</th>
@@ -114,15 +111,12 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            {% if user.is_superuser %}
-                            <form method="post" action="{% url 'reports:companies' %}">
-                            {% endif %}
+
                             <tbody>
+
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
-                                    {% if not user.is_superuser %}
                                     <form method="post" action="{% url 'reports:companies' %}" >
-                                    {% endif %}
                                         <th><a
                                                 href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
@@ -130,7 +124,6 @@
                                         <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
                                         <td>{{company.sector}}</td>
 
-                                        {% if not user.is_superuser %}
                                         <td>
                                             <select name="status_add">
                                                 <option value="{{ company.last_status.id }}">
@@ -142,15 +135,6 @@
                                         </td>
                                         <td><textarea name="fullname">{{company.full_name}}</textarea></td>
                                         <td><textarea name="note">{{company.note}}</textarea></td>
-                                        {% else %}
-                                        <td>
-                                            <span>{{company.last_status.name}}</span>
-                                        </td>
-                                        <td><span name="fullname">{{company.full_name}}</span></td>
-                                        <td><span name="note">{{company.note}}</span></td>
-                                        {% endif %}
-
-                                        {% if not user.is_superuser %}
                                         <input type="hidden" name="company_id" value="{{company.id}}">
                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
                                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
@@ -162,37 +146,10 @@
                                             <button onclick="window.open('{% url 'reports:reminder' company_id=company.id %}','newwindow','width=600,height=400'); return false;" > Hatırlat </button>
                                             {%endif%}
                                         </td>
-                                        </form>
-                                        {% else %}
-                                        <input type="hidden" name="take_{{company.id}}" value="{{company.id}}">
-                                        {% endif %}
-
+                                    </form>
                                 </tr>
                                 {% endfor %}
                             </tbody>
-
-                        {% if user.is_superuser %}
-                        <div>
-                        <h5>Paylaşılan Kullanıcı</h5>
-                        <select name="transfer_to" >
-                            <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
-                            {% for user in users %}
-                            {% if city.id == filters.city_filter.value %}
-                            <option value="0">Tümü</option>
-                            {% else %}
-                            <option value="{{city.id}}">{{city.name}}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                        </div>
-                        <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
-                        <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
-                        <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
-                        <input type="hidden" name="search" value="{{filters.search}}">
-
-                        <button type="submit" name="transfer" Value="true">Datayı al</button>
-                        </form>
-                        {% endif %}
                         </table>
                     </div>
                 </div>
