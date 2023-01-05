@@ -1,11 +1,10 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.contrib.auth import logout,login,authenticate
 from crawler.models import Companies,User,Cities,Status
 
 # Create your views here.
 def http_login(request):
     message=''
-    statuses = Status.objects.all()
     if not request.user.is_authenticated:
         if request.method == 'POST':
             username=request.POST.get('username')
@@ -15,18 +14,14 @@ def http_login(request):
                 login(request,user)
                 if request.user.username=="Ali" or request.user.username=="admin":
                     return render(request,"user/index.html",{"message":message})
-                companies = Companies.objects.filter(user=request.user)
-                return render(request,"companies.html",{'companies': companies,'statuses':statuses})
+                return redirect("/companies")
         return render(request,"login.html",{"message":message})
     else:
         if request.method=="POST":
-            companies = Companies.objects.filter(user=request.user)
-            return render(request,"companies.html",{'companies': companies,'statuses':statuses})
-            
+            return redirect("/companies")
         if request.user.username=="Ali" or request.user.username=="admin":
             return render(request,"user/index.html",{"message":message})
-        companies = Companies.objects.filter(user=request.user)
-        return render(request,"companies.html",{'companies': companies,'statuses':statuses})
+        return HttpResponseRedirect("/companies")
 
 
 

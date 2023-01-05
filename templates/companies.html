@@ -33,10 +33,10 @@
                     <select name="city_filter" >
                         <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
                         {% for city in cities %}
-                        {% if not city.id == filters.city_filter.value %}
-                        <option value="{{city.id}}">{{city.name}}</option>
-                        {% else %}
+                        {% if city.id == filters.city_filter.value %}
                         <option value="0">Tümü</option>
+                        {% else %}
+                        <option value="{{city.id}}">{{city.name}}</option>
                         {% endif %}
                         {% endfor %}
                     </select>
