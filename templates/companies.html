@@ -26,13 +26,15 @@
                 
                 <form method="Post" action="{% url 'reports:companies' %}">
                     {% if user.is_superuser %}
+                    Sayı:
+                    <input name="count" value="" style="height: 22px;width: 50px;"> 
                     Kullanıcı :
                     <select name="user_filter" >
+                        {% if not filters.user_filter.name == "Tümü" %}
                         <option value="{{filters.user_filter.value}}">{{filters.user_filter.name}}</option>
+                        {% endif %}
                         {% for user in users %}
-                        {% if user.id == filters.user_filter.value %}
-                        <option value="0">Tümü</option>
-                        {% else %}
+                        {% if not user.id == filters.user_filter.value %}
                         <option value="{{user.id}}">{{user.username}}</option>
                         {% endif %}
                         {% endfor %}
@@ -126,7 +128,7 @@
                                         <th><a
                                                 href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
-                                        <td><span data-text="{{company.phone}}"></span></td>
+                                        <td><span data-text="({{company.phone|slice:'0:3'}}) {{company.phone|slice:'3:6'}} {{company.phone|slice:'6:8'}} {{company.phone|slice:'8:10'}}"></span></td>
                                         <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
                                         <td>{{company.sector}}</td>
 
@@ -175,12 +177,9 @@
                         <div>
                         <h5>Paylaşılan Kullanıcı</h5>
                         <select name="transfer_to" >
-                            <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
                             {% for user in users %}
-                            {% if city.id == filters.city_filter.value %}
-                            <option value="0">Tümü</option>
-                            {% else %}
-                            <option value="{{city.id}}">{{city.name}}</option>
+                            {% if not user.id == filters.user_filter.value %}
+                            <option value="{{user.id}}">{{user.username}}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
@@ -190,7 +189,7 @@
                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                         <input type="hidden" name="search" value="{{filters.search}}">
 
-                        <button type="submit" name="transfer" Value="true">Datayı al</button>
+                        <button type="submit" name="transfer" Value="true">Paylaş</button>
                         </form>
                         {% endif %}
                         </table>

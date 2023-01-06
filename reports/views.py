@@ -23,6 +23,8 @@ def http_companies(request):
         "city_filter":{"name":"Tümü","value":"0"},
         "user_filter":{"name":"Tümü","value":"0"},
         "search":"",}
+
+    count=500
     if request.method == 'POST':
 
         if request.POST.get('company_id'):
@@ -39,17 +41,32 @@ def http_companies(request):
                 pass
   
 
-
-        #----------------------------------------------------------filters--------------------------------------------
+        #-----------------------------------------------------------admin share---------------------------------------
         if request.POST.get('user_filter'):
             if request.POST.get('user_filter') != "0":
-                companies = Companies.objects.filter(user__id = request.POST.get('user_filter'))
+                companies = Companies.objects.filter(user__id = request.POST.get('user_filter')).order_by("name")
                 x=users.get(id=request.POST.get('user_filter'))
                 filters["user_filter"]["name"]=x.username
                 filters["user_filter"]["value"]=x.id
+            else:
+                companies = Companies.objects.all().order_by("name")
+            if request.POST.get('count'):
+                count=int(request.POST.get('count'))
         else:
             companies = Companies.objects.filter(user=request.user).order_by("-last_status")
         
+        if request.POST.get('transfer'):
+            user_to=users.get(id=request.POST.get('transfer_to'))
+            companies_to=[]
+            all_posts=request.POST.items()
+            for k,v in all_posts:
+                if k[:4]=="take":
+                    companies_to.append(v)
+            Companies.objects.filter(id__in=companies_to).update(user=user_to)
+
+        #--------------------------------------------------------------------------------------------------------------
+
+        #----------------------------------------------------------filters--------------------------------------------
 
         remine_companies = companies.filter(reminder__lte=now)
 
@@ -86,7 +103,7 @@ def http_companies(request):
             
         #----------------------------------------------------------filters--------------------------------------------
 
-    return render(request,"companies.html",{'companies': companies,'users':users,'statuses':statuses,"cities":cities,"remine_companies":remine_companies,"filters":filters})
+    return render(request,"companies.html",{'companies': companies[:count],'users':users,'statuses':statuses,"cities":cities,"remine_companies":remine_companies,"filters":filters})
 
 
 @login_required
