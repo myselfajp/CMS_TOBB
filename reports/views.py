@@ -29,7 +29,7 @@ def http_companies(request):
 
         if request.POST.get('company_id'):
             try:
-                company = companies.get(id=request.POST.get('company_id'))
+                company = Companies.objects.get(id=request.POST.get('company_id'))
                 company.note=request.POST.get('note')
                 company.full_name = request.POST.get('fullname')
                 new_status=request.POST.get('status_add')
