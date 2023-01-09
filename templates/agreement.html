@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Firma bilgileri</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  {% if message %}
+    <script>alert('{{message}}');window.close();</script>
+  {% endif %}
+  <form method="post" action="{% url 'reports:agreement' company_id=company.id %}" style="width: 900px;">
+    {% csrf_token %}
+    <h4>Durum : <span>*</span></h4>
+    <div class="title-block">      
+      <select name="agreement_status" style="width: 210px;">
+        {% for status in agreement_status %}
+        <option value="{{status.id}}">{{status.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <br>
+  
+    <h4>Firma unvanı</h4>
+    <input name="company_name" value="{{company.name}}" >
+    <br>
+
+    <h4>İsim Soyisim</h4>
+    <input name="fullname" value="{{company.full_name}}" style="width: 200px;">
+    <br>
+    <br>
+
+    <h4>Telefon numarası</h4>
+    <input name="tel" value="" style="width: 200px;">
+    <br>
+    <br>
+
+    <h4>Whatsapp numarası</h4>
+    <input name="whatsapp" value="" style="width: 200px;">
+    <br>
+    <br>
+    
+    <h4>Mail Adresi</h4>
+    <input name="mail" value="" style="width: 200px;">
+    <br>
+    <br>
+
+    <h4>Çekim yeri</h4>
+    <input name="adres" value="" style="width: 200px;">
+    <br>
+    <br>
+
+    <h4>Sözleşme günü/saatı</h4>
+    <input type="datetime-local" name="datetime_agreement" datetime-local="MM-DD-YYYY HH:mm" value="{{now}}">
+    <br>
+
+    <h4>Çekim günü/saatı</h4>
+    <input type="datetime-local" name="datetime_record" datetime-local="MM-DD-YYYY HH:mm" value="">
+    <br>
+
+
+    <div class="btn-block">
+      <button type="submit" href="/">Gönder</button>
+    </div>
+  </form>
+</body>
+
+</html>

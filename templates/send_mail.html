@@ -9,15 +9,14 @@
     <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
   </head>
   <body>
+    {% if message %}
+      <script>alert('{{message}}');window.close();</script>
+    {% endif %}
     <div class="testbox">
       <form method="post" action="{% url 'reports:sendmail' %}">
         {% csrf_token %}
         <h1><span data-text="İsim soyisim ve mail adresini giriniz"></span> </h1>
         <br>
-        {% if message %}
-        <h1><span data-text="{{message}}"></span> </h1>
-        <br>
-        {% endif %}
         <h4>İsim Soyisim</h4>
         <input name="fullname" value="" required>
 

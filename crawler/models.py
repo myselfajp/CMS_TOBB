@@ -92,7 +92,7 @@ class Agreement(models.Model):
     record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri")
     whatsapp = models.IntegerField(blank=True)
     mail = models.CharField(max_length=255,blank=True)
-    created_date = models.DateTimeField(auto_now=True,verbose_name = "Sözleşme tarihi")
+    created_date = models.DateTimeField(verbose_name = "Sözleşme tarihi")
     record_date = models.DateTimeField(verbose_name = "Çekim tarihi")
     def __str__(self):
         return f"{self.user}--{self.company_name}"

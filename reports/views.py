@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
-from crawler.models import Companies,Status,Cities
+from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus
 from django.contrib.auth.models import User
 from django.shortcuts import render
 import datetime
@@ -147,6 +147,35 @@ def http_send_mail(request):
             message = "Boşlukları doldurmanız gerekiyor"
 
     return render(request,"send_mail.html",{"message":message})
+
+
+@login_required
+def http_send_agreement(request,company_id):
+    message=''
+    now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") 
+
+    agreement_status = AgreementStatus.objects.all()
+    company = Companies.objects.get(id=company_id)
+    agreement = Agreement()
+
+    if request.method == "POST":
+        try:
+            agreement.user=request.user
+            agreement.company_name=company
+            agreement.person_name=request.POST.get("fullname")
+            agreement.person_number = request.POST.get("tel")
+            agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
+            agreement.record_place = request.POST.get("adres")
+            agreement.whatsapp = request.POST.get("whatsapp")
+            agreement.mail = request.POST.get("mail")
+            agreement.created_date = request.POST.get("datetime_agreement")
+            agreement.record_date = request.POST.get("datetime_record")
+            agreement.save()
+            message="kayd edildi"
+        except:
+            message="Bir hata oluştu"
+    return render(request,"agreement.html",{"message":message,"agreement_status":agreement_status,"company":company,"now":now})
+
 
 @csrf_exempt
 @login_required
