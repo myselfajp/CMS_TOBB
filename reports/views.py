@@ -3,8 +3,39 @@ from django.core.mail import EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
 from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus
 from django.contrib.auth.models import User
+from PIL import Image,ImageDraw,ImageFont
 from django.shortcuts import render
+import os
 import datetime
+
+
+def Agreement_maker(date1,date2,time,company,adres):
+    image=Image.open("ham.jpg")
+
+    font=ImageFont.truetype("times",18)
+    draw =ImageDraw.Draw(image)
+
+
+    draw.text(xy=(311,179),text=date1,fill=(0,0,0),font=font)
+
+    draw.text(xy=(311,223),text=date2,fill=(0,0,0),font=font)
+
+    draw.text(xy=(311,245),text=time,fill=(0,0,0),font=font)
+
+    font=ImageFont.truetype("times",20)
+
+    draw.text(xy=(453,330),text=company,fill=(0,0,0),font=font)
+
+    draw.text(xy=(453,353),text=adres,fill=(0,0,0),font=font)
+
+    # image.show()
+    save_path = "Sözleşmeler/"+date2
+    if not os.path.exists(save_path):
+            os.makedirs(save_path)
+    image.save(f"{save_path}/{company}.jpg",create_dir = True)
+
+
+
 
 # Create your views here.
 @csrf_exempt
@@ -148,33 +179,55 @@ def http_send_mail(request):
 
     return render(request,"send_mail.html",{"message":message})
 
-
 @login_required
 def http_send_agreement(request,company_id):
     message=''
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") 
-
-    agreement_status = AgreementStatus.objects.all()
     company = Companies.objects.get(id=company_id)
     agreement = Agreement()
 
     if request.method == "POST":
-        try:
             agreement.user=request.user
             agreement.company_name=company
             agreement.person_name=request.POST.get("fullname")
             agreement.person_number = request.POST.get("tel")
-            agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
             agreement.record_place = request.POST.get("adres")
             agreement.whatsapp = request.POST.get("whatsapp")
             agreement.mail = request.POST.get("mail")
-            agreement.created_date = request.POST.get("datetime_agreement")
-            agreement.record_date = request.POST.get("datetime_record")
             agreement.save()
             message="kayd edildi"
-        except:
-            message="Bir hata oluştu"
-    return render(request,"agreement.html",{"message":message,"agreement_status":agreement_status,"company":company,"now":now})
+     
+    return render(request,"agreement.html",{"message":message,"company":company,"now":now})
+
+
+@login_required
+def http_report_agreement(request):
+    agreements = Agreement.objects.all()
+    return render(request,"user/agreement_report.html",{"agreements":agreements})
+
+@login_required
+def http_report_agreement_admin(request,agreement_id):
+    agreement_status = AgreementStatus.objects.all()
+    agreement = Agreement.objects.get(id=agreement_id)
+    if request.method == "POST":
+        agreement.person_name=request.POST.get("person_name")
+        agreement.person_number = request.POST.get("person_number")
+        agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
+        agreement.record_place = request.POST.get("record_place")
+        agreement.whatsapp = request.POST.get("whatsapp")
+        agreement.mail = request.POST.get("mail")
+        if request.POST.get("created_date"):
+            agreement.created_date = request.POST.get("created_date")
+            c_date=str(agreement.created_date).split("T")
+        if request.POST.get("record_date"):
+            agreement.record_date = request.POST.get("record_date")
+            r_date=str(agreement.record_date).split("T")
+        agreement.save()
+        Agreement_maker(c_date[0],r_date[0],r_date[1],request.POST.get("company_name"),agreement.record_place)
+        message="kayd edildi"
+        
+
+    return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status})
 
 
 @csrf_exempt

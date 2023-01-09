@@ -88,12 +88,12 @@ class Agreement(models.Model):
     company_name = models.ForeignKey(Companies,on_delete=models.CASCADE,verbose_name = "Firma unvanı")
     person_name = models.CharField(max_length=255,blank=True)
     person_number = models.IntegerField(blank=True)
-    status = models.ForeignKey(AgreementStatus,on_delete=models.CASCADE,verbose_name = "Sözleşme durumu")
+    status = models.ForeignKey(AgreementStatus,on_delete=models.CASCADE,verbose_name = "Sözleşme durumu",null=True)
     record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri")
     whatsapp = models.IntegerField(blank=True)
     mail = models.CharField(max_length=255,blank=True)
-    created_date = models.DateTimeField(verbose_name = "Sözleşme tarihi")
-    record_date = models.DateTimeField(verbose_name = "Çekim tarihi")
+    created_date = models.DateTimeField(auto_now_add=True,verbose_name = "Sözleşme tarihi")
+    record_date = models.DateTimeField(null=True,verbose_name = "Çekim tarihi")
     def __str__(self):
         return f"{self.user}--{self.company_name}"
     class Meta:

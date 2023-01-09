@@ -17,7 +17,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">Sözleşmeler ({{ companies|length }})</h2>
+                    <h2 class="heading-section">Sözleşmeler ({{ agreements|length }})</h2>
                 </div>
             </div>
 
@@ -30,48 +30,29 @@
                             <thead>
                                 <tr>
                                     <th>Unvan</th>
+                                    <th>Kullanıcı</th>
                                     <th>Sözleşme Tarihi</th>
-                                    <th>Çekim Tarihi</th>
-                                    <th>Not</th>
+                                    <th>Sözleşme yeri</th>
+                                    <th>Telefon</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for company in lte %}
-                                <tr style="background-color: {{company.last_status.color}};">
+                                {% for agreement in agreements %}
+                                <tr style="background-color: {{agreement.status.color}};">
                                     <th>
-                                    {{company.name}}
+                                        <a href="{% url 'reports:agreement_admin' agreement_id=agreement.id %}">{{agreement.company_name.name}}</a>
                                     </th>
-                                    <td><span data-text="{{company.phone}}"></span></td>
-                                    <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
-                                    <td>{{company.sector}}</td>
-                                    <td>{{company.note}}</td>
-                                    <td>{{company.reminder}}</td>
-
                                     <td>
-                                    <form method="post" action="{% url 'reports:reminder_report' %}">
-                                        <input type="hidden" name="company_id" value="{{company.id}}">
-                                        <button type="submit" >  Sil  </button>
-                                    </form>
+                                    {{agreement.user.username}}
                                     </td>
-                                    <td ><h3 style="color: red;">*</h3></td>
-                                </tr>
-                                {% endfor %}
-                                {% for company in gte %}
-                                <tr style="background-color: {{company.last_status.color}};">
-                                    <th>
-                                    {{company.name}}
-                                    </th>
-                                    <td><span data-text="{{company.phone}}"></span></td>
-                                    <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
-                                    <td>{{company.sector}}</td>
-                                    <td>{{company.note}}</td>
-                                    <td>{{company.reminder}}</td>
-
                                     <td>
-                                    <form method="post" action="{% url 'reports:reminder_report' %}">
-                                        <input type="hidden" name="company_id" value="{{company.id}}">
-                                        <button type="submit" >  Sil  </button>
-                                    </form>
+                                    {{agreement.created_date}}
+                                    </td>
+                                    <td>
+                                        {{agreement.record_place}}
+                                    </td>
+                                    <td>
+                                        {{agreement.person_number}}
                                     </td>
                                 </tr>
                                 {% endfor %}
