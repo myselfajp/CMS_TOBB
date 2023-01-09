@@ -73,3 +73,29 @@ class AccountReport(models.Model):
         verbose_name_plural = "Hesap raporları"
 
 
+
+class AgreementStatus(models.Model):
+    name = models.CharField(max_length=25,verbose_name = "Adı")
+    color = models.CharField(max_length=25,verbose_name = "Rengi(İngilizce reng)")
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "Sözleşme Durumu"
+        verbose_name_plural = "Sözleşme Durumları"
+
+class Agreement(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
+    company_name = models.ForeignKey(Companies,on_delete=models.CASCADE,verbose_name = "Firma unvanı")
+    person_name = models.CharField(max_length=255,blank=True)
+    person_number = models.IntegerField(blank=True)
+    status = models.ForeignKey(AgreementStatus,on_delete=models.CASCADE,verbose_name = "Sözleşme durumu")
+    record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri")
+    whatsapp = models.IntegerField(blank=True)
+    mail = models.CharField(max_length=255,blank=True)
+    created_date = models.DateTimeField(auto_now=True,verbose_name = "Sözleşme tarihi")
+    record_date = models.DateTimeField(verbose_name = "Çekim tarihi")
+    def __str__(self):
+        return f"{self.user}--{self.company_name}"
+    class Meta:
+        verbose_name = "Sözleşme"
+        verbose_name_plural = "Sözleşmeler"

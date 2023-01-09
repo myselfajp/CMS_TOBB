@@ -168,7 +168,6 @@ def http_reminder_report(request):
         company = Companies.objects.get(id=request.POST.get("company_id"))
         company.reminder = None
         company.save()
-
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") 
     companies = Companies.objects.filter(user=request.user).exclude(reminder__isnull=True)
     lte = companies.filter(reminder__lte=now)
