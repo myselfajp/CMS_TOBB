@@ -11,9 +11,10 @@
   <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
 </head>
 
+
 <body>
   {% if message %}
-    <script>alert('{{message}}');window.open("/");</script>
+    <script>alert('{{message}}');window.open("/","_self")</script>
   {% endif %}
   <form method="post" action="" style="width: 900px;">
     {% csrf_token %}
@@ -72,6 +73,16 @@
     <input name="record_place" value="{{agreement.record_place}}" style="width: 200px;" required>
     {% else %}
     <input name="record_place" value="" style="width: 200px;" required>
+    {% endif %}
+    <br>
+    <br>
+
+
+    <h4>Not</h4>
+    {% if agreement.company_name.note %}
+    <textarea name="note" style="width: 200px;" required>{{agreement.company_name.note}}</textarea>
+    {% else %}
+    <textarea name="note" style="width: 200px;" required></textarea>
     {% endif %}
     <br>
     <br>

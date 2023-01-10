@@ -221,6 +221,7 @@ def http_report_agreement(request):
 def http_report_agreement_admin(request,agreement_id):
     agreement_status = AgreementStatus.objects.all()
     agreement = Agreement.objects.get(id=agreement_id)
+
     message = ""
     if request.method == "POST":
         if request.POST.get("person_name"):
@@ -241,12 +242,23 @@ def http_report_agreement_admin(request,agreement_id):
         if request.POST.get("record_date"):
             agreement.record_date = request.POST.get("record_date")
             r_date=str(agreement.record_date).split("T")
+            
+
+        if request.POST.get("note"):
+            company=Companies.objects.get(id=agreement.company_name.id)
+            company.note = request.POST.get("note")
+            company.save()
+        
+            
+
+
         try:
             agreement.save()
             Agreement_maker(c_date[0],r_date[0],r_date[1],request.POST.get("company_name"),agreement.record_place)
             message="kayd edildi"
         except:
             message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
+
     return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status,"message":message})
 
 
