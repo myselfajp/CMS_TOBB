@@ -16,7 +16,7 @@
         <br>
         <h1>Sektör:  <span data-text="{{company.sector}}"></span> </h1>
         <br>
-        <h1>Unvan:  {{company.name}}</h1>
+        <h1>Unvan:{{company.name}}</h1>
         <br>
         <h1>Telefon:   <span data-text="+90 {{company.phone}}"></span></h1>
         <br>
@@ -66,7 +66,6 @@
             'width=950,height=400'); 
  return false;">Sözleşme gönder</button>
         </div>
-
 
         <div onclick="location.href='{% url 'reports:companies' %}" class="btn-block">
          <h2><a style="color: brown;" href="{% url 'reports:companies' %}"> Ana sayfa </a></h2>

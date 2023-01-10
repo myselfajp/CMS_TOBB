@@ -9,6 +9,8 @@ import datetime
 import os
 
 
+
+
 def Agreement_maker(date1,date2,time,company,adres):
     image=Image.open("ham.jpg")
 
@@ -32,7 +34,7 @@ def Agreement_maker(date1,date2,time,company,adres):
     save_path = "Sözleşmeler/"+date1
     if not os.path.exists(save_path):
             os.makedirs(save_path)
-    image.save(f"{save_path}/{company}.jpg")
+    image.save(f"{save_path}/{company}.pdf")
 
 
 
