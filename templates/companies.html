@@ -103,6 +103,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-wrap">
+                        {% if user.is_superuser %}
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -131,7 +132,7 @@
                                 
                             </tbody>
                         </table>
-
+                        {% endif %}
 
                         <table class="table table-striped">
                             <thead>
