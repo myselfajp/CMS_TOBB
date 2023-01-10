@@ -86,12 +86,12 @@ class AgreementStatus(models.Model):
 class Agreement(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
     company_name = models.ForeignKey(Companies,on_delete=models.CASCADE,verbose_name = "Firma unvanı")
-    person_name = models.CharField(max_length=255,blank=True)
-    person_number = models.IntegerField(blank=True)
+    person_name = models.CharField(max_length=255,null=True)
+    person_number = models.IntegerField(null=True)
     status = models.ForeignKey(AgreementStatus,on_delete=models.CASCADE,verbose_name = "Sözleşme durumu",null=True)
-    record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri")
-    whatsapp = models.IntegerField(blank=True)
-    mail = models.CharField(max_length=255,blank=True)
+    record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri",null=True)
+    whatsapp = models.IntegerField(null=True)
+    mail = models.CharField(max_length=255,null=True)
     created_date = models.DateTimeField(auto_now_add=True,verbose_name = "Sözleşme tarihi")
     record_date = models.DateTimeField(null=True,verbose_name = "Çekim tarihi")
     def __str__(self):

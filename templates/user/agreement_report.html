@@ -18,9 +18,12 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
                     <h2 class="heading-section">Sözleşmeler ({{ agreements|length }})</h2>
+                    <a href="{% url 'users:login' %}" class="notification">
+                        <span>    Ana sayfa    </span>
+                    </a>
                 </div>
             </div>
-
+            
 
             <br><br>
             <div class="row">
@@ -63,7 +66,7 @@
             </div>
         </div>
     </section>
-
+    
     <script src="{% static 'list/js/jquery.min.js'  %}"></script>
     <script src="{% static 'list/js/popper.js'  %}"></script>
     <script src="{% static 'list/js/bootstrap.min.js'  %}"></script>

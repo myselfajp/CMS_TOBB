@@ -1,12 +1,12 @@
-from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMultiAlternatives
-from django.views.decorators.csrf import csrf_exempt
 from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from PIL import Image,ImageDraw,ImageFont
 from django.shortcuts import render
-import os
 import datetime
+import os
 
 
 def Agreement_maker(date1,date2,time,company,adres):
@@ -29,10 +29,10 @@ def Agreement_maker(date1,date2,time,company,adres):
     draw.text(xy=(453,353),text=adres,fill=(0,0,0),font=font)
 
     # image.show()
-    save_path = "Sözleşmeler/"+date2
+    save_path = "Sözleşmeler/"+date1
     if not os.path.exists(save_path):
             os.makedirs(save_path)
-    image.save(f"{save_path}/{company}.jpg",create_dir = True)
+    image.save(f"{save_path}/{company}.jpg")
 
 
 
@@ -189,14 +189,26 @@ def http_send_agreement(request,company_id):
     if request.method == "POST":
             agreement.user=request.user
             agreement.company_name=company
-            agreement.person_name=request.POST.get("fullname")
-            agreement.person_number = request.POST.get("tel")
-            agreement.record_place = request.POST.get("adres")
-            agreement.whatsapp = request.POST.get("whatsapp")
-            agreement.mail = request.POST.get("mail")
-            agreement.save()
-            message="kayd edildi"
-     
+            if request.POST.get("fullname"):
+                agreement.person_name=request.POST.get("fullname")
+            if request.POST.get("tel"):
+                agreement.person_number = request.POST.get("tel")
+            if request.POST.get("adres"):
+                agreement.record_place = request.POST.get("adres")
+            if request.POST.get("whatsapp"):
+                agreement.whatsapp = request.POST.get("whatsapp")
+            if request.POST.get("mail"):
+                agreement.mail = request.POST.get("mail")
+            if request.POST.get("created_date"):
+                agreement.created_date = request.POST.get("created_date")
+            if request.POST.get("record_date"):
+                agreement.record_date = request.POST.get("record_date")
+            try:
+                agreement.save()
+                message="kayd edildi"
+            except Exception as e:
+                print(e)
+                message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
     return render(request,"agreement.html",{"message":message,"company":company,"now":now})
 
 
@@ -209,25 +221,33 @@ def http_report_agreement(request):
 def http_report_agreement_admin(request,agreement_id):
     agreement_status = AgreementStatus.objects.all()
     agreement = Agreement.objects.get(id=agreement_id)
+    message = ""
     if request.method == "POST":
-        agreement.person_name=request.POST.get("person_name")
-        agreement.person_number = request.POST.get("person_number")
-        agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
-        agreement.record_place = request.POST.get("record_place")
-        agreement.whatsapp = request.POST.get("whatsapp")
-        agreement.mail = request.POST.get("mail")
+        if request.POST.get("person_name"):
+            agreement.person_name=request.POST.get("person_name")
+        if request.POST.get("person_number"):
+            agreement.person_number = request.POST.get("person_number")
+        if request.POST.get("agreement_status"):
+            agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
+        if request.POST.get("record_place"):
+            agreement.record_place = request.POST.get("record_place")
+        if request.POST.get("whatsapp"):
+            agreement.whatsapp = request.POST.get("whatsapp")
+        if request.POST.get("mail"):
+            agreement.mail = request.POST.get("mail")
         if request.POST.get("created_date"):
             agreement.created_date = request.POST.get("created_date")
             c_date=str(agreement.created_date).split("T")
         if request.POST.get("record_date"):
             agreement.record_date = request.POST.get("record_date")
             r_date=str(agreement.record_date).split("T")
-        agreement.save()
-        Agreement_maker(c_date[0],r_date[0],r_date[1],request.POST.get("company_name"),agreement.record_place)
-        message="kayd edildi"
-        
-
-    return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status})
+        try:
+            agreement.save()
+            Agreement_maker(c_date[0],r_date[0],r_date[1],request.POST.get("company_name"),agreement.record_place)
+            message="kayd edildi"
+        except:
+            message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
+    return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status,"message":message})
 
 
 @csrf_exempt

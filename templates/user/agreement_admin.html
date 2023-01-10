@@ -13,7 +13,7 @@
 
 <body>
   {% if message %}
-    <script>alert('{{message}}');window.close();</script>
+    <script>alert('{{message}}');window.open("/");</script>
   {% endif %}
   <form method="post" action="" style="width: 900px;">
     {% csrf_token %}
@@ -28,41 +28,60 @@
     <br>
   
     <h4>Firma unvanı</h4>
-    <input name="company_name" value="{{agreement.company_name}}" style="width: 200px;">
+    <input name="company_name" value="{{agreement.company_name.name}}" style="width: 800px;" required>
     <br>
 
     <h4>İsim Soyisim</h4>
-    <input name="person_name" value="{{agreement.person_name}}" style="width: 200px;">
+    {% if agreement.person_name %}
+    <input name="person_name" value="{{agreement.person_name}}" style="width: 200px;" required>
+    {% else %}
+    <input name="person_name" value="" style="width: 200px;" required>
+    {% endif %}
     <br>
     <br>
 
     <h4>Telefon numarası</h4>
-    <input name="person_number" value="{{agreement.person_number}}" style="width: 200px;">
+    {% if agreement.person_number %}
+    <input name="person_number" value="{{agreement.person_number}}" style="width: 200px;" required>
+    {% else %}
+    <input name="person_number" value="" style="width: 200px;" required>
+    {% endif %}
     <br>
     <br>
 
     <h4>Whatsapp numarası</h4>
-    <input name="whatsapp" value="{{agreement.whatsapp}}" style="width: 200px;">
+    {% if agreement.whatsapp %}
+    <input name="whatsapp" value="{{agreement.whatsapp}}" style="width: 200px;" required>
+    {% else %}
+    <input name="whatsapp" value="" style="width: 200px;" required>
+    {% endif %}
     <br>
     <br>
     
     <h4>Mail Adresi</h4>
-    <input name="mail" value="{{agreement.mail}}" style="width: 200px;">
+    {% if agreement.mail %}
+    <input name="mail" value="{{agreement.mail}}" style="width: 200px;" required>
+    {% else %}
+    <input name="mail" value="" style="width: 200px;" required>
+    {% endif %}
     <br>
     <br>
 
     <h4>Çekim yeri</h4>
-    <input name="record_place" value="{{agreement.record_place}}" style="width: 200px;">
+    {% if agreement.record_place %}
+    <input name="record_place" value="{{agreement.record_place}}" style="width: 200px;" required>
+    {% else %}
+    <input name="record_place" value="" style="width: 200px;" required>
+    {% endif %}
     <br>
     <br>
 
     <h4>Sözleşme günü/saatı</h4>
-    {{agreement.created_date}}
-    <input type="datetime-local" name="created_date" datetime-local="MM-DD-YYYY HH:mm" value="" required> 
+    <input type="datetime-local" name="created_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.created_date|date:'Y-m-d'}}T{{agreement.created_date|date:'H:i:s'}}" style="width: 200px;" required> 
     <br>
 
     <h4>Çekim günü/saatı</h4>
-    <input type="datetime-local" name="record_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.record_date}}" required>
+    <input type="datetime-local" name="record_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.record_date|date:'Y-m-d'}}T{{agreement.record_date|date:'H:i:s'}}" style="width: 200px;" required>
     <br>
 
     <div class="btn-block">

@@ -19,11 +19,11 @@
     {% csrf_token %}
     
     <h4>Firma unvanı</h4>
-    <input name="company_name" value="{{company.name}}" >
+    <input name="company_name" value="{{company.name}}"  required>
     <br>
 
     <h4>İsim Soyisim</h4>
-    <input name="fullname" value="{{company.full_name}}" style="width: 200px;">
+    <input name="fullname" value="{{company.full_name}}" style="width: 200px;" required>
     <br>
     <br>
 
@@ -43,10 +43,17 @@
     <br>
 
     <h4>Çekim yeri</h4>
-    <input name="adres" value="" style="width: 200px;">
+    <input name="adres" value="" style="width: 200px;" >
     <br>
     <br>
 
+    <h4>Sözleşme günü/saatı</h4>
+    <input type="datetime-local" name="created_date" datetime-local="MM-DD-YYYY HH:mm" value="" style="width: 200px;" required> 
+    <br>
+
+    <h4>Çekim günü/saatı</h4>
+    <input type="datetime-local" name="record_date" datetime-local="MM-DD-YYYY HH:mm" value="" style="width: 200px;" required>
+    <br>
 
     <div class="btn-block">
       <button type="submit" href="/">Gönder</button>
