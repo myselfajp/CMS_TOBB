@@ -92,8 +92,8 @@ def http_companies(request):
             try:
                 company.fount = Fount.objects.get(name=request.user.username)
             except:
-                fount = Fount(name=request.user.username).save()
-                company.fount = fount
+                Fount(name=request.user.username).save()
+                company.fount = Fount.objects.get(name=request.user.username)
 
             company.city = Cities.objects.get(id=int(request.POST.get('company_city')))
             company.last_status = Status.objects.get(id=int(request.POST.get('company_status')))
