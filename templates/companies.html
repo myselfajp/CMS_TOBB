@@ -14,7 +14,8 @@
 </head>
 
 <body>
-    
+
+      
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -134,6 +135,55 @@
                         </table>
                         {% endif %}
 
+
+
+                        <table id="form" style="display: none;">
+                            <tr>
+                                <form method="post" action="{% url 'reports:companies' %}">
+                                    <td>
+                                        <textarea name="company_name" placeholder="Unvan" style="width: 110px;font-size: small;" required></textarea>
+                                    </td>
+                                    <td>
+                                        <input name="company_tel" placeholder="Telefon" style="width: 110px;font-size: small;" required>
+                                    </td>
+                                    <td>
+                                        <input name="company_site" placeholder="Site" style="width: 170px;font-size: small;" >
+                                    </td>
+                                    <td>
+                                        <input name="company_sector" placeholder="Sektor" style="width: 250px;font-size: small;" required>
+                                    </td>
+                                     <td>
+                                        <input name="company_fullname" placeholder="İsim Soyisim" style="width: 110px;font-size: small;" >
+                                     </td>
+                                     <td>
+                                        <textarea name="company_note" placeholder="Not" style="width: 110px;font-size: small;"></textarea>
+                                     </td>
+                                     <td>
+                                        <select name="company_city">
+                                            {% for city in cities %}
+                                            <option value="{{city.id}}">{{city.name}}</option>
+                                            {% endfor %}
+                                           </select>
+                                       </td>
+                                     <td>
+                                         <select name="company_status">
+                                             {% for status in statuses %}
+                                             <option value="{{status.id}}">{{status.name}}</option>
+                                             {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
+                                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
+                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
+                                         <button name="add_data" value="true" type="submit">  Ekle  </button>
+                                        </td>
+                                </form>
+                            </tr>
+                        </table>
+
+
+
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -153,6 +203,7 @@
                             <tbody>
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
+
                                     {% if not user.is_superuser %}
                                     <form method="post" action="{% url 'reports:companies' %}" >
                                     {% endif %}
@@ -217,9 +268,13 @@
                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                         <input type="hidden" name="search" value="{{filters.search}}">
-
+                        
                         <button type="submit" name="transfer" Value="true">Paylaş</button>
                         </form>
+                        {% else %}
+                        <button  id="btn" class="notification">
+                            <span>    Data Ekle    </span>
+                        </button>
                         {% endif %}
                         </table>
                     </div>
@@ -231,6 +286,23 @@
     <script src="{% static 'list/js/popper.js'  %}"></script>
     <script src="{% static 'list/js/bootstrap.min.js'  %}"></script>
     <script src="{% static 'list/js/main.js'  %}"></script>
+    <script>
+        const btn = document.getElementById('btn');
+        btn.addEventListener('click', () => {
+        const form = document.getElementById('form');
+
+        if (form.style.display === 'none') {
+            // 👇️ this SHOWS the form
+            form.style.display = 'block';
+            btn.textContent = " Vazgeç ";
+        } else {
+            // 👇️ this HIDES the form
+            form.style.display = 'none';
+            btn.textContent = "Data ekle";
+
+        }
+        });
+    </script>
     <script defer
         src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993"
         integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA=="

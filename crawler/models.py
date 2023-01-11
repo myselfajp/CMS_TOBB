@@ -28,8 +28,8 @@ class Cities(models.Model):
 
 class Fount(models.Model):
     name = models.CharField(max_length=50,verbose_name = "Adı")
-    title = models.CharField(max_length=255,verbose_name = "Unvan")
-    link = models.CharField(max_length=255,verbose_name = "Site adresi")
+    title = models.CharField(max_length=255,null=True,verbose_name = "Unvan")
+    link = models.CharField(max_length=255,null=True,verbose_name = "Site adresi")
     def __str__(self):
         return self.name
     class Meta:
@@ -40,18 +40,18 @@ class Fount(models.Model):
 class Companies(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
     city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
-    full_name = models.CharField(max_length=255,blank=True,verbose_name = "Kişi Adı Soyadı")
+    full_name = models.CharField(max_length=255,null=True,verbose_name = "Kişi Adı Soyadı")
     sector = models.CharField(max_length=255,verbose_name = "Sektör")
     name = models.CharField(max_length=255,verbose_name = "Firma unvanı")
     short_name = models.CharField(max_length=11,verbose_name = "Firma unvanı(ilk 11 hanesi)")
     phone = models.CharField(max_length=20,verbose_name = "Telefon numarası")
-    site = models.CharField(max_length=255)
-    address = models.CharField(max_length=255,verbose_name = "Adres")
-    personels_caount = models.IntegerField(verbose_name = "Personel sayısı")
+    site = models.CharField(null=True,max_length=255)
+    address = models.CharField(null=True,max_length=255,verbose_name = "Adres")
+    personels_caount = models.IntegerField(null=True,verbose_name = "Personel sayısı")
     fount = models.ForeignKey(Fount,on_delete=models.CASCADE,verbose_name = "Data kaynağı")
     status = models.ManyToManyField(Status,blank=True,related_name="status")
     last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="last_status")
-    note = models.TextField(blank=True,default='')
+    note = models.TextField(null=True,blank=True,default='')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     reminder = models.DateTimeField(null=True, default=None)

@@ -1,4 +1,4 @@
-from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus
+from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus,Fount
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
@@ -72,8 +72,39 @@ def http_companies(request):
                 company.save()
             except:
                 pass
+            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+            
   
 
+
+        #----------------------------------------------------------add new company-----------------------------------
+        if request.POST.get('add_data'):
+            company=Companies()
+
+            company.user = request.user
+            company.name = request.POST.get('company_name')
+            company.short_name = request.POST.get('company_name')[0:11]
+            company.phone = request.POST.get('company_tel')
+            company.site = request.POST.get('company.site')
+            company.full_name = request.POST.get('company_fullname')
+            company.sector = request.POST.get('company_sector')
+            company.note = request.POST.get('company_note')
+            try:
+                company.fount = Fount.objects.get(name=request.user.username)
+            except:
+                fount = Fount(name=request.user.username).save()
+                company.fount = fount
+
+            company.city = Cities.objects.get(id=int(request.POST.get('company_city')))
+            company.last_status = Status.objects.get(id=int(request.POST.get('company_status')))
+            company.save()
+
+            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+
+        #----------------------------------------------------------add new company-----------------------------------
+
+        
+        
         #-----------------------------------------------------------admin share---------------------------------------
         if request.POST.get('user_filter'):
             if request.POST.get('user_filter') != "0":
