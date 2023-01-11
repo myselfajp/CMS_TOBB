@@ -189,7 +189,7 @@
                                 <tr>
                                     <th>Unvan</th>
                                     <th>Telefon</th>
-                                    <th>SİTE</th>
+                                    <th style="width: 25px;">SİTE</th>
                                     <th>Sektör</th>
                                     <th>Durum</th>
                                     <th>İsim Soyisim</th>
@@ -210,7 +210,7 @@
                                         <th><a href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
                                         <td><span data-text="({{company.phone|slice:'0:3'}}) {{company.phone|slice:'3:6'}} {{company.phone|slice:'6:8'}} {{company.phone|slice:'8:10'}}"></span></td>
-                                        <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
+                                        <td ><a href="https://{{company.site}}" target="_blank" >{{company.site}}</a></td>
                                         <td>{{company.sector}}</td>
 
                                         {% if not user.is_superuser %}
@@ -223,8 +223,8 @@
                                                 {% endfor %}
                                             </select>
                                         </td>
-                                        <td><textarea name="fullname">{{company.full_name}}</textarea></td>
-                                        <td><textarea name="note">{{company.note}}</textarea></td>
+                                        <td><input name="fullname" style="width: 130px;">{{company.full_name}}</textarea></td>
+                                        <td><textarea name="note" style="width: 130px;">{{company.note}}</textarea></td>
                                         {% else %}
                                         <td>
                                             <span>{{company.last_status.name}}</span>
