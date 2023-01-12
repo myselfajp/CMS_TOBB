@@ -188,6 +188,8 @@ def http_crawler_tobb(request,city_slug):
                     company.sector = sub_sector_name
                     company.name = title
                     company.short_name = title[0:11]
+                    if tel[0]=="0":
+                        tel=tel[1:]
                     company.phone = tel
                     company.site = site
                     company.address = address
