@@ -94,6 +94,7 @@ class Agreement(models.Model):
     mail = models.CharField(max_length=255,null=True)
     created_date = models.DateTimeField(auto_now_add=True,verbose_name = "Sözleşme tarihi")
     record_date = models.DateTimeField(null=True,verbose_name = "Çekim tarihi")
+    updated_date = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"{self.user}--{self.company_name}"
     class Meta:

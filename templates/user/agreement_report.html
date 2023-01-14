@@ -22,6 +22,27 @@
                         <span>    Ana sayfa    </span>
                     </a>
                 </div>
+
+
+                <form method="Post" action="{% url 'reports:report_agreement' %}">
+                    Durumlar :
+                    <select name="status_filter" >
+                        <option value="{{filters.status_filter.value}}">{{filters.status_filter.name}}</option>
+                        {% for status in statuses %}
+                        {% if not status.id == filters.status_filter.value %}
+                        <option value="{{status.id}}">{{status.name}}</option>
+                        {% else %}
+                        <option value="0">Tümü</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
+                </form>
+
+
+
+
+
             </div>
             
 

@@ -54,7 +54,7 @@ def http_companies(request):
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
         "city_filter":{"name":"Tümü","value":"0"},
-        "user_filter":{"name":"Tümü","value":"0"},
+        "status_filter":{"name":"Tümü","value":"0"},
         "search":"",}
 
     count=500
@@ -106,12 +106,12 @@ def http_companies(request):
         
         
         #-----------------------------------------------------------admin share---------------------------------------
-        if request.POST.get('user_filter'):
-            if request.POST.get('user_filter') != "0":
-                companies = Companies.objects.filter(user__id = request.POST.get('user_filter')).order_by("name")
-                x=users.get(id=request.POST.get('user_filter'))
-                filters["user_filter"]["name"]=x.username
-                filters["user_filter"]["value"]=x.id
+        if request.POST.get('status_filter'):
+            if request.POST.get('status_filter') != "0":
+                companies = Companies.objects.filter(user__id = request.POST.get('status_filter')).order_by("name")
+                x=users.get(id=request.POST.get('status_filter'))
+                filters["status_filter"]["name"]=x.username
+                filters["status_filter"]["value"]=x.id
             else:
                 companies = Companies.objects.all().order_by("name")
             if request.POST.get('count'):
@@ -244,11 +244,27 @@ def http_send_agreement(request,company_id):
                 message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
     return render(request,"agreement.html",{"message":message,"company":company,"now":now})
 
-
+@csrf_exempt
 @login_required
 def http_report_agreement(request):
-    agreements = Agreement.objects.all()
-    return render(request,"user/agreement_report.html",{"agreements":agreements})
+    agreements = Agreement.objects.all().order_by("status__name").order_by("updated_date")
+    statuses = AgreementStatus.objects.all()
+    filters= {
+        "status_filter":{"name":"Tümü","value":"0"},
+            }
+    if request.method == 'POST':
+        if request.POST.get('status_filter'):
+            if request.POST.get('status_filter') != "0":
+                agreements = agreements.filter(status__id = request.POST.get('status_filter')).order_by("updated_date")
+                x=AgreementStatus.objects.get(id=request.POST.get('status_filter'))
+                filters["status_filter"]["name"]=x.name
+                filters["status_filter"]["value"]=x.id
+            else:
+                agreements = Agreement.objects.all().order_by("updated_date").order_by("status__name")
+        else:
+            agreements = Agreement.objects.all().order_by("updated_date").order_by("status__name")
+        
+    return render(request,"user/agreement_report.html",{"agreements":agreements,"filters":filters,"statuses":statuses})
 
 @login_required
 def http_report_agreement_admin(request,agreement_id):
@@ -272,22 +288,27 @@ def http_report_agreement_admin(request,agreement_id):
         if request.POST.get("created_date"):
             agreement.created_date = request.POST.get("created_date")
             c_date=str(agreement.created_date).split("T")
+
+            c_date=c_date[0].split("-")
+            c_date=c_date[2]+"-"+c_date[1]+"-"+c_date[0]
+
         if request.POST.get("record_date"):
             agreement.record_date = request.POST.get("record_date")
             r_date=str(agreement.record_date).split("T")
-            
+            r_time=r_date[1]
+
+            r_date=r_date[0].split("-")
+            r_date=r_date[2]+"-"+r_date[1]+"-"+r_date[0]
 
         if request.POST.get("note"):
             company=Companies.objects.get(id=agreement.company_name.id)
             company.note = request.POST.get("note")
             company.save()
-        
-            
 
 
         try:
             agreement.save()
-            Agreement_maker(c_date[0],r_date[0],r_date[1],request.POST.get("company_name"),agreement.record_place)
+            Agreement_maker(c_date,r_date,r_time,request.POST.get("company_name"),agreement.record_place)
             message="kayd edildi"
         except:
             message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
