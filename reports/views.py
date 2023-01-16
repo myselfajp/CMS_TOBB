@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from PIL import Image,ImageDraw,ImageFont
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 import datetime
 import os
 
@@ -247,7 +247,7 @@ def http_send_agreement(request,company_id):
 @csrf_exempt
 @login_required
 def http_report_agreement(request):
-    agreements = Agreement.objects.all().order_by("status__name").order_by("updated_date")
+    agreements = Agreement.objects.all().order_by("updated_date").order_by("status__name")
     statuses = AgreementStatus.objects.all()
     filters= {
         "status_filter":{"name":"Tümü","value":"0"},
@@ -273,18 +273,35 @@ def http_report_agreement_admin(request,agreement_id):
 
     message = ""
     if request.method == "POST":
+
         if request.POST.get("person_name"):
             agreement.person_name=request.POST.get("person_name")
+        else:
+            agreement.person_name = None    
+
         if request.POST.get("person_number"):
             agreement.person_number = request.POST.get("person_number")
+        else:
+            agreement.person_number = None    
+
         if request.POST.get("agreement_status"):
             agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
+            
         if request.POST.get("record_place"):
             agreement.record_place = request.POST.get("record_place")
+        else:
+            agreement.record_place = "Belirtilmemiş"
+
         if request.POST.get("whatsapp"):
             agreement.whatsapp = request.POST.get("whatsapp")
+        else:
+            agreement.whatsapp = None
+
         if request.POST.get("mail"):
             agreement.mail = request.POST.get("mail")
+        else:
+            agreement.mail = None
+
         if request.POST.get("created_date"):
             agreement.created_date = request.POST.get("created_date")
             c_date=str(agreement.created_date).split("T")
@@ -304,15 +321,19 @@ def http_report_agreement_admin(request,agreement_id):
             company=Companies.objects.get(id=agreement.company_name.id)
             company.note = request.POST.get("note")
             company.save()
-
+        else:
+            company=Companies.objects.get(id=agreement.company_name.id)
+            company.note = None
+            company.save()
 
         try:
             agreement.save()
             Agreement_maker(c_date,r_date,r_time,request.POST.get("company_name"),agreement.record_place)
             message="kayd edildi"
-        except:
+        except Exception as e:
+            print(e)
             message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
-
+        return redirect("reports:agreement_admin",agreement_id=agreement_id)
     return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status,"message":message})
 
 

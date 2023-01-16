@@ -14,7 +14,7 @@
 
 <body>
   {% if message %}
-    <script>alert('{{message}}');window.open("/","_self")</script>
+    <script>alert('{{message}}');</script>
   {% endif %}
   <form method="post" action="" style="width: 900px;">
     {% csrf_token %}
@@ -52,37 +52,36 @@
 
     <h4>Whatsapp numarası</h4>
     {% if agreement.whatsapp %}
-    <input name="whatsapp" value="{{agreement.whatsapp}}" style="width: 200px;" required>
+    <input name="whatsapp" value="{{agreement.whatsapp}}" style="width: 200px;" >
     {% else %}
-    <input name="whatsapp" value="" style="width: 200px;" required>
+    <input name="whatsapp" value="" style="width: 200px;" >
     {% endif %}
     <br>
     <br>
     
     <h4>Mail Adresi</h4>
     {% if agreement.mail %}
-    <input name="mail" value="{{agreement.mail}}" style="width: 200px;" required>
+    <input name="mail" value="{{agreement.mail}}" style="width: 200px;" >
     {% else %}
-    <input name="mail" value="" style="width: 200px;" required>
+    <input name="mail" value="" style="width: 200px;" >
     {% endif %}
     <br>
     <br>
 
     <h4>Çekim yeri</h4>
     {% if agreement.record_place %}
-    <input name="record_place" value="{{agreement.record_place}}" style="width: 200px;" required>
+    <input name="record_place" value="{{agreement.record_place}}" style="width: 200px;" >
     {% else %}
-    <input name="record_place" value="" style="width: 200px;" required>
+    <input name="record_place" value="" style="width: 200px;" >
     {% endif %}
     <br>
     <br>
 
-
     <h4>Not</h4>
     {% if agreement.company_name.note %}
-    <textarea name="note" style="width: 200px;" required>{{agreement.company_name.note}}</textarea>
+    <textarea name="note" style="width: 200px;" >{{agreement.company_name.note}}</textarea>
     {% else %}
-    <textarea name="note" style="width: 200px;" required></textarea>
+    <textarea name="note" style="width: 200px;" ></textarea>
     {% endif %}
     <br>
     <br>
@@ -97,6 +96,15 @@
 
     <div class="btn-block">
       <button type="submit" >Yazdır</button>
+    </div>
+
+    {% if agreement.whatsapp %}
+    <div class="btn-block">
+      <h2><a style="color: brown;" href="https://wa.me/90{{agreement.whatsapp}}?text=SEKTÖRÜN+ÖNCÜLERİ+OLARAK+KATILIM+FORMUNUZ+EK+OLARAK+TARAFINIZA+GÖNDERİLMİŞTİR.+AD%2FSOYAD+İMZA+VEYA+KAŞE+İMZA+ŞEKLİNDE+TARAFIMIZA+YÖNLENDİRMENİZ+ÇEKİM+TAKVİMİNE+ALINMANIZ+İÇİN+YETERLİ+OLACAKTIR.+İYİ+ÇALIŞMALAR+DİLERİZ&oq=SEKTÖRÜN+ÖNCÜLERİ+OLARAK+KATILIM+FORMUNUZ+EK+OLARAK+TARAFINIZA+GÖNDERİLMİŞTİR.+AD%2FSOYAD+İMZA+VEYA+KAŞE+İMZA+ŞEKLİNDE+TARAFIMIZA+YÖNLENDİRMENİZ+ÇEKİM+TAKVİMİNE+ALINMANIZ+İÇİN+YETERLİ+OLACAKTIR.+İYİ+ÇALIŞMALAR+DİLERİZ" target="_blank"> Whatsapptan Gönder </a></h2>
+    </div>
+    {% endif %}
+    <div class="btn-block">
+      <h2><a style="color: brown;" href="/" target="_blank"> Ana sayfa </a></h2>
     </div>
   </form>
 </body>
