@@ -74,8 +74,6 @@ def http_companies(request):
                 pass
             companies = Companies.objects.filter(user=request.user).order_by("-last_status")
             
-  
-
 
         #----------------------------------------------------------add new company-----------------------------------
         if request.POST.get('add_data'):
@@ -247,7 +245,6 @@ def http_send_agreement(request,company_id):
 
 @login_required
 def http_report_agreement(request):
-<<<<<<< HEAD
     agreements = Agreement.objects.all().order_by("updated_date").order_by("status__name")
     statuses = AgreementStatus.objects.all()
     filters= {
@@ -266,10 +263,6 @@ def http_report_agreement(request):
             agreements = Agreement.objects.all().order_by("updated_date").order_by("status__name")
         
     return render(request,"user/agreement_report.html",{"agreements":agreements,"filters":filters,"statuses":statuses})
-=======
-    agreements = Agreement.objects.all()
-    return render(request,"user/agreement_report.html",{"agreements":agreements})
->>>>>>> parent of a267f44 (update - admin agreement filter)
 
 @login_required
 def http_report_agreement_admin(request,agreement_id):
@@ -319,16 +312,6 @@ def http_report_agreement_admin(request,agreement_id):
             company=Companies.objects.get(id=agreement.company_name.id)
             company.note = request.POST.get("note")
             company.save()
-<<<<<<< HEAD
-        else:
-            company=Companies.objects.get(id=agreement.company_name.id)
-            company.note = None
-            company.save()
-=======
-        
-            
-
->>>>>>> parent of a267f44 (update - admin agreement filter)
 
         try:
             agreement.save()
