@@ -1,10 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from selenium import webdriver
+from django.views.decorators.csrf import csrf_exempt
 from selenium.webdriver.common.by import By
+from django.http import HttpResponse
+from django.shortcuts import render
+from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
 from .models import *
+import time
+
 
 
 # Create your views here.
@@ -16,14 +18,13 @@ def create_account_tobb():
 
 
     #-----get user and number from database
-    account=AccountReport.objects.all()[0]
+    account=AccountReport.objects.get(user_type="account")
     account.number+=1
     account.save()
     #get user and number from database-----
 
     try:
         username=f"{account.user}{account.number}"
-
         #---------------------------------------------------------get an email from mohmal
         driver.get("https://www.mohmal.com/en")
         driver.find_element(By.ID, "rand").click()
@@ -252,6 +253,100 @@ def http_crawler_tobb(request,city_slug):
 
 
 
+@csrf_exempt
+def http_crawler_google(request):
+    message = ""
+    if request.method == "POST":
+        from serpapi import GoogleSearch
 
-def login(request):
-    return render(request,"login.html")
+        api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
+        api_key_name = api_key.user
+        api_key_limit = api_key.number
+
+        city = Cities.objects.get(id=int(request.POST.get('city')))
+        word = request.POST.get('sector')
+        location = request.POST.get('location')
+
+        try:
+            check = GoogleSearchReport.objects.get(word=word,area=location)
+            message = "aradigınız kriterlere ait zaten data var"
+            return render(request,"user/index.html",{"message":message})
+        except:
+            print("ok")
+
+        params = {
+        "engine": "google_maps",
+        "q": f"{word} {location}",
+        "ll":"@41.0687783,29.0110649,13z",
+        "type": "search",
+        'hl': 'tr',
+        "api_key": api_key_name,
+        "start" : 0,
+        }
+
+
+        while True:
+            if api_key_limit >9:
+                search = GoogleSearch(params)
+                results = search.get_dict()
+                api_key_limit -= 1
+                api_key.number = api_key_limit
+                api_key.save()
+
+                try:
+                    local_results = results["local_results"]
+                except:
+                    print("oh")
+                    break
+                
+                for x in local_results[1:]:
+                    try:
+                        company = Companies()
+                        tel=x["phone"].replace("(","").replace(")","").split()
+                        tel_code=tel[0]
+                        tel_number="".join(tel[1:])
+                        print(x)
+                        company.user = request.user
+                        company.name = x["title"]
+                        company.sector = ""
+                        company.short_name = x["title"][0:8]
+                        company.phone = tel_number
+                        company.phone_code = tel_code
+                        try:
+                            company.site = x["website"]
+                        except:
+                            company.site = "bulunmadı"
+                        try:
+                            company.address = x["address"]
+                        except:
+                            company.address = ""
+                        company.note = ""
+                        company.fount = Fount.objects.get(name="GoogleMaps")
+                        company.city = city
+                        company.last_status = Status.objects.get(name="Yeni")
+                        try:
+                            if not tel_number[0:3] in ["444","850"]:
+                                company.save()
+                                company.status.add(Status.objects.get(name="Yeni"))
+                                company.save()
+                        except Exception as e:
+                            print(e)
+                    except Exception as e:
+                        print(e)
+                        pass
+                
+                params["start"]+=20
+
+            else:
+                api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
+                api_key_name = api_key.user
+                api_key_limit = api_key.number
+
+        g_s_r=GoogleSearchReport()
+        g_s_r.city = city
+        g_s_r.area = location
+        g_s_r.word = word
+        g_s_r.save()
+        message = "datalar başarılıyla yüklendi"
+
+    return render(request,"user/index.html",{"message":message})

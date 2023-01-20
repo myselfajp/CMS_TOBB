@@ -31,6 +31,16 @@
                 <div class="container-login100-form-btn p-t-10">
                     <a class="login100-form-btn"  href="{% url 'reports:report_agreement' %}">Sözleşmeler</a> 
                 </div>
+
+                <div class="container-login100-form-btn p-t-10">
+                    <form method="post" action="{% url 'crawler:google_map_crawler' %}">
+                        <input type="text" name="city" value="2">
+                        <input type="text" name="sector" value="" placeholder="sektor">
+                        <input type="text" name="location" value="" placeholder="bolge">
+                        <button type="submit" >BeScrap</button>
+                    </form>
+                </div>
+
                 <div class="container-login100-form-btn p-t-10">
                     <a class="login100-form-btn"  href="{% url 'users:logout' %}">Çıkış</a> 
                 </div>

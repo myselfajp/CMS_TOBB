@@ -64,14 +64,24 @@ class Companies(models.Model):
 
 
 class AccountReport(models.Model):
-    user = models.CharField(max_length=255)
+    user = models.CharField(max_length=250)
     number = models.IntegerField()
+    user_type = models.CharField(max_length=25)
+    report_date = models.DateField()
+
     def __str__(self):
         return f"{self.user}{self.number}"
     class Meta:
         verbose_name = "Hesap raporu"
         verbose_name_plural = "Hesap raporları"
 
+
+class GoogleSearchReport(models.Model):
+    city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
+    area = models.CharField(max_length=25,verbose_name = "Bölge")
+    word = models.CharField(max_length=25,verbose_name = "Kelime")
+    def __str__(self):
+        return self.area
 
 
 class AgreementStatus(models.Model):
