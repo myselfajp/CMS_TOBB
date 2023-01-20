@@ -138,6 +138,13 @@ def http_companies(request):
             filters["search"]=s
 
         if not filters["search"]:
+            if request.POST.get('data_type'):
+                dt=request.POST.get('data_type')
+                if dt=="1":
+                    companies = companies.filter(fount__name="TOBB")
+                elif dt=="2":
+                    companies = companies.filter(fount__name="GoogleMaps")
+
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
                     companies = companies.filter(last_status__id = request.POST.get('last_status_filter'))

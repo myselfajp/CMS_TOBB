@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GoogleMaps Arama</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    {% if message %}
+      <script>alert('{{message}}');window.close();</script>
+    {% endif %}
+    <div class="testbox">
+      <form method="post" action="{% url 'crawler:google_map_crawler' %}">
+        {% csrf_token %}
+        <h1><span data-text="İsim soyisim ve mail adresini giriniz"></span> </h1>
+        <br>
+        <h4>Sektör</h4>
+        <input name="sector" value="" style="width: 200px;" required>
+
+        <h4>Bölge</h4>
+        <input name="location"  value="" style="width: 200px;" required>
+
+        <h4>İl</h4>
+        <select name="city" style="width: 200px;" >
+          {% for city in cities %}
+          <option value="{{city.id}}">{{city.name}}</option>
+          {% endfor %}
+      </select>
+        <div class="btn-block">
+          <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  href="/">Başlat</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

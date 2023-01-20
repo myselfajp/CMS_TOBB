@@ -15,7 +15,7 @@ class Status(models.Model):
 
 class Cities(models.Model):
     name = models.CharField(max_length=25,verbose_name = "Adı")
-    slug = models.SmallIntegerField(verbose_name = "Sitede yazılan İl kodu")
+    slug = models.SmallIntegerField(blank=True,verbose_name = "Sitede yazılan İl kodu")
     sub_sector_report = models.SmallIntegerField(verbose_name = "son rapor 1")
     sector_report = models.SmallIntegerField(verbose_name = "son rapor 2")
     def __str__(self):
@@ -54,7 +54,7 @@ class Companies(models.Model):
     note = models.TextField(null=True,blank=True,default='')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    reminder = models.DateTimeField(null=True, default=None)
+    reminder = models.DateTimeField(null=True, default=None)    
     def __str__(self):
         return f"{self.city}--{self.name}"
     class Meta:
@@ -64,11 +64,11 @@ class Companies(models.Model):
 
 
 class AccountReport(models.Model):
-    user = models.CharField(max_length=250)
-    number = models.IntegerField()
-    user_type = models.CharField(max_length=25)
-    report_date = models.DateField()
-
+    user = models.CharField(max_length=250,verbose_name="hesab ismi")
+    number = models.IntegerField(verbose_name="sayı")
+    user_type = models.CharField(max_length=25,verbose_name="hesab tipi")
+    report_date = models.DateField("son yenileme tarihi")
+    owner = models.ForeignKey(User,on_delete=models.CASCADE,null=True,verbose_name="Kullanıcı" )
     def __str__(self):
         return f"{self.user}{self.number}"
     class Meta:

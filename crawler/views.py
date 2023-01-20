@@ -256,28 +256,35 @@ def http_crawler_tobb(request,city_slug):
 @csrf_exempt
 def http_crawler_google(request):
     message = ""
+    cities=Cities.objects.all()
+
     if request.method == "POST":
         from serpapi import GoogleSearch
-
-        api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
-        api_key_name = api_key.user
-        api_key_limit = api_key.number
-
+        try:
+            api_key= AccountReport.objects.filter(user_type="api_key",owner=request.user,number__gte=10)[0]
+            api_key_name = api_key.user
+            api_key_limit = api_key.number
+        except:
+            message = "Data arama limiti dolmuştur."
+            return render(request,"google_map.html",{"message":message,"cities":cities})
+    
         city = Cities.objects.get(id=int(request.POST.get('city')))
         word = request.POST.get('sector')
         location = request.POST.get('location')
 
+        
+
+
         try:
-            check = GoogleSearchReport.objects.get(word=word,area=location)
+            GoogleSearchReport.objects.get(word=word,area=location)
             message = "aradigınız kriterlere ait zaten data var"
-            return render(request,"user/index.html",{"message":message})
+            return render(request,"google_map.html",{"message":message,"cities":cities})
         except:
             print("ok")
 
         params = {
         "engine": "google_maps",
         "q": f"{word} {location}",
-        "ll":"@41.0687783,29.0110649,13z",
         "type": "search",
         'hl': 'tr',
         "api_key": api_key_name,
@@ -287,6 +294,27 @@ def http_crawler_google(request):
 
         while True:
             if api_key_limit >9:
+                
+                try:
+                    params_locations={
+                        "engine": "google_maps",
+                        "q": f"{city.name} {location}",
+                        "type": "search",
+                        'hl': 'tr',
+                        "api_key": api_key_name,
+                        }
+                    search = GoogleSearch(params_locations)
+                    api_key_limit -= 1
+                    api_key.number = api_key_limit
+                    api_key.save()
+                    results = search.get_dict()["place_results"]["gps_coordinates"]
+                    la=results['latitude']
+                    lo=results['longitude']
+                    params["ll"]=f"@{la},{lo},12z"
+                except:
+                    message = "girdiğiniz İl veya Bölge hatalı"
+                    return render(request,"google_map.html",{"message":message,"cities":cities})
+
                 search = GoogleSearch(params)
                 results = search.get_dict()
                 api_key_limit -= 1
@@ -296,10 +324,10 @@ def http_crawler_google(request):
                 try:
                     local_results = results["local_results"]
                 except:
-                    print("oh")
+                    print("error 1")
                     break
                 
-                for x in local_results[1:]:
+                for x in local_results:
                     try:
                         company = Companies()
                         tel=x["phone"].replace("(","").replace(")","").split()
@@ -309,11 +337,12 @@ def http_crawler_google(request):
                         company.user = request.user
                         company.name = x["title"]
                         company.sector = ""
+                        company.full_name =""
                         company.short_name = x["title"][0:8]
                         company.phone = tel_number
                         company.phone_code = tel_code
                         try:
-                            company.site = x["website"]
+                            company.site = x["website"].replace("https://","").replace("http://","")
                         except:
                             company.site = "bulunmadı"
                         try:
@@ -338,10 +367,13 @@ def http_crawler_google(request):
                 params["start"]+=20
 
             else:
-                api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
-                api_key_name = api_key.user
-                api_key_limit = api_key.number
-
+                try:
+                    api_key= AccountReport.objects.filter(user_type="api_key",owner=request.user,number__gte=10)[0]
+                    api_key_name = api_key.user
+                    api_key_limit = api_key.number
+                except:
+                    message = "Data arama limiti dolmuştur."
+                    break
         g_s_r=GoogleSearchReport()
         g_s_r.city = city
         g_s_r.area = location
@@ -349,4 +381,4 @@ def http_crawler_google(request):
         g_s_r.save()
         message = "datalar başarılıyla yüklendi"
 
-    return render(request,"user/index.html",{"message":message})
+    return render(request,"google_map.html",{"message":message,"cities":cities})

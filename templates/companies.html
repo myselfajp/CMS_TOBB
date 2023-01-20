@@ -42,6 +42,12 @@
                         {% endfor %}
                     </select>
                     {% endif %}
+                    data tipi:
+                    <select name="data_type" >
+                        <option value="0">Tümü</option>
+                        <option value="1">Bahattin</option>
+                        <option value="2">Google</option>
+                    </select>
                     İller:
                     <select name="city_filter" >
                         <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
@@ -97,7 +103,7 @@
             </button>
             </div>
             {% endif %}
-            
+
             <br>
 
             <br><br>
@@ -210,7 +216,7 @@
                                         <th><a href="{% url 'reports:company' company_id=company.id %}">{{company.name}}</a>
                                         </th>
                                         <td><span data-text="({{company.phone|slice:'0:3'}}) {{company.phone|slice:'3:6'}} {{company.phone|slice:'6:8'}} {{company.phone|slice:'8:10'}}"></span></td>
-                                        <td ><a href="https://{{company.site}}" target="_blank" >{{company.site}}</a></td>
+                                        <td ><a href="//{{company.site}}" target="blank" > <span style="display: inline-block; width: 20em;">{{company.site|slice:'0:30'}}...</span></a></td>
                                         <td>{{company.sector}}</td>
 
                                         {% if not user.is_superuser %}
@@ -271,6 +277,10 @@
                         
                         <button type="submit" name="transfer" Value="true">Paylaş</button>
                         </form>
+                             
+                        <button onclick="window.open('{% url 'crawler:google_map_crawler' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
+                            <span>    Google data    </span>
+                        </button>
                         {% else %}
                         <button  id="btn" class="notification">
                             <span>    Data Ekle    </span>
