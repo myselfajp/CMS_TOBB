@@ -15,8 +15,6 @@
     <div class="testbox">
       <form method="post" action="{% url 'crawler:google_map_crawler' %}">
         {% csrf_token %}
-        <h1><span data-text="İsim soyisim ve mail adresini giriniz"></span> </h1>
-        <br>
         <h4>Sektör</h4>
         <input name="sector" value="" style="width: 200px;" required>
 

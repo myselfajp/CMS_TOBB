@@ -69,6 +69,7 @@ class AccountReport(models.Model):
     user_type = models.CharField(max_length=25,verbose_name="hesab tipi")
     report_date = models.DateField("son yenileme tarihi")
     owner = models.ForeignKey(User,on_delete=models.CASCADE,null=True,verbose_name="Kullanıcı" )
+    status = models.BooleanField(default=True)
     def __str__(self):
         return f"{self.owner}-{self.user}"
     class Meta:
