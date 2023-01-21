@@ -277,15 +277,15 @@
                         
                         <button type="submit" name="transfer" Value="true">Paylaş</button>
                         </form>
-                             
-                        <button onclick="window.open('{% url 'crawler:google_map_crawler' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
-                            <span>    Google data    </span>
-                        </button>
                         {% else %}
                         <button  id="btn" class="notification">
                             <span>    Data Ekle    </span>
                         </button>
                         {% endif %}
+                             
+                        <button onclick="window.open('{% url 'crawler:google_map_crawler' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
+                            <span>    Google data    </span>
+                        </button>
                         </table>
                     </div>
                 </div>
