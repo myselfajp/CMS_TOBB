@@ -70,7 +70,7 @@ class AccountReport(models.Model):
     report_date = models.DateField("son yenileme tarihi")
     owner = models.ForeignKey(User,on_delete=models.CASCADE,null=True,verbose_name="Kullanıcı" )
     def __str__(self):
-        return f"{self.user}{self.number}"
+        return f"{self.owner}-{self.user}"
     class Meta:
         verbose_name = "Hesap raporu"
         verbose_name_plural = "Hesap raporları"
