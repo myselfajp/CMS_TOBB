@@ -42,12 +42,24 @@
                         {% endfor %}
                     </select>
                     {% endif %}
+
                     data tipi:
-                    <select name="data_type" >
+                    <select name="data_type_filter" >
+                        {% if filters.data_type_filter.name == "Google" %}
+                        <option value="2">Google</option>
+                        <option value="1">Bahattin</option>
                         <option value="0">Tümü</option>
+                        {% elif  filters.data_type_filter.name == "Tümü" %}
+                        <option value="0">Tümü</option>
+                        <option value="2">Google</option>
+                        <option value="1">Bahattin</option>
+                        {% else %}
                         <option value="1">Bahattin</option>
                         <option value="2">Google</option>
+                        <option value="0">Tümü</option>
+                        {% endif %}
                     </select>
+
                     İller:
                     <select name="city_filter" >
                         <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
@@ -182,6 +194,7 @@
                                          <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
                                          <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                                          <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
+                                         <input type="hidden" name="data_type_filter" value="{{filters.data_type_filter.value}}">
                                          <button name="add_data" value="true" type="submit">  Ekle  </button>
                                         </td>
                                 </form>
@@ -244,6 +257,7 @@
                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
                                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
+                                        <input type="hidden" name="data_type_filter" value="{{filters.data_type_filter.value}}">
                                         <input type="hidden" name="search" value="{{filters.search}}">
                                         <td>
                                             <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button>

@@ -55,7 +55,9 @@ def http_companies(request):
         "tel_filter":{"name":"Tümü","value":"0"},
         "city_filter":{"name":"Tümü","value":"0"},
         "user_filter":{"name":"Tümü","value":"0"},
-        "search":"",}
+        "data_type_filter":{"name":"Tümü","value":"0"},
+        "search":"",
+        }
 
     count=500
     if request.method == 'POST':
@@ -138,12 +140,17 @@ def http_companies(request):
             filters["search"]=s
 
         if not filters["search"]:
-            if request.POST.get('data_type'):
-                dt=request.POST.get('data_type')
+            if request.POST.get('data_type_filter'):
+                dt=request.POST.get('data_type_filter')
                 if dt=="1":
                     companies = companies.filter(fount__name="TOBB")
+                    filters["data_type_filter"]["value"]="1"
+                    filters["data_type_filter"]["name"]="Bahattin"
                 elif dt=="2":
                     companies = companies.filter(fount__name="GoogleMaps")
+                    filters["data_type_filter"]["value"]="2"
+                    filters["data_type_filter"]["name"]="Google"
+
 
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
