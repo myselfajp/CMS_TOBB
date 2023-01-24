@@ -107,16 +107,18 @@
                         <option value="{{filters.sector_filter}}">{{filters.sector_filter}}</option>
                         {% for sector in sectors %}
                         {% if sector == filters.sector_filter %}
-                        <option value="0">Tümü</option>
+                        <option value="Tümü">Tümü</option>
                         {% else %}
                         <option value="{{sector}}">{{sector}}</option>
                         {% endif %}
                         {% endfor %}
                     </select>
-                    <br>
-                    <br>
+                    {% else %}
+                    <span>Seçtiğiniz sektör ve filtrelere göre data bulunamadı</span>
                     <br>
                     {% endif %}
+                    <br>
+                    <br>
                     Telefona göre arama :
                     <input name="search" value="{{filters.search}}">
                     <br>

@@ -118,7 +118,7 @@ def http_companies(request):
             if request.POST.get('count'):
                 count=int(request.POST.get('count'))
 
-        
+
         if request.POST.get('transfer'):
             user_to=users.get(id=request.POST.get('transfer_to'))
             companies_to=[]
@@ -171,6 +171,7 @@ def http_companies(request):
                         filters["tel_filter"]["name"]="Sabit"
 
             if request.POST.get('sector_filter'):
+                print(request.POST.get('sector_filter'))
                 if request.POST.get('sector_filter') != "Tümü":
                     companies = companies.filter(sector = request.POST.get('sector_filter'))
                     filters["sector_filter"] = request.POST.get('sector_filter')
