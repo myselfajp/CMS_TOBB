@@ -49,6 +49,8 @@ def http_companies(request):
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     if request.method == 'GET':
         companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
         remine_companies = companies.filter(reminder__lte=now)
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
@@ -56,12 +58,15 @@ def http_companies(request):
         "city_filter":{"name":"Tümü","value":"0"},
         "user_filter":{"name":"Tümü","value":"0"},
         "data_type_filter":{"name":"Tümü","value":"0"},
+        "sector_filter":"Tümü",
         "search":"",
         }
 
     count=500
     if request.method == 'POST':
-
+        companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
         if request.POST.get('company_id'):
             try:
                 company = Companies.objects.get(id=request.POST.get('company_id'))
@@ -74,13 +79,11 @@ def http_companies(request):
                 company.save()
             except:
                 pass
-            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
             
 
         #----------------------------------------------------------add new company-----------------------------------
         if request.POST.get('add_data'):
             company=Companies()
-
             company.user = request.user
             company.name = request.POST.get('company_name')
             company.short_name = request.POST.get('company_name')[0:11]
@@ -99,8 +102,6 @@ def http_companies(request):
             company.last_status = Status.objects.get(id=int(request.POST.get('company_status')))
             company.save()
 
-            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
-
         #----------------------------------------------------------add new company-----------------------------------
 
         
@@ -116,8 +117,7 @@ def http_companies(request):
                 companies = Companies.objects.all().order_by("name")
             if request.POST.get('count'):
                 count=int(request.POST.get('count'))
-        else:
-            companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+
         
         if request.POST.get('transfer'):
             user_to=users.get(id=request.POST.get('transfer_to'))
@@ -170,16 +170,36 @@ def http_companies(request):
                         filters["tel_filter"]["value"]="office"
                         filters["tel_filter"]["name"]="Sabit"
 
+            if request.POST.get('sector_filter'):
+                if request.POST.get('sector_filter') != "Tümü":
+                    companies = companies.filter(sector = request.POST.get('sector_filter'))
+                    filters["sector_filter"] = request.POST.get('sector_filter')
+
+            
             if request.POST.get('city_filter'):
                 if request.POST.get('city_filter') != "0":
                     companies = companies.filter(city__id = request.POST.get('city_filter'))
                     x=cities.get(id=request.POST.get('city_filter'))
                     filters["city_filter"]["name"]=x.name
                     filters["city_filter"]["value"]=x.id
-            
+
+
+
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
+
         #----------------------------------------------------------filters--------------------------------------------
 
-    return render(request,"companies.html",{'companies': companies[:count],'users':users,'statuses':statuses,"cities":cities,"remine_companies":remine_companies,"filters":filters})
+    context={
+        'companies': companies[:count],
+        'users':users,
+        'statuses':statuses,
+        "cities":cities,
+        "remine_companies":remine_companies,
+        "filters":filters,
+        "sectors":sectors
+        }
+    return render(request,"companies.html",context=context)
 
 
 @login_required

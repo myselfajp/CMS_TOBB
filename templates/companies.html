@@ -30,6 +30,9 @@
                     {% if user.is_superuser %}
                     Sayı:
                     <input name="count" value="" style="height: 22px;width: 50px;"> 
+                    <br>
+                    <br>
+                    <br>
                     Kullanıcı :
                     <select name="user_filter" >
                         {% if not filters.user_filter.name == "Tümü" %}
@@ -96,8 +99,28 @@
                         <option value="office">Sabit</option>
                         {% endif %}
                     </select>
+                    <br>
+                    <br>
+                    {% if sectors %}
+                    Sektörler:
+                    <select name="sector_filter" >
+                        <option value="{{filters.sector_filter}}">{{filters.sector_filter}}</option>
+                        {% for sector in sectors %}
+                        {% if sector == filters.sector_filter %}
+                        <option value="0">Tümü</option>
+                        {% else %}
+                        <option value="{{sector}}">{{sector}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+                    <br>
+                    {% endif %}
                     Telefona göre arama :
                     <input name="search" value="{{filters.search}}">
+                    <br>
+                    <br>
                     <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
                 </form>
             </div>
@@ -195,6 +218,7 @@
                                          <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                                          <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                                          <input type="hidden" name="data_type_filter" value="{{filters.data_type_filter.value}}">
+                                         <input type="hidden" name="sector_filter" value="{{filters.sector_filter}}">
                                          <button name="add_data" value="true" type="submit">  Ekle  </button>
                                         </td>
                                 </form>
@@ -258,6 +282,7 @@
                                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
                                         <input type="hidden" name="data_type_filter" value="{{filters.data_type_filter.value}}">
+                                        <input type="hidden" name="sector_filter" value="{{filters.sector_filter}}">
                                         <input type="hidden" name="search" value="{{filters.search}}">
                                         <td>
                                             <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button>

@@ -80,8 +80,6 @@ def create_account_tobb():
         return False
 
 
-
-
 def http_crawler_tobb(request,city_slug):
 
     #-------------get last sector saved by this city slug
@@ -276,9 +274,6 @@ def http_crawler_google(request):
         word = request.POST.get('sector')
         location = request.POST.get('location')
 
-        
-
-
         try:
             GoogleSearchReport.objects.get(word=word,area=location)
             message = "aradigınız kriterlere ait zaten data var"
@@ -298,7 +293,7 @@ def http_crawler_google(request):
 
         while True:
             if api_key_limit >9:
-                
+
                 try:
                     params_locations={
                         "engine": "google_maps",
@@ -340,7 +335,7 @@ def http_crawler_google(request):
                         print(x)
                         company.user = request.user
                         company.name = x["title"]
-                        company.sector = ""
+                        company.sector = f"{city.name}-{location}-{word}"
                         company.full_name =""
                         company.short_name = x["title"][0:8]
                         company.phone = tel_number
