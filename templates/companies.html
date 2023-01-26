@@ -287,7 +287,7 @@
                                         <input type="hidden" name="sector_filter" value="{{filters.sector_filter}}">
                                         <input type="hidden" name="search" value="{{filters.search}}">
                                         <td>
-                                            <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" type="submit">güncelle</button>
+                                            <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()" >güncelle</button>
                                             {% if company.reminder == None %}
                                             <button onclick="window.open('{% url 'reports:reminder' company_id=company.id %}','newwindow','width=600,height=400'); return false;" > Hatırlat </button>
                                             {%endif%}

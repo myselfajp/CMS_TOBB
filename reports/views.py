@@ -67,6 +67,7 @@ def http_companies(request):
         companies = Companies.objects.filter(user=request.user).order_by("-last_status")
         sectors = [x.sector for x in companies if x.sector]
         sectors = list(dict.fromkeys(sectors))
+
         if request.POST.get('company_id'):
             try:
                 company = Companies.objects.get(id=request.POST.get('company_id'))
@@ -77,6 +78,10 @@ def http_companies(request):
                 company.status.add(new_status)
                 company.last_status = new_status
                 company.save()
+                
+                companies = Companies.objects.filter(user=request.user).order_by("-last_status")
+                sectors = [x.sector for x in companies if x.sector]
+                sectors = list(dict.fromkeys(sectors))
             except:
                 pass
             
