@@ -1,0 +1,7 @@
+input{border:0px solid #000; margin:0; background:transparent; width:100%}
+table tr td{border-right:1px solid #000; border-bottom:1px solid #000;}
+table{background: #fff none repeat scroll 0 0;
+border-left: 1px solid #000;
+border-top: 1px solid #000;}
+table tr:nth-child(even){background:#ccc;}
+table tr:nth-child(odd){background:#eee;}

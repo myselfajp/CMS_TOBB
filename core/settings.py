@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crawler.apps.CrawlerConfig',
     'users.apps.UsersConfig',
     'reports.apps.ReportsConfig',
+    'kurgu.apps.KurguConfig',
 ]
 
 MIDDLEWARE = [

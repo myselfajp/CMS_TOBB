@@ -103,6 +103,8 @@ class Agreement(models.Model):
     record_place = models.CharField(max_length=255,verbose_name = "Çekim yeri",null=True)
     whatsapp = models.IntegerField(null=True)
     mail = models.CharField(max_length=255,null=True)
+    price = models.CharField(max_length=255,verbose_name = "Sözleşme bedeli",default="2250")
+    Contract_minute = models.CharField(max_length=2,null=True)
     updated_date = models.DateTimeField(auto_now=True)
     created_date = models.DateTimeField(auto_now_add=True,verbose_name = "Sözleşme tarihi")
     record_date = models.DateTimeField(null=True,verbose_name = "Çekim tarihi")
