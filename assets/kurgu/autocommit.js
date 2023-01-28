@@ -1,26 +1,28 @@
-var timeout = null;
-var minlength = 0;
+$("input").change(function(){
+  keyupfunction($(this).attr('name'),$(this).attr('id'), $(this).val())
+});
 
+function keyupfunction(name, id, value) {
+  var timeout = null;
+  var minlength = 0;
 
-$("#image_query").keyup(function() {
   // clear last timeout check
   clearTimeout(timeout);
 
-  var value = $(this).val();
-  var txtbox = $("#image_query").attr("name");
-  console.log(txtbox)
-  if (value.length >= minlength) {
-    //
-    // run ajax call 1 second after user has stopped typing
-    //
+  if (value.length > minlength) {
+    console.log(name, id, value)
+
     timeout = setTimeout(function() {
       $.ajax({
-        type: "GET",
-        url: "https://www.google.com/search",
+        type: "POST",
+        url: "/kurgu/kj_kurgu",
         data: {
-          [txtbox] : value
+          [name] : value,
+          id : id
         },
         dataType: "text",
       });
-    }, 1000);
-  }});
+    }, 500); 
+}
+
+}

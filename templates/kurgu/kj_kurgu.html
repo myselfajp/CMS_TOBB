@@ -1,59 +1,34 @@
+{% load static %}
 <html>
 <head>
     <title>Firma bilgileri</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="{% static 'kurgu/autocommit.js'  %}"></script>
     <link rel="stylesheet" href="{% static 'kurgu/table.css'  %}">
 </head>
 <body>
 
-  <table cellpadding="0"; cellspacing="0">
-    <thead>
-      <tr>
-          <th>Unvan</th>
-          <th>Telefon</th>
-          <th>Sektör</th>
-          <th>Durum</th>
-          <th>İsim Soyisim</th>
-          <th>Not</th>
-          <th></th>
-      </tr>
-  </thead>
-    <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td width="60"><input type="text" /></td>
-    <td width="60"><input type="text" /></td>
-    </tr>
-    <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-    </tr>
-    <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-    </tr>
-    <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-    </tr>
-</table>
+    <table cellpadding="0"; cellspacing="0">
+        <thead>
+          <tr>
+              <th>Unvan</th>
+              <th>Telefon</th>
+              <th>Sektör</th>
+              <th>Durum</th>
+              <th>İsim Soyisim</th>
+              <th>Not</th>
+          </tr>
+        </thead>
+        {% for kj in kj_list %}
+        <tr>
+            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
+            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
+            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="instagram" value="{{kj.instagram}}" /></td>
+            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="website" value="{{kj.website}}" /></td>
+        </tr>
+        {% endfor %}
+    </table>
 
 
-  <form method="get" action="">
-    <input type="text" name="hamid" id="image_query" placeholder="Search Here For Images">
-    <span id="span_result"></span>
-  </body>
-
+<script src="{% static 'kurgu/autocommit.js'  %}"></script>
 
 </html>

@@ -3,7 +3,7 @@ from crawler.models import Agreement
 
 # Create your models here.
 class KJ(models.Model):
-    company = models.ForeignKey(Agreement)
+    company = models.ForeignKey(Agreement,on_delete=models.CASCADE)
     # Muhasebe
     client = models.CharField(default='', blank=True,max_length=250,verbose_name="Röportaj veren adı soyadı")
     title = models.CharField(default='', blank=True,max_length=250,verbose_name="Ekranda gözükecek unvan")
