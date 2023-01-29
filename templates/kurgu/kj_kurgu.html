@@ -10,20 +10,72 @@
     <table cellpadding="0"; cellspacing="0">
         <thead>
           <tr>
+              <th>Katilimci</th>
               <th>Unvan</th>
-              <th>Telefon</th>
-              <th>Sektör</th>
-              <th>Durum</th>
-              <th>İsim Soyisim</th>
-              <th>Not</th>
+              <th>instagram</th>
+              <th>Web Adresi</th>
+              <th>telefon</th>
+              <th>sponsorluk</th>
+              <th>altbant</th>
+              <th>dakika</th>
+              <th>test</th>
+
           </tr>
         </thead>
         {% for kj in kj_list %}
         <tr>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="instagram" value="{{kj.instagram}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="website" value="{{kj.website}}" /></td>
+            <td><span style="text-align: center;width: 150px;">{{kj.client}}</span></td>
+            
+            {% if kj.is_played %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_played" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_played" ></td>
+            {% endif %}
+
+            {% if kj.videos %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="videos" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="videos" ></td>
+            {% endif %}
+
+            {% if kj.kj_detials %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="kj_detials" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="kj_detials" ></td>
+            {% endif %}
+
+            {% if kj.banner %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="banner" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="banner" ></td>
+            {% endif %}
+
+            {% if kj.presentation %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="presentation" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="presentation" ></td>
+            {% endif %}
+
+            {% if kj.subtitle %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="subtitle" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="subtitle" ></td>
+            {% endif %}
+
+            {% if kj.youtube %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="youtube" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="youtube" ></td>
+            {% endif %}
+
+            {% if kj.is_sent %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_sent" checked></td>
+            {% else %}
+            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_sent" ></td>
+            {% endif %}
+            
+            
+            
         </tr>
         {% endfor %}
     </table>
