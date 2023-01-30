@@ -10,21 +10,23 @@
     <table cellpadding="0"; cellspacing="0">
         <thead>
           <tr>
-              <th>Katilimci</th>
-              <th>Unvan</th>
-              <th>instagram</th>
-              <th>Web Adresi</th>
-              <th>telefon</th>
-              <th>sponsorluk</th>
-              <th>altbant</th>
-              <th>dakika</th>
-              <th>sozlesme ucreti</th>
-              <th>odenmis fiyat</th>
-              <th>not</th>
+            <th>Firma unvanı</th>
+            <th>Röportaj veren</th>
+            <th>Ekranda yer alan unvan</th>
+            <th>instagram</th>
+            <th>Web adresi</th>
+            <th>Tel no</th>
+            <th>Sponsorluk</th>
+            <th>Altbant</th>
+            <th>Yayın dakikasi</th>
+            <th>Sözleşme ücreti</th>
+            <th>Alınan ücret</th>
+            <th>Not</th>
           </tr>
         </thead>
         {% for kj in kj_list %}
         <tr>
+            <td><span style="text-align: center;">{{kj.company.company_name.name}}</span></td>
             <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
             <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
             <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="instagram" value="{{kj.instagram}}" /></td>

@@ -16,13 +16,15 @@
   {% if message %}
     <script>alert('{{message}}');</script>
   {% endif %}
-  <form method="post" action="" style="width: 900px;">
-    {% csrf_token %}
+  <form method="post" action="{% url 'reports:agreement_admin' agreement_id=agreement.id %}" style="width: 900px;">
     <h4>Durum : <span>*</span></h4>
     <div class="title-block">      
       <select name="agreement_status" style="width: 210px;">
+        <option value="{{agreement.status.id}}">{{agreement.status}}</option>
         {% for status in agreement_status %}
+        {% if not status == agreement.status %}
         <option value="{{status.id}}">{{status.name}}</option>
+        {% endif %}
         {% endfor %}
       </select>
     </div>

@@ -10,75 +10,82 @@
     <table cellpadding="0"; cellspacing="0">
         <thead>
           <tr>
-              <th>Katilimci</th>
-              <th>Unvan</th>
-              <th>instagram</th>
-              <th>Web Adresi</th>
-              <th>telefon</th>
-              <th>sponsorluk</th>
-              <th>altbant</th>
-              <th>dakika</th>
-              <th>test</th>
-
+            <th>   Firma Unvanı     </th>
+            <th>   Röportaj veren   </th>
+            <th>   Yayınlanma   </th>
+            <th>   Görseller   </th>
+            <th>   Kj Bilgileri   </th>
+            <th>   Afiş   </th>
+            <th>   Altyazı   </th>
+            <th>   Firma gönderim   </th>
+            <th>   Youtube  </th>
+            <th>Montaj</th>
+            <th>Yayın tarihi</th>
+            <th>   Sunum   </th>
           </tr>
         </thead>
         {% for kj in kj_list %}
         <tr>
-            <td><span style="text-align: center;width: 150px;">{{kj.client}}</span></td>
+            <td><span style="text-align: center;">  {{kj.company.company_name.name}}  </span></td>
+
+            <td><span style="text-align: center;">     {{kj.client}}</span></td>
             
             {% if kj.is_played %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_played" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="is_played" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_played" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="is_played" ></td>
             {% endif %}
 
             {% if kj.videos %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="videos" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="videos" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="videos" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="videos" ></td>
             {% endif %}
 
             {% if kj.kj_detials %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="kj_detials" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="kj_detials" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="kj_detials" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="kj_detials" ></td>
             {% endif %}
 
             {% if kj.banner %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="banner" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="banner" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="banner" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="banner" ></td>
             {% endif %}
 
-            {% if kj.presentation %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="presentation" checked></td>
-            {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="presentation" ></td>
-            {% endif %}
-
+            
             {% if kj.subtitle %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="subtitle" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="subtitle" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="subtitle" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="subtitle" ></td>
             {% endif %}
-
-            {% if kj.youtube %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="youtube" checked></td>
-            {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="youtube" ></td>
-            {% endif %}
-
+            
             {% if kj.is_sent %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_sent" checked></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="is_sent" checked></td>
             {% else %}
-            <td><input style="text-align: center;width: 150px;" type="checkbox"  id="{{kj.id}}" name="is_sent" ></td>
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="is_sent" ></td>
             {% endif %}
             
+            {% if kj.montaj %}
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="montaj" checked></td>
+            {% else %}
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="montaj" ></td>
+            {% endif %}
             
+            {% if kj.youtube %}
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="youtube" checked></td>
+            {% else %}
+            <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="youtube" ></td>
+            {% endif %}
+
+            <td><input style="text-align: center;" type="text" name="play_date" id="{{kj.id}}" placeholder="gün/ay/yıl" value="{{kj.play_date}}"  ></td>
             
-        </tr>
-        {% endfor %}
-    </table>
+            <td><textarea style="text-align: center;" type="text"  id="{{kj.id}}" name="presentation" >{{ kj.presentation }}</textarea></td>
+            
+          </tr>
+          {% endfor %}
+        </table>
 
 
 <script src="{% static 'kurgu/autocommit.js'  %}"></script>

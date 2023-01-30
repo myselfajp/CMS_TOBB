@@ -10,65 +10,71 @@ def http_kj_kurgu(request):
     kj_list=KJ.objects.all()
 
     if request.method == "POST":
-
-        if request.POST.get("client"):
+        message={"Status":"200"}
+        if "client" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.client=request.POST.get("client")
             object.save()
 
-        elif request.POST.get("title"):
+        elif "title" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.title=request.POST.get("title")
             object.save()
 
-        elif request.POST.get("instagram"):
+        elif "instagram" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.instagram=request.POST.get("instagram")
             object.save()
-        
-        elif request.POST.get("website"):
+
+        elif "website" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.website=request.POST.get("website")
             object.save()
 
-        elif request.POST.get("tel"):
+        elif "tel" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.tel=request.POST.get("tel")
             object.save()
 
-        elif request.POST.get("sponser"):
+        elif "sponser" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.sponser=request.POST.get("sponser")
             object.save()
 
-        elif request.POST.get("ad_banner"):
+        elif "ad_banner" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.ad_banner=request.POST.get("ad_banner")
             object.save()
 
-        elif request.POST.get("play_time_as_minuate"):
+        elif "play_time_as_minuate" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.play_time_as_minuate=request.POST.get("play_time_as_minuate")
             object.save()
 
-        elif request.POST.get("agreement_price"):
+        elif "agreement_price" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.agreement_price=request.POST.get("agreement_price")
             object.save()
 
-        elif request.POST.get("Paid_price"):
+        elif "Paid_price" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.Paid_price=request.POST.get("Paid_price")
             object.save()
 
-        elif request.POST.get("note"):
+        elif "note" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.note=request.POST.get("note")
             object.save()
 
+        elif "presentation" in request.POST:
+            object = KJ.objects.get(id=request.POST.get("id"))
+            object.presentation=request.POST.get("presentation")
+            object.save()
 
 
-        elif request.POST.get("is_played"):
+
+
+        elif "is_played" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("is_played")=="true":
                 object.is_played=True
@@ -76,7 +82,7 @@ def http_kj_kurgu(request):
                 object.is_played=False
             object.save()
 
-        elif request.POST.get("videos"):
+        elif "videos" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("videos")=="true":
                 object.videos=True
@@ -84,7 +90,7 @@ def http_kj_kurgu(request):
                 object.videos=False
             object.save()
 
-        elif request.POST.get("kj_detials"):
+        elif "kj_detials" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("kj_detials")=="true":
                 object.kj_detials=True
@@ -92,7 +98,7 @@ def http_kj_kurgu(request):
                 object.kj_detials=False
             object.save()
 
-        elif request.POST.get("banner"):
+        elif "banner" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("banner")=="true":
                 object.banner=True
@@ -100,15 +106,7 @@ def http_kj_kurgu(request):
                 object.banner=False
             object.save()
 
-        elif request.POST.get("presentation"):
-            object = KJ.objects.get(id=request.POST.get("id"))
-            if request.POST.get("presentation")=="true":
-                object.presentation=True
-            else:
-                object.presentation=False
-            object.save()
-
-        elif request.POST.get("subtitle"):
+        elif "subtitle" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("subtitle")=="true":
                 object.subtitle=True
@@ -116,7 +114,7 @@ def http_kj_kurgu(request):
                 object.subtitle=False
             object.save()
 
-        elif request.POST.get("youtube"):
+        elif "youtube" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("youtube")=="true":
                 object.youtube=True
@@ -124,7 +122,7 @@ def http_kj_kurgu(request):
                 object.youtube=False
             object.save()
 
-        elif request.POST.get("is_sent"):
+        elif "is_sent" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             if request.POST.get("is_sent")=="true":
                 object.is_sent=True
@@ -132,13 +130,20 @@ def http_kj_kurgu(request):
                 object.is_sent=False
             object.save()
 
-        elif request.POST.get("play_date"):
+        elif "montaj" in request.POST:
+            object = KJ.objects.get(id=request.POST.get("id"))
+            if request.POST.get("montaj")=="true":
+                object.montaj=True
+            else:
+                object.montaj=False
+            object.save()
+
+        elif "play_date" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
             object.play_date=request.POST.get("play_date")
             object.save()
 
-
-        return HttpResponse(json.dumps({"status":"ok"}), content_type="application/json")
+        return HttpResponse(json.dumps(message), content_type="application/json")
     return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list})
 
 

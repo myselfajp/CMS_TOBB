@@ -5,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from PIL import Image,ImageDraw,ImageFont
 from django.shortcuts import render,redirect
+from kurgu.models import KJ
 import datetime
 import os
 
@@ -250,13 +251,13 @@ def http_send_mail(request):
 
     return render(request,"send_mail.html",{"message":message})
 
+
 @login_required
 def http_send_agreement(request,company_id):
     message=''
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") 
     company = Companies.objects.get(id=company_id)
     agreement = Agreement()
-
     if request.method == "POST":
             agreement.user=request.user
             agreement.company_name=company
@@ -277,6 +278,7 @@ def http_send_agreement(request,company_id):
             try:
                 agreement.save()
                 message="kayd edildi"
+
             except Exception as e:
                 print(e)
                 message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
@@ -304,6 +306,7 @@ def http_report_agreement(request):
         
     return render(request,"user/agreement_report.html",{"agreements":agreements,"filters":filters,"statuses":statuses})
 
+@csrf_exempt
 @login_required
 def http_report_agreement_admin(request,agreement_id):
     agreement_status = AgreementStatus.objects.all()
@@ -315,16 +318,24 @@ def http_report_agreement_admin(request,agreement_id):
         if request.POST.get("person_name"):
             agreement.person_name=request.POST.get("person_name")
         else:
-            agreement.person_name = None    
+            agreement.person_name = ""    
 
         if request.POST.get("person_number"):
             agreement.person_number = request.POST.get("person_number")
         else:
-            agreement.person_number = None    
+            agreement.person_number = ""
 
         if request.POST.get("agreement_status"):
-            agreement.status = AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
-            
+            status =AgreementStatus.objects.get(id=request.POST.get("agreement_status"))
+            agreement.status = status
+            if "Onaylandı" in status.name:
+                try:
+                    xx=KJ.objects.get(company=agreement)
+                except:
+                    kj = KJ()
+                    kj.company=agreement
+                    kj.save()
+
         if request.POST.get("record_place"):
             agreement.record_place = request.POST.get("record_place")
         else:
@@ -333,12 +344,12 @@ def http_report_agreement_admin(request,agreement_id):
         if request.POST.get("whatsapp"):
             agreement.whatsapp = request.POST.get("whatsapp")
         else:
-            agreement.whatsapp = None
+            agreement.whatsapp = ""
 
         if request.POST.get("mail"):
             agreement.mail = request.POST.get("mail")
         else:
-            agreement.mail = None
+            agreement.mail = ""
 
         if request.POST.get("created_date"):
             agreement.created_date = request.POST.get("created_date")
@@ -360,7 +371,7 @@ def http_report_agreement_admin(request,agreement_id):
         except Exception as e:
             print(e)
             message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
-        return redirect("reports:agreement_admin",agreement_id=agreement_id)
+        # return redirect("reports:agreement_admin",agreement_id=agreement_id)
     return render(request,"user/agreement_admin.html",{"agreement":agreement,"agreement_status":agreement_status,"message":message})
 
 
