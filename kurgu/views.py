@@ -7,7 +7,7 @@ import json
 # Create your views here.
 @csrf_exempt
 def http_kj_kurgu(request):
-    kj_list=KJ.objects.all()
+    kj_list=KJ.objects.all().order_by("play_date")
 
     if request.method == "POST":
         message={"Status":"200"}
