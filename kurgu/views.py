@@ -1,14 +1,14 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import KJ
+from .models import KJ,KJStatus,KJStatusAccounting
 import json
 
 # Create your views here.
 @csrf_exempt
 def http_kj_kurgu(request):
     kj_list=KJ.objects.all().order_by("play_date")
-
+    statuses=KJStatus.objects.all()
     if request.method == "POST":
         message={"Status":"200"}
         if "client" in request.POST:
@@ -143,10 +143,25 @@ def http_kj_kurgu(request):
             object.play_date=request.POST.get("play_date")
             object.save()
 
+        elif "status" in request.POST:
+            status=KJStatus.objects.get(id=request.POST.get("status"))
+            object = KJ.objects.get(id=request.POST.get("id"))
+            object.status=status
+            object.save()
+
+
+        elif "status_accounting" in request.POST:
+            status=KJStatusAccounting.objects.get(id=request.POST.get("status_accounting"))
+            object = KJ.objects.get(id=request.POST.get("id"))
+            object.status_accounting=status
+            object.save()
+
         return HttpResponse(json.dumps(message), content_type="application/json")
-    return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list})
+    return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses})
 
 
 def http_kj_muhasebe(request):
     kj_list=KJ.objects.all()
-    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list})
+    status_accounting = KJStatusAccounting.objects.all()
+
+    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting})

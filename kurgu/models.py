@@ -2,8 +2,27 @@ from django.db import models
 from crawler.models import Agreement
 
 # Create your models here.
+class KJStatus(models.Model):
+    name = models.CharField(max_length=25,verbose_name = "Adı")
+    color = models.CharField(max_length=25,verbose_name = "Rengi(İngilizce reng)")
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "KJ kurgu Durumu"
+        verbose_name_plural = "KJ kurgu Durumları"
+
+class KJStatusAccounting(models.Model):
+    name = models.CharField(max_length=25,verbose_name = "Adı")
+    color = models.CharField(max_length=25,verbose_name = "Rengi(İngilizce reng)")
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "KJ muhasebe Durumu"
+        verbose_name_plural = "KJ muhasebe Durumları"
+
 class KJ(models.Model):
     company = models.ForeignKey(Agreement,on_delete=models.CASCADE)
+
     # Muhasebe
     client = models.CharField(default='', blank=True,max_length=250,verbose_name="Röportaj veren adı soyadı")
     title = models.CharField(default='', blank=True,max_length=250,verbose_name="Ekranda gözükecek unvan")
@@ -27,10 +46,12 @@ class KJ(models.Model):
     youtube = models.BooleanField(default=False,verbose_name="Youtube")
     is_sent = models.BooleanField(default=False,verbose_name="Firmaya gönderim")
     montaj = models.BooleanField(default=False,verbose_name="Montaj")
+    status = models.ForeignKey(KJStatus,null=True,on_delete=models.CASCADE)
+    status_accounting = models.ForeignKey(KJStatusAccounting,null=True,on_delete=models.CASCADE)
     play_date = models.CharField(default='',max_length=250,verbose_name="Yayın tarihi")
 
     def __str__(self):
-        return f"{self.client}-{self.title}"
+        return self.company.company_name.name
     class Meta:
         verbose_name = "Kj listesi"
         verbose_name_plural = "Kj listeleri"

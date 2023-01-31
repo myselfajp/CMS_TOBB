@@ -11,7 +11,7 @@
         <thead>
           <tr>
             <th>   Firma Unvanı     </th>
-            <th>   Röportaj veren   </th>
+            <th>   Röportaj veren kişi   </th>
             <th>   Yayınlanma   </th>
             <th>   Görseller   </th>
             <th>   Kj Bilgileri   </th>
@@ -21,6 +21,7 @@
             <th>   Youtube  </th>
             <th>Montaj</th>
             <th>Yayın tarihi</th>
+            <th>Durum</th>
             <th>   Sunum   </th>
           </tr>
         </thead>
@@ -28,7 +29,7 @@
         <tr>
             <td><span style="text-align: center;">  {{kj.company.company_name.name}}  </span></td>
 
-            <td><span style="text-align: center;">     {{kj.client}}</span></td>
+            <td><input style="text-align: center;" type="text" id="{{kj.id}}" value="{{kj.client}}" name="client" ></td>
             
             {% if kj.is_played %}
             <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="is_played" checked></td>
@@ -72,15 +73,27 @@
             {% else %}
             <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="montaj" ></td>
             {% endif %}
-            
+
             {% if kj.youtube %}
             <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="youtube" checked></td>
             {% else %}
             <td><input style="text-align: center;" type="checkbox"  id="{{kj.id}}" name="youtube" ></td>
             {% endif %}
 
+
             <td><input style="text-align: center;" type="text" name="play_date" id="{{kj.id}}" placeholder="gün/ay/yıl" value="{{kj.play_date}}"  ></td>
             
+            <td>
+            <select id="{{kj.id}}" name="status" >
+              <option value="{{kj.status.id}}">{{kj.status}}</option>
+              {% for x in statuses %}
+              {% if not x == kj.status %}
+              <option value="{{x.id}}">{{x.name}}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+            </td>
+
             <td><textarea style="text-align: center;" type="text"  id="{{kj.id}}" name="presentation" >{{ kj.presentation }}</textarea></td>
             
           </tr>
@@ -91,3 +104,4 @@
 <script src="{% static 'kurgu/autocommit.js'  %}"></script>
 
 </html>
+
