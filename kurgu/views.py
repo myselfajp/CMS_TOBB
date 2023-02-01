@@ -7,8 +7,9 @@ import json
 # Create your views here.
 @csrf_exempt
 def http_kj_kurgu(request):
-    kj_list=KJ.objects.all().order_by("play_date")
+    kj_list=KJ.objects.all().order_by("-play_date")
     statuses=KJStatus.objects.all()
+
     if request.method == "POST":
         message={"Status":"200"}
         if "client" in request.POST:
@@ -140,7 +141,28 @@ def http_kj_kurgu(request):
 
         elif "play_date" in request.POST:
             object = KJ.objects.get(id=request.POST.get("id"))
-            object.play_date=request.POST.get("play_date")
+            date=request.POST.get("play_date").split("/")
+            date="%s-%s-%s"%(date[2],date[1],date[0])
+            object.play_date=date
+            object.save()
+
+        elif "record_date" in request.POST:
+            object = KJ.objects.get(id=request.POST.get("id"))
+
+            datetime=request.POST.get("record_date").split("-")
+
+            date=datetime[0].split("/")
+            date="%s-%s-%s"%(date[2],date[1],date[0])
+
+            time=datetime[1]+":00"
+
+
+            datetime=date+"-"+time
+
+            agreement=object.company
+            agreement.record_date=datetime
+
+            agreement.save()
             object.save()
 
         elif "status" in request.POST:
@@ -161,7 +183,7 @@ def http_kj_kurgu(request):
 
 
 def http_kj_muhasebe(request):
-    kj_list=KJ.objects.all()
+    kj_list=KJ.objects.all().order_by("-company__record_date")
     status_accounting = KJStatusAccounting.objects.all()
 
     return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting})

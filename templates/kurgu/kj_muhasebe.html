@@ -7,9 +7,11 @@
 </head>
 <body>
 
-    <table cellpadding="0"; cellspacing="0">
-        <thead>
-          <tr>
+  <table cellpadding="0"; cellspacing="0">
+    <thead>
+      <tr>
+            <th>Çekim tarihi(gün/ay/yıl-saat:dakika)</th>
+            <th>Yayın tarihi(gün/ay/yıl)</th>
             <th>Firma unvanı</th>
             <th>Ekranda yer alan firma unvanı</th>
             <th>Röportaj veren kişi</th>
@@ -19,27 +21,25 @@
             <th>Sponsorluk</th>
             <th>Altbant</th>
             <th>Yayın dakikasi</th>
-            <th>Sözleşme ücreti</th>
-            <th>Alınan ücret</th>
             <th>Ödeme durumu</th>
             <th>Not</th>
           </tr>
         </thead>
         {% for kj in kj_list %}
         <tr>
+            <td><input style="text-align: center;" type="text" name="record_date" id="datetimefield" placeholder="gün/ay/yıl-saat:dakika" class="{{kj.id}}" maxlength="16" value="{{kj.company.record_date|date:'d/m/Y'}}-{{kj.company.record_date|date:'H:i'}}"  ></td>
+            <td><input style="text-align: center;" type="text" name="play_date" id="datefield" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.play_date|date:'d/m/Y'}}"  ></td>
             <td><span style="text-align: center;">{{kj.company.company_name.name}}</span></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="instagram" value="{{kj.instagram}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="website" value="{{kj.website}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="tel" value="{{kj.tel}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="sponser" value="{{kj.sponser}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="ad_banner" value="{{kj.ad_banner}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="play_time_as_minuate" value="{{kj.play_time_as_minuate}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="agreement_price" value="{{kj.agreement_price}}" /></td>
-            <td><input style="text-align: center;" type="text" id="{{kj.id}}" name="Paid_price" value="{{kj.Paid_price}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="instagram" value="{{kj.instagram}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="website" value="{{kj.website}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="tel" value="{{kj.tel}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="sponser" value="{{kj.sponser}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="ad_banner" value="{{kj.ad_banner}}" /></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="play_time_as_minuate" value="{{kj.play_time_as_minuate}}" /></td>
             <td>
-              <select id="{{kj.id}}" name="status_accounting" >
+              <select class="{{kj.id}}" name="status_accounting" >
                 <option value="{{kj.status_accounting.id}}">{{kj.status_accounting}}</option>
                 {% for x in status_accounts %}
                 {% if not x == kj.status_accounting %}
@@ -48,7 +48,9 @@
                 {% endfor %}
               </select>
               </td>
-            <td><textarea style="text-align: center;" type="text" id="{{kj.id}}" name="note" >{{kj.note}}</textarea></td>
+              
+
+            <td><textarea style="text-align: center;" type="text" class="{{kj.id}}" name="note" >{{kj.note}}</textarea></td>
         </tr>
         {% endfor %}
     </table>
