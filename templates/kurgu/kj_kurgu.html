@@ -12,6 +12,7 @@
           <tr>
             <th>   Firma Unvanı     </th>
             <th>   Röportaj veren kişi   </th>
+            <th>Kişi unvanı</th>
             <th>   Yayınlanma   </th>
             <th>   Görseller   </th>
             <th>   Kj Bilgileri   </th>
@@ -31,6 +32,7 @@
             <td><span style="text-align: center;">  {{kj.company.company_name.name}}  </span></td>
 
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" value="{{kj.client}}" name="client" ></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" value="{{kj.nikname}}" name="nikname" ></td>
             
             {% if kj.is_played %}
             <td><input style="text-align: center;" type="checkbox"  class="{{kj.id}}" name="is_played" checked></td>

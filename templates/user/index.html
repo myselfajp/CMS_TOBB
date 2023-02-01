@@ -24,6 +24,8 @@
     <div class="limiter">
         <div class="container-login100" style="background-image: url('{% static 'crawler/images/img-01.jpg' %}');">
             <div class="wrap-login100 p-t-190 p-b-30">
+                {% if not user.username == "Ufuk" %}
+
                 <div class="container-login100-form-btn p-t-10">
                     <a class="login100-form-btn"  href="{% url 'reports:companies' %}">Dağıtım</a> 
                 </div>
@@ -42,6 +44,20 @@
                 <div class="container-login100-form-btn p-t-10">
                     <a class="login100-form-btn"  href="{% url 'users:logout' %}">Çıkış</a> 
                 </div>
+                {% else %}
+                <div class="container-login100-form-btn p-t-10">
+                    <a class="login100-form-btn"  href="{% url 'kurgu:kj_muhasebe' %}">Muhasebe</a> 
+                </div>
+
+                <div class="container-login100-form-btn p-t-10">
+                    <a class="login100-form-btn"  href="{% url 'kurgu:kj_kurgu' %}">kurgu</a> 
+                </div>
+
+                <div class="container-login100-form-btn p-t-10">
+                    <a class="login100-form-btn"  href="{% url 'users:logout' %}">Çıkış</a> 
+                </div>
+
+                {% endif %}
             </div>
            
            

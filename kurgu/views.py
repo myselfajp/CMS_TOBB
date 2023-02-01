@@ -72,6 +72,11 @@ def http_kj_kurgu(request):
             object.presentation=request.POST.get("presentation")
             object.save()
 
+        elif "nikname" in request.POST:
+            object = KJ.objects.get(id=request.POST.get("id"))
+            object.nikname=request.POST.get("nikname")
+            object.save()
+
 
 
 

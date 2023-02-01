@@ -25,6 +25,7 @@ class KJ(models.Model):
 
     # Muhasebe
     client = models.CharField(default='', blank=True,max_length=250,verbose_name="Röportaj veren adı soyadı")
+    nikname = models.CharField(default='', blank=True,max_length=250,verbose_name="Kişi unvanı")
     title = models.CharField(default='', blank=True,max_length=250,verbose_name="Ekranda gözükecek unvan")
     instagram = models.CharField(default='', blank=True,max_length=50,verbose_name="İnstagram hesabı")
     website = models.CharField(default='', blank=True,max_length=250,verbose_name="Web adresi")
@@ -32,8 +33,6 @@ class KJ(models.Model):
     sponser = models.CharField(default='', blank=True,max_length=250,verbose_name="ُSponsorluk")
     ad_banner = models.CharField(default='', blank=True,max_length=250,verbose_name="ُAlt bant reklam")
     play_time_as_minuate = models.CharField(default='', blank=True,max_length=2,verbose_name="Yayın dakikasi")
-    agreement_price = models.CharField(default='', blank=True,max_length=250,verbose_name="Sözleşme Ücreti")
-    Paid_price = models.CharField(default='', blank=True,max_length=250,)
     note = models.TextField(blank=True,default='',verbose_name="Not")
 
     # Kurgu 
@@ -46,7 +45,7 @@ class KJ(models.Model):
     youtube = models.BooleanField(default=False,verbose_name="Youtube")
     is_sent = models.BooleanField(default=False,verbose_name="Firmaya gönderim")
     montaj = models.BooleanField(default=False,verbose_name="Montaj")
-    status = models.ForeignKey(KJStatus,blank=True,on_delete=models.CASCADE)
+    status = models.ForeignKey(KJStatus,blank=True,default=None,on_delete=models.CASCADE)
     status_accounting = models.ForeignKey(KJStatusAccounting,null=True,on_delete=models.CASCADE)
     play_date = models.DateField(default=None,null=True,verbose_name="Yayın tarihi")
 
