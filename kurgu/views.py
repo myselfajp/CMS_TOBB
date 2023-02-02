@@ -1,11 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from .models import KJ,KJStatus,KJStatusAccounting
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import KJ,KJStatus,KJStatusAccounting
 import json
 
 # Create your views here.
 @csrf_exempt
+@login_required
 def http_kj_kurgu(request):
     kj_list=KJ.objects.all().order_by("-play_date")
     statuses=KJStatus.objects.all()
@@ -186,7 +188,7 @@ def http_kj_kurgu(request):
         return HttpResponse(json.dumps(message), content_type="application/json")
     return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses})
 
-
+@login_required
 def http_kj_muhasebe(request):
     kj_list=KJ.objects.all().order_by("-company__record_date")
     status_accounting = KJStatusAccounting.objects.all()
