@@ -45,7 +45,7 @@ class KJ(models.Model):
     youtube = models.BooleanField(default=False,verbose_name="Youtube")
     is_sent = models.BooleanField(default=False,verbose_name="Firmaya gönderim")
     montaj = models.BooleanField(default=False,verbose_name="Montaj")
-    status = models.ForeignKey(KJStatus,blank=True,default=None,on_delete=models.CASCADE)
+    status = models.ForeignKey(KJStatus,null=True,blank=True,default=None,on_delete=models.CASCADE)
     status_accounting = models.ForeignKey(KJStatusAccounting,null=True,on_delete=models.CASCADE)
     play_date = models.DateField(default=None,null=True,verbose_name="Yayın tarihi")
 
