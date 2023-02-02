@@ -153,7 +153,7 @@ def http_companies(request):
                     filters["data_type_filter"]["value"]="1"
                     filters["data_type_filter"]["name"]="Bahattin"
                 elif dt=="2":
-                    companies = companies.filter(fount__name="GoogleMaps")
+                    companies = Companies.objects.filter(fount__name="GoogleMaps")
                     filters["data_type_filter"]["value"]="2"
                     filters["data_type_filter"]["name"]="Google"
 
