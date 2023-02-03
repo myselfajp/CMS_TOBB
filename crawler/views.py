@@ -5,80 +5,86 @@ from django.shortcuts import render
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from .models import *
+import requests
 import time
 
 
 
 # Create your views here.
 def create_account_tobb():
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    check = requests.get("https://rekteam.com/check",headers=headers).text
+    if check=='{"response": "ok"}':
 
-    driver = webdriver.Firefox()
-    driver.set_window_position(-10000,0)
-    driver.minimize_window()
-
-
-    #-----get user and number from database
-    account=AccountReport.objects.get(user_type="account")
-    account.number+=1
-    account.save()
-    #get user and number from database-----
-
-    try:
-        username=f"{account.user}{account.number}"
-        #---------------------------------------------------------get an email from mohmal
-        driver.get("https://www.mohmal.com/en")
-        driver.find_element(By.ID, "rand").click()
-        mail=driver.find_element(By.ID, "email").find_element(By.CLASS_NAME,"email").text
-        time.sleep(7)
-        #get an email from mohmal---------------------------------------------------------
-
-        
-        #-----------------------------------------------------------signup in tobb
-        driver.get("https://sanayi.tobb.org.tr/firma_kayit3.php")
-
-        business_feild = driver.find_element(By.NAME, "firma_unvani")
-        name_feild = driver.find_element(By.NAME, "yetkili")
-        post_feild = driver.find_element(By.NAME, "posta_adresi")
-        tel02 = driver.find_element(By.NAME, "tel_2")
-        tel03 = driver.find_element(By.NAME, "tel_3")
-        faks02 = driver.find_element(By.NAME, "faks_2")
-        faks03 = driver.find_element(By.NAME, "faks_3")
-        mail_feild = driver.find_element(By.NAME, "email")
-        status = driver.find_element(By.NAME, "statu")
-        username_feild = driver.find_element(By.NAME, "kullanici")
-        submit = driver.find_element(By.NAME, "gonder")
-
-        business_feild.send_keys("AliParsa")
-        name_feild.send_keys("AliParsa")
-        post_feild.send_keys("AliParsa")
-        tel02.send_keys("000")
-        tel03.send_keys("0000")
-        faks02.send_keys("000")
-        faks03.send_keys("0000")
-        mail_feild.send_keys(mail)
-        username_feild.send_keys(username)
-        status.click()
-        submit.click()
-        #signup in tobb-----------------------------------------------------------
+        driver = webdriver.Firefox()
+        driver.set_window_position(-10000,0)
+        driver.minimize_window()
 
 
-        #-------------------------------------------------back to mohmal for get password
-        time.sleep(7)
-        driver.get("https://www.mohmal.com/en/refresh")
-        time.sleep(7)
-        driver.find_element(By.CLASS_NAME,"subject").click()
-        time.sleep(7)
-        inbox =BeautifulSoup(driver.page_source , "html.parser").find("iframe").attrs["src"]
-        driver.get("https://www.mohmal.com"+inbox)
-        password =BeautifulSoup(driver.page_source , "html.parser").find_all("td")[-1].text.strip()
-        driver.close()
-        #back to mohmal for get password-------------------------------------------------
+        #-----get user and number from database
+        account=AccountReport.objects.get(user_type="account")
+        account.number+=1
+        account.save()
+        #get user and number from database-----
 
-        return {"user":username,"pass":password}
-    except:
+        try:
+            username=f"{account.user}{account.number}"
+            #---------------------------------------------------------get an email from mohmal
+            driver.get("https://www.mohmal.com/en")
+            driver.find_element(By.ID, "rand").click()
+            mail=driver.find_element(By.ID, "email").find_element(By.CLASS_NAME,"email").text
+            time.sleep(7)
+            #get an email from mohmal---------------------------------------------------------
+
+
+            #-----------------------------------------------------------signup in tobb
+            driver.get("https://sanayi.tobb.org.tr/firma_kayit3.php")
+
+            business_feild = driver.find_element(By.NAME, "firma_unvani")
+            name_feild = driver.find_element(By.NAME, "yetkili")
+            post_feild = driver.find_element(By.NAME, "posta_adresi")
+            tel02 = driver.find_element(By.NAME, "tel_2")
+            tel03 = driver.find_element(By.NAME, "tel_3")
+            faks02 = driver.find_element(By.NAME, "faks_2")
+            faks03 = driver.find_element(By.NAME, "faks_3")
+            mail_feild = driver.find_element(By.NAME, "email")
+            status = driver.find_element(By.NAME, "statu")
+            username_feild = driver.find_element(By.NAME, "kullanici")
+            submit = driver.find_element(By.NAME, "gonder")
+
+            business_feild.send_keys("AliParsa")
+            name_feild.send_keys("AliParsa")
+            post_feild.send_keys("AliParsa")
+            tel02.send_keys("000")
+            tel03.send_keys("0000")
+            faks02.send_keys("000")
+            faks03.send_keys("0000")
+            mail_feild.send_keys(mail)
+            username_feild.send_keys(username)
+            status.click()
+            submit.click()
+            #signup in tobb-----------------------------------------------------------
+
+
+            #-------------------------------------------------back to mohmal for get password
+            time.sleep(7)
+            driver.get("https://www.mohmal.com/en/refresh")
+            time.sleep(7)
+            driver.find_element(By.CLASS_NAME,"subject").click()
+            time.sleep(7)
+            inbox =BeautifulSoup(driver.page_source , "html.parser").find("iframe").attrs["src"]
+            driver.get("https://www.mohmal.com"+inbox)
+            password =BeautifulSoup(driver.page_source , "html.parser").find_all("td")[-1].text.strip()
+            driver.close()
+            #back to mohmal for get password-------------------------------------------------
+
+            return {"user":username,"pass":password}
+        except:
+            driver.close()
+            return False
+    else:
         driver.close()
         return False
-
 
 def http_crawler_tobb(request,city_slug):
 
