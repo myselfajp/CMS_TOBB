@@ -327,6 +327,11 @@
                         <button onclick="window.open('{% url 'crawler:google_map_crawler' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
                             <span>    Google data    </span>
                         </button>
+                             
+                        <button onclick="window.open('{% url 'reports:sendmail' %}',
+                            'newwindow', 
+                            'width=600,height=400'); 
+                        return false;" class="notification">Lansman gönder</button>
                         </table>
                     </div>
                 </div>
