@@ -25,6 +25,12 @@ class Cities(models.Model):
         verbose_name_plural = "İller"
 
 
+class Permision(models.Model):
+    per_type = models.CharField(max_length=50,verbose_name = "Adı")
+    users = models.ManyToManyField(User)
+    def __str__(self):
+        return self.per_type
+
 
 class Fount(models.Model):
     name = models.CharField(max_length=50,verbose_name = "Adı")

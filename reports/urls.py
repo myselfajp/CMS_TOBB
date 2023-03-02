@@ -12,4 +12,5 @@ urlpatterns = [
     path("agreement-<int:company_id>",http_send_agreement,name='agreement'),
     path("agreement_report",http_report_agreement,name='report_agreement'),
     path("agreement_admin-<int:agreement_id>",http_report_agreement_admin,name='agreement_admin'),
+    path("azerbaycan",http_azerbaycan,name='azerbaycan'),
 ]

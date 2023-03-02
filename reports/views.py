@@ -1,4 +1,4 @@
-from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus,Fount
+from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus,Fount,Permision
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
@@ -48,11 +48,13 @@ def http_companies(request):
     cities = Cities.objects.all()
     users = User.objects.all()
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    permisions=Permision.objects.all()
     if request.method == 'GET':
         companies = Companies.objects.filter(user=request.user).order_by("-last_status")
         sectors = [x.sector for x in companies if x.sector]
         sectors = list(dict.fromkeys(sectors))
         remine_companies = companies.filter(reminder__lte=now)
+
     filters= {
         "last_status_filter":{"name":"Tümü","value":"0"},
         "tel_filter":{"name":"Tümü","value":"0"},
@@ -109,9 +111,9 @@ def http_companies(request):
             company.save()
 
         #----------------------------------------------------------add new company-----------------------------------
-
         
         
+         
         #-----------------------------------------------------------admin share---------------------------------------
         if request.POST.get('user_filter'):
             if request.POST.get('user_filter') != "0":
@@ -204,7 +206,8 @@ def http_companies(request):
         "cities":cities,
         "remine_companies":remine_companies,
         "filters":filters,
-        "sectors":sectors
+        "sectors":sectors,
+        "permisions":permisions,
         }
     return render(request,"companies.html",context=context)
 
@@ -306,6 +309,7 @@ def http_report_agreement(request):
         
     return render(request,"user/agreement_report.html",{"agreements":agreements,"filters":filters,"statuses":statuses})
 
+
 @csrf_exempt
 @login_required
 def http_report_agreement_admin(request,agreement_id):
@@ -400,3 +404,9 @@ def http_reminder_report(request):
     lte = companies.filter(reminder__lte=now)
     gte = companies.exclude(reminder__lte=now)
     return render(request,"reminder_report.html",{"lte":lte,"gte":gte})
+
+
+@login_required
+def http_azerbaycan(request):
+    companies = Companies.objects.filter(city__slug=716)
+    return render(request,"azerbaycan.html",{"companies":companies})

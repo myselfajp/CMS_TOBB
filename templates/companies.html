@@ -15,7 +15,6 @@
 
 <body>
 
-      
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -332,6 +331,15 @@
                             'newwindow', 
                             'width=600,height=400'); 
                         return false;" class="notification">Lansman gönder</button>
+                        {% for permision in permisions %}
+                        {% if permision.per_type == "azerbaycan" and user in permision.users.all %}
+                             
+                        <button onclick="window.open('{% url 'reports:azerbaycan' %}',
+                        'newwindow', 
+                        'width=600,height=400'); 
+                        return false;" class="notification">Azerbaycan</button>
+                        {% endif %}
+                        {% endfor %}
                         </table>
                     </div>
                 </div>
