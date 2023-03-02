@@ -20,7 +20,12 @@
                     <h2 class="heading-section">Azerbaycan ({{ companies|length }})</h2>
                 </div>
             </div>
-
+            
+            <form method="Post" action="{% url 'reports:azerbaycan' %}">
+            <input name="search" value="">
+            <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
+            </form>
+            
 
             <br><br>
             <div class="row">
@@ -30,6 +35,7 @@
                             <thead>
                                 <tr>
                                     <th>Unvan</th>
+                                    <th>Kullanıcı</th>
                                     <th>Telefon</th>
                                     <th>SİTE</th>
                                     <th>Sektör</th>
@@ -40,9 +46,11 @@
                             <tbody>
                                 {% for company in companies %}
                                 <tr style="background-color: {{company.last_status.color}};">
+
                                     <th>
                                     {{company.name}}
                                     </th>
+                                    <td>{{company.user.username}}</td>
                                     <td><span data-text="{{company.phone}}"></span></td>
                                     <td><a href="https://{{company.site}}" target="_blank">{{company.site}}</a></td>
                                     <td>{{company.sector}}</td>

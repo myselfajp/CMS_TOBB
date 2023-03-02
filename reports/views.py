@@ -405,8 +405,12 @@ def http_reminder_report(request):
     gte = companies.exclude(reminder__lte=now)
     return render(request,"reminder_report.html",{"lte":lte,"gte":gte})
 
-
+@csrf_exempt
 @login_required
 def http_azerbaycan(request):
     companies = Companies.objects.filter(city__slug=716)
+    if request.POST.get('search'):
+            s=request.POST.get('search')
+            companies = companies.filter(name__contains=s)
+
     return render(request,"azerbaycan.html",{"companies":companies})
