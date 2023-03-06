@@ -7,6 +7,36 @@ from bs4 import BeautifulSoup
 from .models import *
 import requests
 import time
+import csv
+
+def http_excel(request,city_slug):
+    context = {'name':'xyz'}
+    file = open("EXCEL.csv")
+    csvreader = csv.reader(file)
+    # rows = []
+    # d = dict()
+    for row in csvreader:
+        company = Companies()
+        company.user = request.user
+        company.sector = row[0]
+        company.name = row[1]
+        company.short_name = row[1][0:11]
+        company.phone = str(row[2])
+        company.site = row[3]
+        company.fount = Fount.objects.get(name="EXCEL")
+        company.city = Cities.objects.get(slug=city_slug)
+        company.last_status = Status.objects.get(name="Yeni")
+        try:
+            print(row[1])
+            company.save()
+            company.status.add(Status.objects.get(name="Yeni"))
+            company.save()
+        except:
+            pass
+        # print(row)
+
+    file.close()
+    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
 
 
 

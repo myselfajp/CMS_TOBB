@@ -37,9 +37,6 @@ def Agreement_maker(date1,date2,time,company,adres):
             os.makedirs(save_path)
     image.save(f"{save_path}/{company}.pdf")
 
-
-
-
 # Create your views here.
 @csrf_exempt
 @login_required
@@ -158,7 +155,10 @@ def http_companies(request):
                     companies = companies.filter(fount__name="GoogleMaps")
                     filters["data_type_filter"]["value"]="2"
                     filters["data_type_filter"]["name"]="Google"
-
+                elif dt=="3":
+                    companies = companies.filter(fount__name="EXCEL")
+                    filters["data_type_filter"]["value"]="3"
+                    filters["data_type_filter"]["name"]="EXCEL"
 
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
@@ -413,4 +413,4 @@ def http_azerbaycan(request):
             s=request.POST.get('search')
             companies = companies.filter(name__contains=s)
 
-    return render(request,"azerbaycan.html",{"companies":companies})
+    return render(request,"azerbaycan.html",{"companies":companies[0]})

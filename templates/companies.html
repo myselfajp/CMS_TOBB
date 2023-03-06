@@ -49,14 +49,22 @@
                     <select name="data_type_filter" >
                         {% if filters.data_type_filter.name == "Google" %}
                         <option value="2">Google</option>
+                        <option value="3">Excel</option>
                         <option value="1">Bahattin</option>
                         <option value="0">Tümü</option>
                         {% elif  filters.data_type_filter.name == "Tümü" %}
                         <option value="0">Tümü</option>
-                        <option value="2">Google</option>
+                        <option value="3">Excel</option>
                         <option value="1">Bahattin</option>
+                        <option value="2">Google</option>
+                        {% elif  filters.data_type_filter.name == "EXCEL" %}
+                        <option value="3">Excel</option>
+                        <option value="1">Bahattin</option>
+                        <option value="2">Google</option>
+                        <option value="0">Tümü</option>
                         {% else %}
                         <option value="1">Bahattin</option>
+                        <option value="3">Excel</option>
                         <option value="2">Google</option>
                         <option value="0">Tümü</option>
                         {% endif %}
