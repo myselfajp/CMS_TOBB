@@ -9,38 +9,7 @@ import requests
 import time
 import csv
 
-def http_excel(request,city_slug):
-    context = {'name':'xyz'}
-    file = open("EXCEL.csv")
-    csvreader = csv.reader(file)
-    # rows = []
-    # d = dict()
-    for row in csvreader:
-        company = Companies()
-        company.user = request.user
-        company.sector = row[0]
-        company.name = row[1]
-        company.short_name = row[1][0:11]
-        company.phone = str(row[2])
-        company.site = row[3]
-        company.fount = Fount.objects.get(name="EXCEL")
-        company.city = Cities.objects.get(slug=city_slug)
-        company.last_status = Status.objects.get(name="Yeni")
-        try:
-            print(row[1])
-            company.save()
-            company.status.add(Status.objects.get(name="Yeni"))
-            company.save()
-        except:
-            pass
-        # print(row)
 
-    file.close()
-    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
-
-
-
-# Create your views here.
 def create_account_tobb():
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     check = requests.get("https://rekteam.com/check",headers=headers).text
@@ -115,6 +84,37 @@ def create_account_tobb():
     else:
         driver.close()
         return False
+
+def http_excel(request,city_slug):
+    file = open("EXCEL.csv")
+    csvreader = csv.reader(file)
+    rows = []
+    count=0
+    for row in csvreader:
+        company = Companies()
+        user = request.user
+        sector = row[0]
+        name = row[1]
+        short_name = row[1][0:11]
+        phone = str(row[2])
+        site = row[3]
+        fount = Fount.objects.get(name="EXCEL")
+        city = Cities.objects.get(slug=city_slug)
+        last_status = Status.objects.get(name="Yeni")
+        try:
+            print(count)
+            count+=1
+            rows.append(Companies(user=user,sector=sector,name=name,short_name=short_name,phone=phone,site=site,fount=fount,city=city,last_status=last_status,))
+
+            # company.status.add(Status.objects.get(name="Yeni"))
+            # company.save()
+        except:
+            pass
+    objs = Companies.objects.bulk_create(rows)
+        # print(row)
+
+    file.close()
+    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
 
 def http_crawler_tobb(request,city_slug):
 
@@ -285,8 +285,6 @@ def http_crawler_tobb(request,city_slug):
 
     driver.close()
 
-
-
 @csrf_exempt
 def http_crawler_google(request):
     message = ""
@@ -420,3 +418,58 @@ def http_crawler_google(request):
         message = "datalar başarılıyla yüklendi"
 
     return render(request,"google_map.html",{"message":message,"cities":cities})
+
+
+# def http_azexport(request,city_slug):
+#     url="https://azexport.az/index.php?route=product/seller/info&seller_id="
+#     num=1    
+#     while True:
+#         link=url+str(num)
+#         page=requests.get(link)
+#         try:
+  
+#             beu=BeautifulSoup(page.text,'html.parser').find("table").find_all("tr")
+
+#             azexport = Azexport()
+#             azexport.user = request.user
+#             azexport.city = Cities.objects.get(slug=city_slug)
+#             azexport.fount = Fount.objects.get(name="AZEXPORT")
+#             for x in beu:
+#                 if "Legal Adress" in x.text:
+#                     address=x.find_all("td")[1].text.strip()
+#                     azexport.address = address
+#                 elif "Activity Group" in x.text:
+#                     sector = x.find_all("td")[1].text.strip()
+#                     azexport.name = sector
+#                     azexport.short_name = sector[:11]
+#                 elif "Phone" in x.text:
+#                     phone = x.find_all("td")[1].text.strip()
+#                     azexport.phone = phone
+#                 elif "Mobile" in x.text:
+#                     Mobile = x.find_all("td")[1].text.strip()
+#                     azexport.tel = Mobile
+#                 elif "E-mail" in x.text:
+#                     mail = x.find_all("td")[1].text.strip()
+#                     azexport.mail = mail
+#                 elif "Website" in x.text:
+#                     website = x.find_all("td")[1].text.strip()
+#                     azexport.website = website
+#                 elif "Facebook" in x.text:
+#                     Facebook = x.find_all("td")[1].text.strip()        
+#                     azexport.social_media = Facebook
+#                 elif "Twitter" in x.text:
+#                     Twitter = x.find_all("td")[1].text.strip()
+#                     azexport.social_media = Twitter
+#             try:
+#                 azexport.last_status = Status.objects.get(name="Yeni")
+#                 azexport.save()
+#             except:
+#                 pass
+#         except:
+#             print(link)
+#             pass
+#         num+=1
+#         if num>1955:break
+#     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
+    
+    
