@@ -119,30 +119,30 @@ class Agreement(models.Model):
         verbose_name = "Sözleşme"
         verbose_name_plural = "Sözleşmeler"
 
-# class Azexport(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
-#     city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
-#     full_name = models.CharField(max_length=255,null=True,verbose_name = "Kişi Adı Soyadı")
-#     sector = models.CharField(max_length=255,null=True,verbose_name = "Sektör")
-#     name = models.CharField(max_length=255,null=True,verbose_name = "Firma unvanı")
-#     short_name = models.CharField(max_length=11,null=True,verbose_name = "Firma unvanı(ilk 11 hanesi)")
-#     phone = models.CharField(max_length=20,null=True,verbose_name = "Sabit numarası")
-#     tel = models.CharField(max_length=30,null=True,verbose_name = "Cep numarası")
-#     website = models.CharField(null=True,max_length=255)
-#     mail = models.CharField(null=True,max_length=255)
-#     address = models.CharField(null=True,max_length=255,verbose_name = "Adres")
-#     social_media = models.CharField(null=True,max_length=255,verbose_name = "Sosyal Medya")
-#     personels_caount = models.BigIntegerField(null=True,verbose_name = "Personel sayısı")
-#     fount = models.ForeignKey(Fount,on_delete=models.CASCADE,verbose_name = "Data kaynağı")
-#     status = models.ManyToManyField(Status,blank=True,related_name="azexport_status")
-#     last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="azexport_last_status")
-#     note = models.TextField(null=True,blank=True,default='')
-#     created_date = models.DateTimeField(auto_now_add=True)
-#     updated_date = models.DateTimeField(auto_now=True)
-#     reminder = models.DateTimeField(null=True, default=None)
-#     def __str__(self):
-#         return f"{self.city}--{self.name}"
-#     class Meta:
-#         unique_together = ('short_name', 'phone',)
-#         verbose_name = "AzExport datası"
-#         verbose_name_plural = "AzExport dataları"
+class Azexport(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
+    city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
+    full_name = models.CharField(max_length=255,null=True,verbose_name = "Kişi Adı Soyadı")
+    sector = models.CharField(max_length=255,null=True,verbose_name = "Sektör")
+    name = models.CharField(max_length=255,null=True,verbose_name = "Firma unvanı")
+    short_name = models.CharField(max_length=11,null=True,verbose_name = "Firma unvanı(ilk 11 hanesi)")
+    phone = models.CharField(max_length=20,null=True,verbose_name = "Sabit numarası")
+    tel = models.CharField(max_length=30,null=True,verbose_name = "Cep numarası")
+    website = models.CharField(null=True,max_length=255)
+    mail = models.CharField(null=True,max_length=255)
+    address = models.CharField(null=True,max_length=255,verbose_name = "Adres")
+    social_media = models.CharField(null=True,max_length=255,verbose_name = "Sosyal Medya")
+    personels_caount = models.BigIntegerField(null=True,verbose_name = "Personel sayısı")
+    fount = models.ForeignKey(Fount,on_delete=models.CASCADE,verbose_name = "Data kaynağı")
+    status = models.ManyToManyField(Status,blank=True,related_name="azexport_status")
+    last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="azexport_last_status")
+    note = models.TextField(null=True,blank=True,default='')
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    reminder = models.DateTimeField(null=True, default=None)
+    def __str__(self):
+        return f"{self.city}--{self.name}"
+    class Meta:
+        unique_together = ('short_name', 'phone',)
+        verbose_name = "AzExport datası"
+        verbose_name_plural = "AzExport dataları"

@@ -13,14 +13,14 @@ def http_login(request):
                 login(request,user)
                 if request.user.username=="Ali" or request.user.username=="admin":
                     return render(request,"user/index.html",{"message":message})
-                return redirect("/companies")
+                return redirect("/")
         return render(request,"login.html",{"message":message})
     else:
         if request.method=="POST":
-            return redirect("/companies")
+            return redirect("user/index2.html")
         if request.user.username=="Ali" or request.user.username=="admin":
             return render(request,"user/index.html",{"message":message})
-        return HttpResponseRedirect("/companies")
+        return render(request,"user/index2.html",{"message":message})
 
 def http_logout(request):
     logout(request)

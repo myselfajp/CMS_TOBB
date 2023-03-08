@@ -1,0 +1,77 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Firma bilgileri</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="{% static 'list/css/single.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="testbox">
+      <form method="post" action="{% url 'reports:company' company_id=company.id %}">
+        {% csrf_token %}
+        <h1>Unvan:{{company.name}}</h1>
+        <br>
+        <h1>Cep:   <span data-text="{{company.tel}}"></span></h1>
+        <br>        
+        <h1>Sabit:   <span data-text="{{company.phone}}"></span></h1>
+        <br>
+        <h1>Adres:  <span data-text="{{company.address}}"></span></h1>
+        <br>
+        <h1>Site: <span data-text="{{company.website}}"></span></h1>
+        <br>
+        <br>
+        <h1>Mail: <span data-text="{{company.mail}}"></span></h1>
+        <br>
+        
+        <h1>Son durum: {{company.last_status}}</h1>
+        <br>
+        <br>
+        <h1>Geçmiş durumlar:</h1>
+        {% for status in company.status.all %}
+        <h2>{{status.name}}</h2>
+        {% endfor %}
+        <br>
+        <br>
+        <h4>Durum Ekle<span>*</span></h4>
+        <div class="title-block">
+        <select name="status_add">
+          <option value="{{ last_status.id }}">{{ last_status.name }}</option>
+          {% for status in statuses %}
+          <option value="{{status.id}}">{{status.name}}</option>
+          {% endfor %}
+        </select>
+        </div>
+        <br>
+        <h4>İsim Soyisim</h4>
+        <input name="fullname" value="{{company.full_name}}">
+        <br>
+        <h4>Not</h4>
+          <textarea rows="5" name="note">{{company.note}}</textarea>
+        <div class="btn-block">
+          <button type="submit" href="/">Güncelle</button>
+        </div>
+        <div class="btn-block">
+          <button onclick="window.open('{% url 'reports:sendmail' %}',
+            'newwindow', 
+            'width=600,height=400'); 
+ return false;">Lansman gönder</button>
+        </div>
+<!-- 
+        <div class="btn-block">
+        <button onclick="window.open('{% url 'reports:agreement' company_id=company.id %}',
+            'newwindow', 
+            'width=950,height=400'); 
+ return false;">Sözleşme gönder</button>
+        </div> -->
+
+        <div onclick="location.href='{% url 'reports:companies_azexport' %}" class="btn-block">
+         <h2><a style="color: brown;" href="{% url 'reports:companies_azexport' %}"> Ana sayfa </a></h2>
+        </div>
+
+      </form>
+    </div>
+  </body>
+</html>

@@ -190,7 +190,7 @@ def http_kj_kurgu(request):
         return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses})
     else:
         return HttpResponseRedirect("/")
-        
+
 @login_required
 def http_kj_muhasebe(request):
     kj_list=KJ.objects.all().order_by("-company__record_date")

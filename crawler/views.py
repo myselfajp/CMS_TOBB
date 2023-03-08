@@ -420,56 +420,56 @@ def http_crawler_google(request):
     return render(request,"google_map.html",{"message":message,"cities":cities})
 
 
-# def http_azexport(request,city_slug):
-#     url="https://azexport.az/index.php?route=product/seller/info&seller_id="
-#     num=1    
-#     while True:
-#         link=url+str(num)
-#         page=requests.get(link)
-#         try:
+def http_azexport(request,city_slug):
+    url="https://azexport.az/index.php?route=product/seller/info&seller_id="
+    num=1    
+    while True:
+        link=url+str(num)
+        page=requests.get(link)
+        try:
   
-#             beu=BeautifulSoup(page.text,'html.parser').find("table").find_all("tr")
+            beu=BeautifulSoup(page.text,'html.parser').find("table").find_all("tr")
 
-#             azexport = Azexport()
-#             azexport.user = request.user
-#             azexport.city = Cities.objects.get(slug=city_slug)
-#             azexport.fount = Fount.objects.get(name="AZEXPORT")
-#             for x in beu:
-#                 if "Legal Adress" in x.text:
-#                     address=x.find_all("td")[1].text.strip()
-#                     azexport.address = address
-#                 elif "Activity Group" in x.text:
-#                     sector = x.find_all("td")[1].text.strip()
-#                     azexport.name = sector
-#                     azexport.short_name = sector[:11]
-#                 elif "Phone" in x.text:
-#                     phone = x.find_all("td")[1].text.strip()
-#                     azexport.phone = phone
-#                 elif "Mobile" in x.text:
-#                     Mobile = x.find_all("td")[1].text.strip()
-#                     azexport.tel = Mobile
-#                 elif "E-mail" in x.text:
-#                     mail = x.find_all("td")[1].text.strip()
-#                     azexport.mail = mail
-#                 elif "Website" in x.text:
-#                     website = x.find_all("td")[1].text.strip()
-#                     azexport.website = website
-#                 elif "Facebook" in x.text:
-#                     Facebook = x.find_all("td")[1].text.strip()        
-#                     azexport.social_media = Facebook
-#                 elif "Twitter" in x.text:
-#                     Twitter = x.find_all("td")[1].text.strip()
-#                     azexport.social_media = Twitter
-#             try:
-#                 azexport.last_status = Status.objects.get(name="Yeni")
-#                 azexport.save()
-#             except:
-#                 pass
-#         except:
-#             print(link)
-#             pass
-#         num+=1
-#         if num>1955:break
-#     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
+            azexport = Azexport()
+            azexport.user = request.user
+            azexport.city = Cities.objects.get(slug=city_slug)
+            azexport.fount = Fount.objects.get(name="AZEXPORT")
+            for x in beu:
+                if "Legal Adress" in x.text:
+                    address=x.find_all("td")[1].text.strip()
+                    azexport.address = address
+                elif "Activity Group" in x.text:
+                    sector = x.find_all("td")[1].text.strip()
+                    azexport.name = sector
+                    azexport.short_name = sector[:11]
+                elif "Phone" in x.text:
+                    phone = x.find_all("td")[1].text.strip()
+                    azexport.phone = phone
+                elif "Mobile" in x.text:
+                    Mobile = x.find_all("td")[1].text.strip()
+                    azexport.tel = Mobile
+                elif "E-mail" in x.text:
+                    mail = x.find_all("td")[1].text.strip()
+                    azexport.mail = mail
+                elif "Website" in x.text:
+                    website = x.find_all("td")[1].text.strip()
+                    azexport.website = website
+                elif "Facebook" in x.text:
+                    Facebook = x.find_all("td")[1].text.strip()        
+                    azexport.social_media = Facebook
+                elif "Twitter" in x.text:
+                    Twitter = x.find_all("td")[1].text.strip()
+                    azexport.social_media = Twitter
+            try:
+                azexport.last_status = Status.objects.get(name="Yeni")
+                azexport.save()
+            except:
+                pass
+        except:
+            print(link)
+            pass
+        num+=1
+        if num>1955:break
+    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
     
     

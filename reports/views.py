@@ -1,4 +1,4 @@
-from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus,Fount,Permision
+from crawler.models import Companies,Status,Cities,Agreement,AgreementStatus,Fount,Permision,Azexport
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
@@ -210,6 +210,202 @@ def http_companies(request):
         "permisions":permisions,
         }
     return render(request,"companies.html",context=context)
+
+
+
+
+
+@csrf_exempt
+@login_required
+def http_azexport(request):
+    statuses = Status.objects.all()
+    cities = Cities.objects.all()
+    users = User.objects.all()
+    now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    permisions=Permision.objects.all()
+    if request.method == 'GET':
+        companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
+        remine_companies = companies.filter(reminder__lte=now)
+
+    filters= {
+        "last_status_filter":{"name":"Tümü","value":"0"},
+        "tel_filter":{"name":"Tümü","value":"0"},
+        "city_filter":{"name":"Tümü","value":"0"},
+        "user_filter":{"name":"Tümü","value":"0"},
+        "data_type_filter":{"name":"Tümü","value":"0"},
+        "sector_filter":"Tümü",
+        "search":"",
+        }
+
+    count=500
+    if request.method == 'POST':
+        companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
+
+        if request.POST.get('company_id'):
+            try:
+                company = Azexport.objects.get(id=request.POST.get('company_id'))
+                company.note=request.POST.get('note')
+                company.full_name = request.POST.get('fullname')
+                new_status=request.POST.get('status_add')
+                new_status=Status.objects.get(id=int(new_status))
+                company.status.add(new_status)
+                company.last_status = new_status
+                company.save()
+                
+                companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
+                sectors = [x.sector for x in companies if x.sector]
+                sectors = list(dict.fromkeys(sectors))
+            except:
+                pass
+            
+
+        #----------------------------------------------------------add new company-----------------------------------
+        if request.POST.get('add_data'):
+            company=Azexport()
+            company.user = request.user
+            company.name = request.POST.get('company_name')
+            company.short_name = request.POST.get('company_name')[0:11]
+            company.phone = request.POST.get('company_tel')
+            company.site = request.POST.get('company.site')
+            company.full_name = request.POST.get('company_fullname')
+            company.sector = request.POST.get('company_sector')
+            company.note = request.POST.get('company_note')
+            try:
+                company.fount = Fount.objects.get(name=request.user.username)
+            except:
+                Fount(name=request.user.username).save()
+                company.fount = Fount.objects.get(name=request.user.username)
+
+            company.city = Cities.objects.get(id=int(request.POST.get('company_city')))
+            company.last_status = Status.objects.get(id=int(request.POST.get('company_status')))
+            company.save()
+
+        #----------------------------------------------------------add new company-----------------------------------
+        
+        
+         
+        #-----------------------------------------------------------admin share---------------------------------------
+        if request.POST.get('user_filter'):
+            if request.POST.get('user_filter') != "0":
+                companies = Azexport.objects.filter(user__id = request.POST.get('user_filter')).order_by("name")
+                x=users.get(id=request.POST.get('user_filter'))
+                filters["user_filter"]["name"]=x.username
+                filters["user_filter"]["value"]=x.id
+            else:
+                companies = Azexport.objects.all().order_by("name")
+            if request.POST.get('count'):
+                count=int(request.POST.get('count'))
+
+
+        if request.POST.get('transfer'):
+            user_to=users.get(id=request.POST.get('transfer_to'))
+            companies_to=[]
+            all_posts=request.POST.items()
+            for k,v in all_posts:
+                if k[:4]=="take":
+                    companies_to.append(v)
+            Azexport.objects.filter(id__in=companies_to).update(user=user_to)
+
+        #--------------------------------------------------------------------------------------------------------------
+
+        #----------------------------------------------------------filters--------------------------------------------
+
+        remine_companies = companies.filter(reminder__lte=now)
+
+        if request.POST.get('search'):
+            s=request.POST.get('search')
+            companies = companies.filter(phone__contains=s)
+            filters["search"]=s
+
+        if not filters["search"]:
+            # if request.POST.get('data_type_filter'):
+            #     dt=request.POST.get('data_type_filter')
+            #     if dt=="1":
+            #         companies = companies.filter(fount__name="TOBB")
+            #         filters["data_type_filter"]["value"]="1"
+            #         filters["data_type_filter"]["name"]="Bahattin"
+            #     elif dt=="2":
+            #         companies = companies.filter(fount__name="GoogleMaps")
+            #         filters["data_type_filter"]["value"]="2"
+            #         filters["data_type_filter"]["name"]="Google"
+            #     elif dt=="3":
+            #         companies = companies.filter(fount__name="EXCEL")
+            #         filters["data_type_filter"]["value"]="3"
+            #         filters["data_type_filter"]["name"]="EXCEL"
+
+            if request.POST.get('last_status_filter'):
+                if request.POST.get('last_status_filter') != "0":
+                    companies = companies.filter(last_status__id = request.POST.get('last_status_filter'))
+                    x=Status.objects.get(id=request.POST.get('last_status_filter'))
+                    filters["last_status_filter"]["name"]=x.name
+                    filters["last_status_filter"]["value"]=x.id
+
+            # if request.POST.get('tel_filter'):
+            #     if request.POST.get('tel_filter') != "0":
+            #         if request.POST.get('tel_filter')=="tel":
+            #             companies = companies.filter(phone__istartswith="5")
+            #             filters["tel_filter"]["value"]="tel"
+            #             filters["tel_filter"]["name"]="Cep"
+            #         else:
+            #             companies = companies.exclude(phone__istartswith="5")
+            #             filters["tel_filter"]["value"]="office"
+            #             filters["tel_filter"]["name"]="Sabit"
+
+            # if request.POST.get('sector_filter'):
+            #     print(request.POST.get('sector_filter'))
+            #     if request.POST.get('sector_filter') != "Tümü":
+            #         companies = companies.filter(sector = request.POST.get('sector_filter'))
+            #         filters["sector_filter"] = request.POST.get('sector_filter')
+
+            
+            # if request.POST.get('city_filter'):
+            #     if request.POST.get('city_filter') != "0":
+            #         companies = companies.filter(city__id = request.POST.get('city_filter'))
+            #         x=cities.get(id=request.POST.get('city_filter'))
+            #         filters["city_filter"]["name"]=x.name
+            #         filters["city_filter"]["value"]=x.id
+
+
+
+        sectors = [x.sector for x in companies if x.sector]
+        sectors = list(dict.fromkeys(sectors))
+
+        #----------------------------------------------------------filters--------------------------------------------
+
+    context={
+        'companies': companies[:count],
+        'users':users,
+        'statuses':statuses,
+        "cities":cities,
+        "remine_companies":remine_companies,
+        "filters":filters,
+        "sectors":sectors,
+        "permisions":permisions,
+        }
+    return render(request,"companies_azexport.html",context=context)
+
+
+@login_required
+def http_company_azexport(request,company_id):
+    if request.method == 'POST':
+        company = Azexport.objects.get(id=company_id)
+        company.note=request.POST.get('note')
+        company.full_name = request.POST.get('fullname')
+        new_status=request.POST.get('status_add')
+        new_status=Status.objects.get(id=int(new_status))
+        company.status.add(new_status)
+        company.last_status = new_status
+        company.save()
+    company = Azexport.objects.get(id=company_id)
+    statuses = Status.objects.all()
+    last_status = company.last_status
+    return render(request,"company_azexport.html",{'company': company,'statuses':statuses,"last_status":last_status})
+
+
 
 
 @login_required

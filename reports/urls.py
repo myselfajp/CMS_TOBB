@@ -4,8 +4,10 @@ from .views import *
 app_name="reports"
 
 urlpatterns = [
-    path("companies",http_companies,name='companies'),
+    path("company_azexport-<int:company_id>",http_company_azexport,name='company_azexport'),
+    path("companies_azexport",http_azexport,name='companies_azexport'),
     path("company-<int:company_id>",http_company,name='company'),
+    path("companies",http_companies,name='companies'),
     path("sendmail",http_send_mail,name='sendmail'),
     path("reminder<int:company_id>",http_reminder,name='reminder'),
     path("reminder_report",http_reminder_report,name='reminder_report'),
