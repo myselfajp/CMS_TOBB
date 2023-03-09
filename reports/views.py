@@ -222,7 +222,6 @@ def http_azexport(request):
     cities = Cities.objects.all()
     users = User.objects.all()
     now=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    permisions=Permision.objects.all()
     if request.method == 'GET':
         companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
         sectors = [x.sector for x in companies if x.sector]
@@ -242,8 +241,6 @@ def http_azexport(request):
     count=500
     if request.method == 'POST':
         companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
-        sectors = [x.sector for x in companies if x.sector]
-        sectors = list(dict.fromkeys(sectors))
 
         if request.POST.get('company_id'):
             try:
@@ -257,8 +254,6 @@ def http_azexport(request):
                 company.save()
                 
                 companies = Azexport.objects.filter(user=request.user).order_by("-last_status")
-                sectors = [x.sector for x in companies if x.sector]
-                sectors = list(dict.fromkeys(sectors))
             except:
                 pass
             
@@ -322,20 +317,6 @@ def http_azexport(request):
             filters["search"]=s
 
         if not filters["search"]:
-            # if request.POST.get('data_type_filter'):
-            #     dt=request.POST.get('data_type_filter')
-            #     if dt=="1":
-            #         companies = companies.filter(fount__name="TOBB")
-            #         filters["data_type_filter"]["value"]="1"
-            #         filters["data_type_filter"]["name"]="Bahattin"
-            #     elif dt=="2":
-            #         companies = companies.filter(fount__name="GoogleMaps")
-            #         filters["data_type_filter"]["value"]="2"
-            #         filters["data_type_filter"]["name"]="Google"
-            #     elif dt=="3":
-            #         companies = companies.filter(fount__name="EXCEL")
-            #         filters["data_type_filter"]["value"]="3"
-            #         filters["data_type_filter"]["name"]="EXCEL"
 
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
@@ -343,33 +324,6 @@ def http_azexport(request):
                     x=Status.objects.get(id=request.POST.get('last_status_filter'))
                     filters["last_status_filter"]["name"]=x.name
                     filters["last_status_filter"]["value"]=x.id
-
-            # if request.POST.get('tel_filter'):
-            #     if request.POST.get('tel_filter') != "0":
-            #         if request.POST.get('tel_filter')=="tel":
-            #             companies = companies.filter(phone__istartswith="5")
-            #             filters["tel_filter"]["value"]="tel"
-            #             filters["tel_filter"]["name"]="Cep"
-            #         else:
-            #             companies = companies.exclude(phone__istartswith="5")
-            #             filters["tel_filter"]["value"]="office"
-            #             filters["tel_filter"]["name"]="Sabit"
-
-            # if request.POST.get('sector_filter'):
-            #     print(request.POST.get('sector_filter'))
-            #     if request.POST.get('sector_filter') != "Tümü":
-            #         companies = companies.filter(sector = request.POST.get('sector_filter'))
-            #         filters["sector_filter"] = request.POST.get('sector_filter')
-
-            
-            # if request.POST.get('city_filter'):
-            #     if request.POST.get('city_filter') != "0":
-            #         companies = companies.filter(city__id = request.POST.get('city_filter'))
-            #         x=cities.get(id=request.POST.get('city_filter'))
-            #         filters["city_filter"]["name"]=x.name
-            #         filters["city_filter"]["value"]=x.id
-
-
 
         sectors = [x.sector for x in companies if x.sector]
         sectors = list(dict.fromkeys(sectors))
@@ -384,7 +338,6 @@ def http_azexport(request):
         "remine_companies":remine_companies,
         "filters":filters,
         "sectors":sectors,
-        "permisions":permisions,
         }
     return render(request,"companies_azexport.html",context=context)
 
@@ -404,8 +357,6 @@ def http_company_azexport(request,company_id):
     statuses = Status.objects.all()
     last_status = company.last_status
     return render(request,"company_azexport.html",{'company': company,'statuses':statuses,"last_status":last_status})
-
-
 
 
 @login_required

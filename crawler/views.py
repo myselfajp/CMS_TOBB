@@ -1,4 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from selenium.webdriver.common.by import By
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -18,7 +19,6 @@ def create_account_tobb():
         driver = webdriver.Firefox()
         driver.set_window_position(-10000,0)
         driver.minimize_window()
-
 
         #-----get user and number from database
         account=AccountReport.objects.get(user_type="account")
@@ -85,6 +85,7 @@ def create_account_tobb():
         driver.close()
         return False
 
+@login_required
 def http_excel(request,city_slug):
     file = open("EXCEL.csv")
     csvreader = csv.reader(file)
@@ -116,6 +117,7 @@ def http_excel(request,city_slug):
     file.close()
     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
 
+@login_required
 def http_crawler_tobb(request,city_slug):
 
     #-------------get last sector saved by this city slug
@@ -419,7 +421,7 @@ def http_crawler_google(request):
 
     return render(request,"google_map.html",{"message":message,"cities":cities})
 
-
+@login_required
 def http_azexport(request,city_slug):
     url="https://azexport.az/index.php?route=product/seller/info&seller_id="
     num=1    
@@ -467,7 +469,6 @@ def http_azexport(request,city_slug):
                 azexport.city = Cities.objects.get(slug=city_slug)
                 azexport.fount = Fount.objects.get(name="AZEXPORT")
                 azexport.last_status = Status.objects.get(name="Yeni")
-
                 azexport.save()
             except:
                 pass
@@ -477,5 +478,4 @@ def http_azexport(request,city_slug):
         num+=1
         if num>1955:break
     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
-    
-    
+   

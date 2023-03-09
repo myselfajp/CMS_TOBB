@@ -24,225 +24,64 @@
                         <span>    Çıkış    </span>
                     </a>
                 </div>
+                
+                <div class="row justify-content-center">
+                    <form method="Post" action="{% url 'reports:companies_azexport' %}">
 
-                <form method="Post" action="{% url 'reports:companies' %}">
-                    {% if user.is_superuser %}
-                    Sayı:
-                    <input name="count" value="" style="height: 22px;width: 50px;"> 
-                    <br>
-                    <br>
-                    <br>
-                    Kullanıcı :
-                    <select name="user_filter" >
-                        {% if not filters.user_filter.name == "Tümü" %}
-                        <option value="{{filters.user_filter.value}}">{{filters.user_filter.name}}</option>
+                        {% if user.is_superuser %}
+                        Sayı:
+                        <input name="count" value="" style="height: 22px;width: 50px;"> 
+                        <br>
+                        <br>
+                        <br>
+                        Kullanıcı :
+                        <select name="user_filter" >
+                            {% if not filters.user_filter.name == "Tümü" %}
+                            <option value="{{filters.user_filter.value}}">{{filters.user_filter.name}}</option>
+                            {% endif %}
+                            {% for user in users %}
+                            {% if not user.id == filters.user_filter.value %}
+                            <option value="{{user.id}}">{{user.username}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
                         {% endif %}
-                        {% for user in users %}
-                        {% if not user.id == filters.user_filter.value %}
-                        <option value="{{user.id}}">{{user.username}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% endif %}
 
-                    <!-- data tipi:
-                    <select name="data_type_filter" >
-                        {% if filters.data_type_filter.name == "Google" %}
-                        <option value="2">Google</option>
-                        <option value="3">Excel</option>
-                        <option value="1">Bahattin</option>
-                        <option value="0">Tümü</option>
-                        {% elif  filters.data_type_filter.name == "Tümü" %}
-                        <option value="0">Tümü</option>
-                        <option value="3">Excel</option>
-                        <option value="1">Bahattin</option>
-                        <option value="2">Google</option>
-                        {% elif  filters.data_type_filter.name == "EXCEL" %}
-                        <option value="3">Excel</option>
-                        <option value="1">Bahattin</option>
-                        <option value="2">Google</option>
-                        <option value="0">Tümü</option>
-                        {% else %}
-                        <option value="1">Bahattin</option>
-                        <option value="3">Excel</option>
-                        <option value="2">Google</option>
-                        <option value="0">Tümü</option>
-                        {% endif %}
-                    </select> -->
-<!-- 
-                    İller:
-                    <select name="city_filter" >
-                        <option value="{{filters.city_filter.value}}">{{filters.city_filter.name}}</option>
-                        {% for city in cities %}
-                        {% if city.id == filters.city_filter.value %}
-                        <option value="0">Tümü</option>
-                        {% else %}
-                        <option value="{{city.id}}">{{city.name}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select> -->
-                    Durumlar :
-                    <select name="last_status_filter" >
-                        <option value="{{filters.last_status_filter.value}}">{{filters.last_status_filter.name}}</option>
-                        {% for status in statuses %}
-                        {% if not status.id == filters.last_status_filter.value %}
-                        <option value="{{status.id}}">{{status.name}}</option>
-                        {% else %}
-                        <option value="0">Tümü</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    <!-- Telefon:
-                    <select name="tel_filter">
-                        <option value="{{filters.tel_filter.value}}">{{filters.tel_filter.name}}</option>
-                        {% if filters.tel_filter.value == "tel" %}
-                        <option value="0">Tümü</option>
-                        <option value="office">Sabit</option>
-                        {% elif filters.tel_filter.value == "office" %}
-                        <option value="0">Tümü</option>
-                        <option value="tel">Cep</option>
-                        {% else %}
-                        <option value="tel">Cep</option>
-                        <option value="office">Sabit</option>
-                        {% endif %}
-                    </select>
-                    <br>
-                    <br>
-                    {% if sectors %}
-                    Sektörler:
-                    <select name="sector_filter" >
-                        <option value="{{filters.sector_filter}}">{{filters.sector_filter}}</option>
-                        {% for sector in sectors %}
-                        {% if sector == filters.sector_filter %}
-                        <option value="Tümü">Tümü</option>
-                        {% else %}
-                        <option value="{{sector}}">{{sector}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% else %}
-                    <span>Seçtiğiniz sektör ve filtrelere göre data bulunamadı</span>
-                    <br>
-                    {% endif %} -->
-                    <br>
-                    <br>
-                    Telefona göre arama :
-                    <input name="search" value="{{filters.search}}">
-                    <br>
-                    <br>
-                    <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
-                </form>
-            </div>
-            <div class="row justify-content-center">
+                        Durumlar :
+                        <select name="last_status_filter" >
+                            <option value="{{filters.last_status_filter.value}}">{{filters.last_status_filter.name}}</option>
+                            {% for status in statuses %}
+                            {% if not status.id == filters.last_status_filter.value %}
+                            <option value="{{status.id}}">{{status.name}}</option>
+                            {% else %}
+                            <option value="0">Tümü</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                
+                        <br>
+                        <br>
+                        Telefona göre arama :
+                        <input name="search" value="{{filters.search}}">
+                        <br>
+                        <br>
+                        <button onClick="this.disabled=true; this.innerText='Lütfen bekleyin';this.form.submit()"  type="submit" class="notification">  uygula  </button>
+                    </form>
+                </div>
                 <br>
                 <br>
             </div>
-            {% if not user.is_superuser %}
-            <div class="row justify-content-center">
-            <button onclick="window.open('{% url 'reports:reminder_report' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
-                <span>Hatırlatma</span>
-                {% if remine_companies %}
-                <span class="badge">{{ remine_companies|length }}</span>
-                {% endif %}
-            </button>
-            </div>
-            {% endif %}
-
             <br>
 
             <br><br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-wrap">
-                        {% if user.is_superuser %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>{{filters.city_filter.name}}</th>
-                                    {% for status in statuses %}
-                                    <th>{{status.name}}</th>
-                                    {% endfor %}
-                                    <th>cep</th>
-                                    <th>sabit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for user in users %}
-                                <tr>
-                                    <th>{{ user.username }}</th>
-                                    {% for status in statuses %}
-                                        <td>
-                                            {% StatusCounter user.id status.id filters.city_filter.value %}
-                                        </td>
-                                    {% endfor %}
-                                    <td>{% TelCounter user.id filters.city_filter.value %}</td>
-                                    <td>{% ComtelCounter user.id filters.city_filter.value %}</td>
-                                </tr>
-                                {% endfor %}
-                                
-                                
-                            </tbody>
-                        </table>
-                        {% endif %}
-
-
-
-                        <!-- <table id="form" style="display: none;">
-                            <tr>
-                                <form method="post" action="{% url 'reports:companies' %}">
-                                    <td>
-                                        <textarea name="company_name" placeholder="Unvan" style="width: 110px;font-size: small;" required></textarea>
-                                    </td>
-                                    <td>
-                                        <input name="company_tel" type="number" placeholder="Telefon" style="width: 110px;font-size: small;" required>
-                                    </td>
-                                    <td>
-                                        <input name="company_site"  placeholder="Site" style="width: 170px;font-size: small;" >
-                                    </td>
-                                    <td>
-                                        <input name="company_sector" placeholder="Sektor" style="width: 250px;font-size: small;" required>
-                                    </td>
-                                     <td>
-                                        <input name="company_fullname" placeholder="İsim Soyisim" style="width: 110px;font-size: small;" >
-                                     </td>
-                                     <td>
-                                        <textarea name="company_note" placeholder="Not" style="width: 110px;font-size: small;"></textarea>
-                                     </td>
-                                     <td>
-                                        <select name="company_city">
-                                            {% for city in cities %}
-                                            <option value="{{city.id}}">{{city.name}}</option>
-                                            {% endfor %}
-                                           </select>
-                                       </td>
-                                     <td>
-                                         <select name="company_status">
-                                             {% for status in statuses %}
-                                             <option value="{{status.id}}">{{status.name}}</option>
-                                             {% endfor %}
-                                            </select>
-                                        </td>
-                                        <td>
-                                         <input type="hidden" name="last_status_filter" value="{{filters.last_status_filter.value}}">
-                                         <input type="hidden" name="city_filter" value="{{filters.city_filter.value}}">
-                                         <input type="hidden" name="tel_filter" value="{{filters.tel_filter.value}}">
-                                         <input type="hidden" name="data_type_filter" value="{{filters.data_type_filter.value}}">
-                                         <input type="hidden" name="sector_filter" value="{{filters.sector_filter}}">
-                                         <button name="add_data" value="true" type="submit">  Ekle  </button>
-                                        </td>
-                                </form>
-                            </tr>
-                        </table>
- -->
-
-
+                  
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Unvan</th>
-                                    <!-- <th>Telefon</th> -->
-                                    <!-- <th style="width: 25px;">SİTE</th> -->
-                                    <!-- <th>Sektör</th> -->
                                     <th>Durum</th>
                                     <th>İsim Soyisim</th>
                                     <th>Not</th>
@@ -250,7 +89,7 @@
                                 </tr>
                             </thead>
                             {% if user.is_superuser %}
-                            <form method="post" action="{% url 'reports:companies' %}">
+                            <form method="post" action="{% url 'reports:companies_azexport' %}">
                             {% endif %}
                             <tbody>
                                 {% for company in companies %}
@@ -261,10 +100,6 @@
                                     {% endif %}
                                         <th><a href="{% url 'reports:company_azexport' company_id=company.id %}">{{company.name}}</a>
                                         </th>
-                                        <!-- <td><span data-text="({{company.phone|slice:'0:3'}}) {{company.phone|slice:'3:6'}} {{company.phone|slice:'6:8'}} {{company.phone|slice:'8:10'}}"></span></td> -->
-                                        <!-- <td ><a href="//{{company.site}}" target="blank" > <span style="display: inline-block; width: 20em;">{{company.site|slice:'0:30'}}...</span></a></td> -->
-                                        <!-- <td>{{company.sector}}</td> -->
-
                                         {% if not user.is_superuser %}
                                         <td>
                                             <select name="status_add">
@@ -325,29 +160,7 @@
                         
                         <button type="submit" name="transfer" Value="true">Paylaş</button>
                         </form>
-                        {% else %}
-                        <!-- <button  id="btn" class="notification">
-                            <span>    Data Ekle    </span>
-                        </button> -->
                         {% endif %}
-                        <!--      
-                        <button onclick="window.open('{% url 'crawler:google_map_crawler' %}', 'newwindow','width=1024,height=480'); return false;" class="notification">
-                            <span>    Google data    </span>
-                        </button> -->
-                             
-                        <!-- <button onclick="window.open('{% url 'reports:sendmail' %}',
-                            'newwindow', 
-                            'width=600,height=400'); 
-                        return false;" class="notification">Lansman gönder</button> -->
-                        {% for permision in permisions %}
-                        {% if permision.per_type == "azerbaycan" and user in permision.users.all %}
-                             
-                        <button onclick="window.open('{% url 'reports:azerbaycan' %}',
-                        'newwindow', 
-                        'width=600,height=400'); 
-                        return false;" class="notification">Azerbaycan</button>
-                        {% endif %}
-                        {% endfor %}
                         </table>
                     </div>
                 </div>
