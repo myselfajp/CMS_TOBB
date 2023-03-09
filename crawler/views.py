@@ -437,7 +437,7 @@ def http_azexport(request,city_slug):
             name=page.find("ul",attrs={"class":"breadcrumb"}).find_all("li")[-1].text
             azexport.name=name[:250]
             azexport.short_name = name[:11]
-
+            azexport.link = link
             for x in beu:
                 if "Legal Adress" in x.text:
                     address=x.find_all("td")[1].text.strip()

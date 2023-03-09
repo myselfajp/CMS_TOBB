@@ -121,6 +121,7 @@ class Agreement(models.Model):
 
 class Azexport(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name = "Kullanıcı")
+    link = models.CharField(max_length=300,null=True,verbose_name = "bağlantı")
     city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
     full_name = models.CharField(max_length=255,null=True,verbose_name = "Kişi Adı Soyadı")
     sector = models.CharField(max_length=255,null=True,verbose_name = "Sektör")
