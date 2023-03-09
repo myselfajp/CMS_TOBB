@@ -425,23 +425,26 @@ def http_azexport(request,city_slug):
     num=1    
     while True:
         link=url+str(num)
-        page=requests.get(link)
         try:
-  
-            beu=BeautifulSoup(page.text,'html.parser').find("table").find_all("tr")
+            page=BeautifulSoup(requests.get(link).text,'html.parser')
+            beu=page.find("table").find_all("tr")
+
 
             azexport = Azexport()
+
             azexport.user = request.user
-            azexport.city = Cities.objects.get(slug=city_slug)
-            azexport.fount = Fount.objects.get(name="AZEXPORT")
+
+            name=page.find("ul",attrs={"class":"breadcrumb"}).find_all("li")[-1].text
+            azexport.name=name[:250]
+            azexport.short_name = name[:11]
+
             for x in beu:
                 if "Legal Adress" in x.text:
                     address=x.find_all("td")[1].text.strip()
                     azexport.address = address
                 elif "Activity Group" in x.text:
                     sector = x.find_all("td")[1].text.strip()
-                    azexport.name = sector
-                    azexport.short_name = sector[:11]
+                    azexport.sector = sector
                 elif "Phone" in x.text:
                     phone = x.find_all("td")[1].text.strip()
                     azexport.phone = phone
@@ -461,7 +464,10 @@ def http_azexport(request,city_slug):
                     Twitter = x.find_all("td")[1].text.strip()
                     azexport.social_media = Twitter
             try:
+                azexport.city = Cities.objects.get(slug=city_slug)
+                azexport.fount = Fount.objects.get(name="AZEXPORT")
                 azexport.last_status = Status.objects.get(name="Yeni")
+
                 azexport.save()
             except:
                 pass
