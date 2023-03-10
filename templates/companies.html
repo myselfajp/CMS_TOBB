@@ -24,7 +24,12 @@
                         <span>    Çıkış    </span>
                     </a>
                 </div>
-
+                <div class="col-md-6 text-center mb-5">
+                    
+                    <a href="\" class="notification">
+                        <span>    Ana menü    </span>
+                    </a>
+                </div>
                 <form method="Post" action="{% url 'reports:companies' %}">
                     {% if user.is_superuser %}
                     Sayı:
