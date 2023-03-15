@@ -125,7 +125,7 @@ class Azexport(models.Model):
     city = models.ForeignKey(Cities,on_delete=models.CASCADE,verbose_name = "İl")
     full_name = models.CharField(max_length=255,null=True,verbose_name = "Kişi Adı Soyadı")
     sector = models.CharField(max_length=255,null=True,verbose_name = "Sektör")
-    name = models.CharField(max_length=255,null=True,verbose_name = "Firma unvanı")
+    name = models.CharField(max_length=255,null=True,verbose_name = "Firma unvanı",unique=True)
     short_name = models.CharField(max_length=11,null=True,verbose_name = "Firma unvanı(ilk 11 hanesi)")
     phone = models.CharField(max_length=20,null=True,verbose_name = "Sabit numarası")
     tel = models.CharField(max_length=30,null=True,verbose_name = "Cep numarası")
@@ -144,6 +144,6 @@ class Azexport(models.Model):
     def __str__(self):
         return f"{self.city}--{self.name}"
     class Meta:
-        unique_together = ('short_name', 'phone',)
+        # unique_together = ('short_name', 'phone',)
         verbose_name = "AzExport datası"
         verbose_name_plural = "AzExport dataları"
