@@ -483,7 +483,7 @@ def http_azexport(request,city_slug):
 def http_azerbaycan_yp(request,city_slug):
     site="https://www.azerbaijanyp.com/company/"
     page_number=7
-    for page_number in range(7,20300):
+    for page_number in range(4600,20300):
         try:
             page=site+str(page_number)
             source = BeautifulSoup(requests.get(page).text,'html.parser')
@@ -520,6 +520,7 @@ def http_azerbaycan_yp(request,city_slug):
                     azexport.fount = Fount.objects.get(name="AZERBAYCANYP")
                     azexport.last_status = Status.objects.get(name="Yeni")
                     azexport.save()
+                    print("save")
                 except Exception as e:
                     print("not save: ",page)
         except:
