@@ -478,4 +478,49 @@ def http_azexport(request,city_slug):
         num+=1
         if num>1955:break
     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
-   
+
+
+def http_azerbaycan_yp(request,city_slug):
+    site="https://www.azerbaijanyp.com/company/"
+    page_number=7
+    for page_number in range(7,20300):
+        try:
+            page=site+str(page_number)
+            source = BeautifulSoup(requests.get(page).text,'html.parser')
+            info = source.find_all("div",attrs={"class":"info"})
+            azexport = Azexport()
+            for x in info:
+                title=x.find("div").text
+                if title=="Phone Number" or title=="Mobile phone":
+                    tel = x.text.replace("Phone Number","").replace(" ","").strip()
+                    if (tel[:4]=="9945" or tel[:5]=="+9945" or tel[0]=="5"):
+                        tel=tel
+                    elif len(tel)>9:
+                        phone=tel
+                    else:
+                        tel=None
+                        phone=None
+
+                elif title=="Website":
+                    website = x.text.replace("Website","").strip()
+                elif title=="Company name":
+                    name = x.text.replace("Company name","").strip()
+                elif title=="Address":
+                    address = x.text.replace("Address","").strip()
+            if (tel or phone) and name:
+                azexport.name=name
+                azexport.short_name=name[:10]
+                azexport.tel=tel
+                azexport.website=website
+                azexport.address=address
+                azexport.link=page
+                try:
+                    azexport.user = request.user
+                    azexport.city = Cities.objects.get(slug=city_slug)
+                    azexport.fount = Fount.objects.get(name="AZERBAYCANYP")
+                    azexport.last_status = Status.objects.get(name="Yeni")
+                    azexport.save()
+                except Exception as e:
+                    print("not save: ",page)
+        except:
+            pass
