@@ -482,46 +482,71 @@ def http_azexport(request,city_slug):
 
 def http_azerbaycan_yp(request,city_slug):
     site="https://www.azerbaijanyp.com/company/"
-    page_number=7
-    for page_number in range(4600,20300):
+    for page_number in range(7,20300):
         try:
             page=site+str(page_number)
+
+
+            # page="https://www.azerbaijanyp.com/company/15207/GINAR_SANATORIUM" #test
+            # page="https://www.azerbaijanyp.com/company/20382/AccountingAz_LLC" #test
+
+
             source = BeautifulSoup(requests.get(page).text,'html.parser')
             info = source.find_all("div",attrs={"class":"info"})
+
             azexport = Azexport()
+            name=""
+            tel=""
+            phone=""
+            azexport.link=page
+
+            if "Verified Business" in source.text:
+                azexport.is_verified=True
             for x in info:
-                title=x.find("div").text
-                if title=="Phone Number" or title=="Mobile phone":
-                    tel = x.text.replace("Phone Number","").replace(" ","").strip()
-                    if (tel[:4]=="9945" or tel[:5]=="+9945" or tel[0]=="5"):
-                        tel=tel
-                    elif len(tel)>9:
-                        phone=tel
-                    else:
-                        tel=None
-                        phone=None
+                try:
+                    title=x.find("div").text
+                except:
+                    title=x.find("span").text
+
+                if title=="Phone Number":
+                    c=BeautifulSoup(str(x).replace("<br/>","\n"),'html.parser')
+                    phone = c.text.replace("Phone Number","").replace("\n"," | ").strip(" | ")
+                    azexport.phone = phone
+                    # print(phone)
+
+                elif title=="Mobile phone":
+                    c=BeautifulSoup(str(x).replace("<br/>","\n"),'html.parser')
+                    tel = c.text.replace("Mobile phone","").replace("\n"," | ").strip(" | ")
+                    azexport.tel = tel
+                    # print(tel)
 
                 elif title=="Website":
                     website = x.text.replace("Website","").strip()
+                    azexport.website=website
                 elif title=="Company name":
                     name = x.text.replace("Company name","").strip()
+                    azexport.name=name
+                    azexport.short_name=name[:10]
                 elif title=="Address":
                     address = x.text.replace("Address","").strip()
+                    azexport.address=address
+
             if (tel or phone) and name:
-                azexport.name=name
-                azexport.short_name=name[:10]
-                azexport.tel=tel
-                azexport.website=website
-                azexport.address=address
-                azexport.link=page
                 try:
                     azexport.user = request.user
                     azexport.city = Cities.objects.get(slug=city_slug)
                     azexport.fount = Fount.objects.get(name="AZERBAYCANYP")
                     azexport.last_status = Status.objects.get(name="Yeni")
                     azexport.save()
-                    print("save")
+                    print(azexport.is_verified)
+
+                    # print("save")
                 except Exception as e:
                     print("not save: ",page)
         except:
+            print("",title,"\nlink: ",page)
             pass
+        # break
+
+    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
+    

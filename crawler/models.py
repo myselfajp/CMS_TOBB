@@ -138,6 +138,7 @@ class Azexport(models.Model):
     status = models.ManyToManyField(Status,blank=True,related_name="azexport_status")
     last_status = models.ForeignKey(Status,on_delete=models.CASCADE ,related_name="azexport_last_status")
     note = models.TextField(null=True,blank=True,default='')
+    is_verified = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     reminder = models.DateTimeField(null=True, default=None)
