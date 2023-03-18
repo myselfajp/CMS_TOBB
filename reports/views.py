@@ -5,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from PIL import Image,ImageDraw,ImageFont
 from django.shortcuts import render,redirect
+from django.db.models import Q
 from kurgu.models import KJ
 import datetime
 import os
@@ -313,10 +314,25 @@ def http_azexport(request):
 
         if request.POST.get('search'):
             s=request.POST.get('search')
-            companies = companies.filter(phone__contains=s)
+            companies = companies.filter(tel__contains=s)
             filters["search"]=s
 
         if not filters["search"]:
+        
+            if request.POST.get('tel_filter'):
+                if request.POST.get('tel_filter') != "0":
+                    if request.POST.get('tel_filter')=="tel":
+                        companies = companies.filter(Q(tel__istartswith="9945") | Q(tel__istartswith="+9945") | Q(tel__istartswith="5") )
+                        filters["tel_filter"]["value"]="tel"
+                        filters["tel_filter"]["name"]="Cep"
+                    else:
+
+                        companies = companies.exclude(tel__istartswith="9945")
+                        companies = companies.exclude(tel__istartswith="+9945")
+                        companies = companies.exclude(tel__istartswith="5")
+                        filters["tel_filter"]["value"]="office"
+                        filters["tel_filter"]["name"]="Sabit"
+
 
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
@@ -324,6 +340,17 @@ def http_azexport(request):
                     x=Status.objects.get(id=request.POST.get('last_status_filter'))
                     filters["last_status_filter"]["name"]=x.name
                     filters["last_status_filter"]["value"]=x.id
+            if request.POST.get('data_type_filter'):
+                dt=request.POST.get('data_type_filter')
+                if dt=="1":
+                    companies = companies.filter(fount__name="AZEXPORT")
+                    filters["data_type_filter"]["value"]="1"
+                    filters["data_type_filter"]["name"]="ihracat"
+                elif dt=="2":
+                    companies = companies.filter(fount__name="AZERBAYCANYP")
+                    filters["data_type_filter"]["value"]="2"
+                    filters["data_type_filter"]["name"]="azerbaycan_yp"
+
 
         sectors = [x.sector for x in companies if x.sector]
         sectors = list(dict.fromkeys(sectors))

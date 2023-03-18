@@ -3,7 +3,6 @@
 
 <!doctype html>
 <html lang="en">
-
     <head>
         <title>Firmalar</title>
         <meta charset="utf-8">
@@ -14,7 +13,6 @@
 </head>
 
 <body>
-
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -25,7 +23,6 @@
                     </a>
                 </div>
                 <div class="col-md-6 text-center mb-5">
-                    
                     <a href="\" class="notification">
                         <span>    Ana menü    </span>
                     </a>
@@ -63,7 +60,38 @@
                             {% endif %}
                             {% endfor %}
                         </select>
-                
+                        data tipi:
+                        <select name="data_type_filter" >
+                            {% if filters.data_type_filter.name == "azerbaycan_yp" %}
+                            <option value="2">azerbaycan_yp</option>
+                            <option value="1">ihracat</option>
+                            <option value="0">Tümü</option>
+                            {% elif  filters.data_type_filter.name == "Tümü" %}
+                            <option value="0">Tümü</option>
+                            <option value="1">ihracat</option>
+                            <option value="2">azerbaycan_yp</option>
+                            {% elif  filters.data_type_filter.name == "ihracat" %}
+                            <option value="1">ihracat</option>
+                            <option value="2">azerbaycan_yp</option>
+                            <option value="0">Tümü</option>
+                            {% endif %}
+                        </select>
+                        <br>
+                        <br>
+                        Telefon:
+                        <select name="tel_filter">
+                            <option value="{{filters.tel_filter.value}}">{{filters.tel_filter.name}}</option>
+                            {% if filters.tel_filter.value == "tel" %}
+                            <option value="0">Tümü</option>
+                            <option value="office">Sabit</option>
+                            {% elif filters.tel_filter.value == "office" %}
+                            <option value="0">Tümü</option>
+                            <option value="tel">Cep</option>
+                            {% else %}
+                            <option value="tel">Cep</option>
+                            <option value="office">Sabit</option>
+                            {% endif %}
+                        </select>
                         <br>
                         <br>
                         Telefona göre arama :
