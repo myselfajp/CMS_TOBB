@@ -531,6 +531,24 @@ def http_azerbaycan_yp(request,city_slug):
                     address = x.text.replace("Address","").strip()
                     azexport.address=address
 
+
+                elif title=="Contact Person":
+                    full_name = x.text.replace("Contact Person","").strip()
+                    azexport.full_name += full_name+" - "
+                elif title=="Company manager":
+                    full_name = x.text.replace("Company manager","").strip()
+                    azexport.full_name += full_name+" - "
+                elif title=="Employees":
+                    try:
+                        personels_caount = x.text.replace("Employees","").strip()
+                        azexport.personels_caount = int(personels_caount.spilit("-")[1].strip())
+                    except:
+                        pass
+                elif title=="Establishment year":
+                    note = x.text.replace("Establishment year","").strip()
+                    azexport.note = "firma açılış tarihi: "+note
+
+
             if (tel or phone) and name:
                 try:
                     azexport.user = request.user
@@ -538,9 +556,7 @@ def http_azerbaycan_yp(request,city_slug):
                     azexport.fount = Fount.objects.get(name="AZERBAYCANYP")
                     azexport.last_status = Status.objects.get(name="Yeni")
                     azexport.save()
-                    print(azexport.is_verified)
-
-                    # print("save")
+                    print("save")
                 except Exception as e:
                     print("not save: ",page)
         except:
