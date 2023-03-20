@@ -9,7 +9,7 @@ class CompaniesAdmin(admin.ModelAdmin):
 
 class AzexportAdmin(admin.ModelAdmin):
     list_filter = ('is_verified','fount')
-    search_fields = ['name','address']
+    search_fields = ['name','address','tel','phone']
 
 # class MyModelAdmin(admin.ModelAdmin):
 #     def get_model_perms(self, request):

@@ -324,11 +324,13 @@ def http_azexport(request):
                     if request.POST.get('tel_filter')=="tel":
                         companies = companies.exclude(tel="")
                         companies = companies.exclude(tel="None")
+                        companies = companies.exclude(tel__isnull=True)
                         filters["tel_filter"]["value"]="tel"
                         filters["tel_filter"]["name"]="Cep"
                     elif request.POST.get('tel_filter')=="office":
                         companies = companies.exclude(phone="")
                         companies = companies.exclude(phone="None")
+                        companies = companies.exclude(phone__isnull=True)
                         filters["tel_filter"]["value"]="office"
                         filters["tel_filter"]["name"]="Sabit"
 
