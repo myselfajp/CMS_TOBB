@@ -333,6 +333,8 @@ def http_azexport(request):
                         filters["tel_filter"]["value"]="office"
                         filters["tel_filter"]["name"]="Sabit"
 
+            if request.POST.get('is_verified')=="2":
+                companies = companies.filter(is_verified = True)
 
             if request.POST.get('last_status_filter'):
                 if request.POST.get('last_status_filter') != "0":
