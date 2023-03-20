@@ -482,7 +482,7 @@ def http_azexport(request,city_slug):
 
 def http_azerbaycan_yp(request,city_slug):
     site="https://www.azerbaijanyp.com/company/"
-    for page_number in range(20300,21000):
+    for page_number in range(7,21000):
         try:
             page=site+str(page_number)
 
@@ -498,6 +498,7 @@ def http_azerbaycan_yp(request,city_slug):
             name=""
             tel=""
             phone=""
+            Person_name=""
             azexport.link=page
 
             if "Verified Business" in source.text:
@@ -534,10 +535,12 @@ def http_azerbaycan_yp(request,city_slug):
 
                 elif title=="Contact Person":
                     full_name = x.text.replace("Contact Person","").strip()
-                    azexport.full_name += full_name+" - "
+                    Person_name += full_name+" - "
+                    azexport.full_name += Person_name
                 elif title=="Company manager":
                     full_name = x.text.replace("Company manager","").strip()
-                    azexport.full_name += full_name+" - "
+                    Person_name += full_name+" - "
+                    azexport.full_name += Person_name
                 elif title=="Employees":
                     try:
                         personels_caount = x.text.replace("Employees","").strip()
