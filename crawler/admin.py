@@ -7,6 +7,10 @@ class CompaniesAdmin(admin.ModelAdmin):
     list_filter = ('user','city','last_status','sector')
     search_fields = ['name','address']
 
+class AzexportAdmin(admin.ModelAdmin):
+    list_filter = ('is_verified','fount')
+    search_fields = ['name','address']
+
 # class MyModelAdmin(admin.ModelAdmin):
 #     def get_model_perms(self, request):
 #         """
@@ -26,5 +30,5 @@ admin.site.register(AccountReport)
 admin.site.register(GoogleSearchReport)
 admin.site.register(Companies,CompaniesAdmin)
 admin.site.register(Permision)
-admin.site.register(Azexport)
+admin.site.register(Azexport,AzexportAdmin)
 admin.site.unregister(Group)
