@@ -322,14 +322,11 @@ def http_azexport(request):
             if request.POST.get('tel_filter'):
                 if request.POST.get('tel_filter') != "0":
                     if request.POST.get('tel_filter')=="tel":
-                        companies = companies.filter(Q(tel__istartswith="9945") | Q(tel__istartswith="+9945") | Q(tel__istartswith="5") )
+                        companies = companies.exclude(tel="")
                         filters["tel_filter"]["value"]="tel"
                         filters["tel_filter"]["name"]="Cep"
                     else:
-
-                        companies = companies.exclude(tel__istartswith="9945")
-                        companies = companies.exclude(tel__istartswith="+9945")
-                        companies = companies.exclude(tel__istartswith="5")
+                        companies = companies.exclude(phone="")
                         filters["tel_filter"]["value"]="office"
                         filters["tel_filter"]["name"]="Sabit"
 
