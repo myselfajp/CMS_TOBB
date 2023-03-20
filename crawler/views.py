@@ -482,7 +482,7 @@ def http_azexport(request,city_slug):
 
 def http_azerbaycan_yp(request,city_slug):
     site="https://www.azerbaijanyp.com/company/"
-    for page_number in range(7,20300):
+    for page_number in range(20300,21000):
         try:
             page=site+str(page_number)
 
