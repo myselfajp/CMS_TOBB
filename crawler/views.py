@@ -536,11 +536,11 @@ def http_azerbaycan_yp(request,city_slug):
                 elif title=="Contact Person":
                     full_name = x.text.replace("Contact Person","").strip()
                     Person_name += full_name+" - "
-                    azexport.full_name += Person_name
+                    azexport.full_name = Person_name
                 elif title=="Company manager":
                     full_name = x.text.replace("Company manager","").strip()
                     Person_name += full_name+" - "
-                    azexport.full_name += Person_name
+                    azexport.full_name = Person_name
                 elif title=="Employees":
                     try:
                         personels_caount = x.text.replace("Employees","").strip()
