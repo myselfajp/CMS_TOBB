@@ -559,7 +559,7 @@ def http_azerbaycan_yp(request,city_slug):
                     print("save")
                 except Exception as e:
                     print("not save: ",page)
-        except:
+        except Exception as e:
             print(e,"\nlink: ",page)
             pass
         # break
