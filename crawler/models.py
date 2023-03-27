@@ -63,7 +63,7 @@ class Companies(models.Model):
     def __str__(self):
         return f"{self.city}--{self.name}"
     class Meta:
-        unique_together = ('short_name', 'phone',)
+        # unique_together = ('short_name', 'phone',)
         verbose_name = "Data"
         verbose_name_plural = "Datalar"
 
