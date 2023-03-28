@@ -53,7 +53,7 @@ class KJ(models.Model):
 
 
     def __str__(self):
-        return self.company.company_name.name
+        return f"{self.company}--{self.user.username}"
     class Meta:
         verbose_name = "Kj listesi"
         verbose_name_plural = "Kj listeleri"
