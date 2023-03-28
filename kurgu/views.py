@@ -23,9 +23,11 @@ def http_kj_kurgu(request):
                 object.save()
 
             elif "company" in request.POST and request.POST.get("id")=="new":
-                object = KJ()
-                object.company = request.POST.get("company")
-                object.save()
+                c = request.POST.get("company")
+                if not KJ.objects.filter(company=c).exists():
+                    object = KJ()
+                    object.company = c
+                    object.save()
 
             elif "title" in request.POST:
                 object = KJ.objects.get(id=request.POST.get("id"))
@@ -197,10 +199,18 @@ def http_kj_kurgu(request):
     else:
         return HttpResponseRedirect("/")
 
+@csrf_exempt
 @login_required
 def http_kj_muhasebe(request):
-    kj_list=KJ.objects.all().order_by("record_date")
+    if request.method == "POST":
+        if request.POST.get("company"):
+            c=request.POST.get("company")
+            if not KJ.objects.filter(company=c).exists():
+                kj=KJ(company=c)
+                kj.save()
+            else:
+                print("not save")
+    kj_list=KJ.objects.all().order_by("-record_date")
     status_accounting = KJStatusAccounting.objects.all()
     users = User.objects.all()
-
     return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users})
