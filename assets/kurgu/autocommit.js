@@ -10,31 +10,54 @@ $("select").change(function(){
   keyupfunction3($(this).attr('name'),$(this).attr('class'), $(this).val())
 });
 
-$('input[id=datefield]').keyup(function(){
-  autodate($(this).val())
-});
 
-$('input[id=datetimefield]').keyup(function(){
-  autodatetime($(this).val())
-});
+function addDash(input) {
+  var val = input.value;
+  if ((val.length == 2 || val.length == 5) & ! (val.indexOf("/") == 1) ) {
+    val = val + '/';
+    input.value = val;
+  }
+}
 
-function autodate(value) {
-  if ((value.length == 2 || value.length == 5) & ! (value.indexOf("/") == 1) ) {
-    document.getElementById("datefield").value = value+"/"
+// تمام ورودی‌های مربوطه را به دست آورید
+var inputs = document.getElementsByName('play_date');
+
+// برای هر ورودی، یک رویداد `oninput` تعریف کنید تا هنگامی که کاربر مقدار را تغییر می‌دهد، تابع `addDash` را صدا بزند.
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].onkeyup = function() {
+    addDash(this);
   };
 }
 
-function autodatetime(value) {
-  if ((value.length == 2 || value.length == 5) & ! (value.indexOf("/") == 1) ) {
-    document.getElementById("datetimefield").value = value+"/"
-  };
-  if ((value.length == 10) & ! (value.indexOf("/") == 1) ) {
-    document.getElementById("datetimefield").value = value+"-"
-  };
-  if ((value.length == 13) & ! (value.indexOf("/") == 1) ) {
-    document.getElementById("datetimefield").value = value+":"
+
+function addDash2(input) {
+  var val = input.value;
+  if ((val.length == 2 || val.length == 5) & ! (val.indexOf("/") == 1) ) {
+    val = val + "/";
+    input.value = val;
+  }
+  if ((val.length == 10) & ! (val.indexOf("/") == 1) ) {
+    val = val + "-";
+    input.value = val;
+  }
+  if ((val.length == 13) & ! (val.indexOf("/") == 1) ) {
+    val = val + ":";
+    input.value = val;
+  }
+  
+}
+
+// تمام ورودی‌های مربوطه را به دست آورید
+var inputs = document.getElementsByName('record_date');
+
+// برای هر ورودی، یک رویداد `oninput` تعریف کنید تا هنگامی که کاربر مقدار را تغییر می‌دهد، تابع `addDash` را صدا بزند.
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].onkeyup = function() {
+    addDash2(this);
   };
 }
+
+
 
 
 function keyupfunction(name, id, value,check) {

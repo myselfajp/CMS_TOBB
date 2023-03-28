@@ -1,5 +1,5 @@
 from django.db import models
-from crawler.models import Agreement
+from django.contrib.auth.models import User
 
 # Create your models here.
 class KJStatus(models.Model):
@@ -21,7 +21,8 @@ class KJStatusAccounting(models.Model):
         verbose_name_plural = "KJ muhasebe Durumları"
 
 class KJ(models.Model):
-    company = models.ForeignKey(Agreement,on_delete=models.CASCADE)
+    company = models.CharField(default='', blank=True,max_length=250,verbose_name="Firma unvanı")
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True,verbose_name = "Kullanıcı")
 
     # Muhasebe
     client = models.CharField(default='', blank=True,max_length=250,verbose_name="Röportaj veren adı soyadı")
@@ -48,6 +49,8 @@ class KJ(models.Model):
     status = models.ForeignKey(KJStatus,blank=True,null=True,on_delete=models.CASCADE)
     status_accounting = models.ForeignKey(KJStatusAccounting,null=True,on_delete=models.CASCADE)
     play_date = models.DateField(default=None,null=True,verbose_name="Yayın tarihi")
+    record_date = models.DateTimeField(null=True,verbose_name = "Çekim tarihi")
+
 
     def __str__(self):
         return self.company.company_name.name

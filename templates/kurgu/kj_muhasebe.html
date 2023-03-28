@@ -6,7 +6,16 @@
     <link rel="stylesheet" href="{% static 'kurgu/table.css'  %}">
 </head>
 <body>
-
+  <table cellpadding="0"; cellspacing="0">
+        <thead>
+          <tr>
+            <th>Firma unvanı</th>
+          </tr>
+        </thead>
+        <tr>
+          <td><input style="text-align: center;" type="text" class="new" name="company" value="{{kj.company}}" /></td>
+        </tr>
+  </table>
   <table cellpadding="0"; cellspacing="0">
     <thead>
       <tr>
@@ -23,16 +32,17 @@
             <th>Altbant</th>
             <th>Yayın dakikasi</th>
             <th>Ödeme durumu</th>
+            <th>   kullanıcı   </th>
             <th>Not</th>
           </tr>
         </thead>
-        {% for kj in kj_list %}
-        {% if not user.username == "Ufuk" %}
+        <td><input  type="hidden" class="{{kj.id}}" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  checked></td>
 
+        {% for kj in kj_list %}
         <tr>
-            <td><input style="text-align: center;" type="text" name="record_date" id="datetimefield" placeholder="gün/ay/yıl-saat:dakika" class="{{kj.id}}" maxlength="16" value="{{kj.company.record_date|date:'d/m/Y'}}-{{kj.company.record_date|date:'H:i'}}"  ></td>
-            <td><input style="text-align: center;" type="text" name="play_date" id="datefield" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.play_date|date:'d/m/Y'}}"  ></td>
-            <td><span style="text-align: center;">{{kj.company.company_name.name}}</span></td>
+            <td><input style="text-align: center;" type="text" name="record_date" placeholder="gün/ay/yıl-saat:dakika" class="{{kj.id}}" maxlength="16" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  ></td>
+            <td><input style="text-align: center;" type="text" name="play_date" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.play_date|date:'d/m/Y'}}"  ></td>
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="company" value="{{kj.company}}" /></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="title" value="{{kj.title}}" /></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="nikname" value="{{kj.nikname}}"/></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="client" value="{{kj.client}}"/></td>
@@ -52,26 +62,18 @@
                 {% endfor %}
               </select>
             </td>
+            <td>
+              <select class="{{kj.id}}" name="user" >
+                <option value="{{kj.user.id}}">{{kj.user.username}}</option>
+                {% for x in users %}
+                {% if not x == kj.user %}
+                <option value="{{x.id}}">{{x.username}}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </td>
             <td><textarea style="text-align: center;" type="text" class="{{kj.id}}" name="note" >{{kj.note}}</textarea></td>
         </tr>
-        {% else %}
-        <tr>
-            <td>{{kj.company.record_date|date:'d/m/Y'}}-{{kj.company.record_date|date:'H:i'}}</td>
-            <td>{{kj.play_date|date:'d/m/Y'}}</td>
-            <td><span style="text-align: center;">{{kj.company.company_name.name}}</span></td>
-            <td>{{kj.title}}</td>
-            <td>{{kj.nikname}}</td>
-            <td>{{kj.client}}</td>
-            <td>{{kj.instagram}}</td>
-            <td>{{kj.website}}</td>
-            <td>{{kj.tel}}</td>
-            <td>{{kj.sponser}}</td>
-            <td>{{kj.ad_banner}}</td>
-            <td>{{kj.play_time_as_minuate}}</td>
-            <td>{{kj.status_accounting}}</td>
-            <td>{{kj.note}}</td>
-        </tr>
-        {% endif %}
         {% endfor %}
     </table>
 

@@ -1,15 +1,17 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from .models import KJ,KJStatus,KJStatusAccounting
+from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render,HttpResponseRedirect
 import json
+
 
 # Create your views here.
 @csrf_exempt
 @login_required
 def http_kj_kurgu(request):
-    if not request.user.is_authenticated:
+    if request.user.is_authenticated:
         kj_list=KJ.objects.all().order_by("-play_date")
         statuses=KJStatus.objects.all()
 
@@ -20,11 +22,19 @@ def http_kj_kurgu(request):
                 object.client=request.POST.get("client")
                 object.save()
 
+            elif "company" in request.POST and request.POST.get("id")=="new":
+                object = KJ()
+                object.company = request.POST.get("company")
+                object.save()
+
             elif "title" in request.POST:
                 object = KJ.objects.get(id=request.POST.get("id"))
                 object.title=request.POST.get("title")
                 object.save()
-
+            elif "company" in request.POST:
+                object = KJ.objects.get(id=request.POST.get("id"))
+                object.company=request.POST.get("company")
+                object.save()
             elif "instagram" in request.POST:
                 object = KJ.objects.get(id=request.POST.get("id"))
                 object.instagram=request.POST.get("instagram")
@@ -156,21 +166,12 @@ def http_kj_kurgu(request):
 
             elif "record_date" in request.POST:
                 object = KJ.objects.get(id=request.POST.get("id"))
-
                 datetime=request.POST.get("record_date").split("-")
-
                 date=datetime[0].split("/")
                 date="%s-%s-%s"%(date[2],date[1],date[0])
-
                 time=datetime[1]+":00"
-
-
                 datetime=date+"-"+time
-
-                agreement=object.company
-                agreement.record_date=datetime
-
-                agreement.save()
+                object.record_date=datetime
                 object.save()
 
             elif "status" in request.POST:
@@ -185,6 +186,11 @@ def http_kj_kurgu(request):
                 object = KJ.objects.get(id=request.POST.get("id"))
                 object.status_accounting=status
                 object.save()
+            elif "user" in request.POST:
+                user=User.objects.get(id=request.POST.get("user"))
+                object = KJ.objects.get(id=request.POST.get("id"))
+                object.user=user
+                object.save()
 
             return HttpResponse(json.dumps(message), content_type="application/json")
         return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses})
@@ -193,7 +199,8 @@ def http_kj_kurgu(request):
 
 @login_required
 def http_kj_muhasebe(request):
-    kj_list=KJ.objects.all().order_by("-company__record_date")
+    kj_list=KJ.objects.all().order_by("record_date")
     status_accounting = KJStatusAccounting.objects.all()
+    users = User.objects.all()
 
-    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting})
+    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users})
