@@ -22,7 +22,7 @@
   <table cellpadding="0"; cellspacing="0">
     <thead>
       <tr>
-            <th>Çekim tarihi(gün/ay/yıl-saat:dakika)</th>
+            <th><a href="{% url 'kurgu:kj_muhasebe'%}?filter={{tarih_filter}}">Çekim tarihi(gün/ay/yıl-saat:dakika)</a></th>
             <th>Yayın tarihi(gün/ay/yıl)</th>
             <th>Firma unvanı</th>
             <th>Ekranda yer alan firma unvanı</th>
@@ -42,7 +42,7 @@
         <td><input  type="hidden" class="{{kj.id}}" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  checked></td>
 
         {% for kj in kj_list %}
-        <tr>
+        <tr style="color: {{kj.status.color}};>
             <td><input style="text-align: center;" type="text" name="record_date" placeholder="gün/ay/yıl-saat:dakika" class="{{kj.id}}" maxlength="16" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  ></td>
             <td><input style="text-align: center;" type="text" name="play_date" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.play_date|date:'d/m/Y'}}"  ></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="company" value="{{kj.company}}" /></td>
@@ -56,10 +56,10 @@
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="ad_banner" value="{{kj.ad_banner}}" /></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="play_time_as_minuate" value="{{kj.play_time_as_minuate}}" /></td>
             <td>
-              <select class="{{kj.id}}" name="status_accounting" >
-                <option value="{{kj.status_accounting.id}}">{{kj.status_accounting}}</option>
+              <select class="{{kj.id}}" name="status" >
+                <option value="{{kj.status.id}}">{{kj.status}}</option>
                 {% for x in status_accounts %}
-                {% if not x == kj.status_accounting %}
+                {% if not x == kj.status %}
                 <option value="{{x.id}}">{{x.name}}</option>
                 {% endif %}
                 {% endfor %}

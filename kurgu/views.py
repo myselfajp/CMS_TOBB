@@ -221,4 +221,15 @@ def http_kj_muhasebe(request):
     kj_list=KJ.objects.all().order_by("-record_date")
     status_accounting = KJStatus.objects.all()
     users = User.objects.all()
-    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users})
+    tarih_filter="artan"
+
+    if request.method=="GET":
+        if request.GET.get("filter"):
+            if request.GET.get("filter")=="artan":
+                kj_list=kj_list.order_by("record_date")
+                tarih_filter="azalan"
+            elif  request.GET.get("filter")=="azalan":
+                kj_list=kj_list.order_by("-record_date")
+                tarih_filter="artan"
+
+    return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users,"tarih_filter":tarih_filter})
