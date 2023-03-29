@@ -42,7 +42,7 @@
         <td><input  type="hidden" class="{{kj.id}}" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  checked></td>
 
         {% for kj in kj_list %}
-        <tr style="background-color: {{kj.status.color}};>
+        <tr style="background-color: {{kj.status.color}}";>
             <td><input style="text-align: center;" type="text" name="record_date" placeholder="gün/ay/yıl-saat:dakika" class="{{kj.id}}" maxlength="16" value="{{kj.record_date|date:'d/m/Y'}}-{{kj.record_date|date:'H:i'}}"  ></td>
             <td><input style="text-align: center;" type="text" name="play_date" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.play_date|date:'d/m/Y'}}"  ></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="company" value="{{kj.company}}" /></td>
