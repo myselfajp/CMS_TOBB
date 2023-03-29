@@ -14,6 +14,16 @@ def http_kj_kurgu(request):
     if request.user.is_authenticated:
         kj_list=KJ.objects.all().order_by("-play_date")
         statuses=KJStatus.objects.all()
+        tarih_filter="artan"
+
+        if request.method=="GET":
+            if request.GET.get("filter"):
+                if request.GET.get("filter")=="artan":
+                    kj_list=kj_list.order_by("play_date")
+                    tarih_filter="azalan"
+                elif  request.GET.get("filter")=="azalan":
+                    kj_list=kj_list.order_by("-play_date")
+                    tarih_filter="artan"
 
         if request.method == "POST":
             message={"Status":"200"}
@@ -21,14 +31,12 @@ def http_kj_kurgu(request):
                 object = KJ.objects.get(id=request.POST.get("id"))
                 object.client=request.POST.get("client")
                 object.save()
-
             elif "company" in request.POST and request.POST.get("id")=="new":
                 c = request.POST.get("company")
                 if not KJ.objects.filter(company=c).exists():
                     object = KJ()
                     object.company = c
                     object.save()
-
             elif "title" in request.POST:
                 object = KJ.objects.get(id=request.POST.get("id"))
                 object.title=request.POST.get("title")
@@ -195,7 +203,7 @@ def http_kj_kurgu(request):
                 object.save()
 
             return HttpResponse(json.dumps(message), content_type="application/json")
-        return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses})
+        return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses,"tarih_filter":tarih_filter})
     else:
         return HttpResponseRedirect("/")
 
@@ -211,6 +219,6 @@ def http_kj_muhasebe(request):
             else:
                 print("not save")
     kj_list=KJ.objects.all().order_by("-record_date")
-    status_accounting = KJStatusAccounting.objects.all()
+    status_accounting = KJStatus.objects.all()
     users = User.objects.all()
     return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users})

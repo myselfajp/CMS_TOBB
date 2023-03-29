@@ -11,12 +11,13 @@
     <table cellpadding="0"; cellspacing="0">
         <thead>
           <tr>
-            <th>Yayın tarihi(gün/ay/yıl)</th>
+            <th><a href="{% url 'kurgu:kj_kurgu'%}?filter={{tarih_filter}}">Yayın tarihi(gün/ay/yıl)</a></th>
             <th>Yayın dakikasi</th>
             <th>   Firma Unvanı     </th>
             <th>Ekranda yer alan firma unvanı</th>
             <th>Kişi unvanı</th>
             <th>   Röportaj veren kişi   </th>
+            <th>         Tel_no         </th>
             <th>   Sponsorluk   </th>
             <th>   Altbant   </th>
             <th>Durum</th>
@@ -42,7 +43,7 @@
 
             <td><span style="text-align: center;">  {{kj.nikname}}  </span></td>
             <td><span style="text-align: center;">  {{kj.client}}  </span></td>
-
+            <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="tel" value="{{kj.tel}}" /></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="sponser" value="{{kj.sponser}}" /></td>
             <td><input style="text-align: center;" type="text" class="{{kj.id}}" name="ad_banner" value="{{kj.ad_banner}}" /></td>
 
@@ -99,7 +100,7 @@
             <td><input style="text-align: center;" type="checkbox"  class="{{kj.id}}" name="montaj" ></td>
             {% endif %}
 
-            <td><textarea style="text-align: center;" type="text"  class="{{kj.id}}" name="presentation" >{{ kj.presentation }}</textarea></td>
+            <td><textarea style="text-align: center;" type="text"  class="{{kj.id}}" name="presentation" >{{ kj.note }}</textarea></td>
 
           </tr>
           {% endfor %}
