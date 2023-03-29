@@ -21,16 +21,41 @@ def http_kj_kurgu(request):
         if request.user in permision:
             kj_list=KJ.objects.all().exclude(status__name="Yeni").exclude(status=None).order_by("-play_date")
             statuses=KJStatus.objects.all()
-            tarih_filter="artan"
-
+            c_tarih_filter="c_artan"
+            y_tarih_filter="y_artan"
+            company_name_filter="cn_artan"
+            status_filter="s_artan"
             if request.method=="GET":
                 if request.GET.get("filter"):
-                    if request.GET.get("filter")=="artan":
+
+                    if request.GET.get("filter")=="c_artan":
+                        kj_list=kj_list.order_by("record_date")
+                        c_tarih_filter="c_azalan"
+                    elif  request.GET.get("filter")=="c_azalan":
+                        kj_list=kj_list.order_by("-record_date")
+                        c_tarih_filter="c_artan"
+
+                    elif request.GET.get("filter")=="y_artan":
                         kj_list=kj_list.order_by("play_date")
-                        tarih_filter="azalan"
-                    elif  request.GET.get("filter")=="azalan":
+                        y_tarih_filter="y_azalan"
+                    elif  request.GET.get("filter")=="y_azalan":
                         kj_list=kj_list.order_by("-play_date")
-                        tarih_filter="artan"
+                        y_tarih_filter="y_artan"
+
+                    elif request.GET.get("filter")=="cn_artan":
+                        kj_list=kj_list.order_by("company")
+                        company_name_filter="cn_azalan"
+                    elif  request.GET.get("filter")=="cn_azalan":
+                        kj_list=kj_list.order_by("-company")
+                        company_name_filter="cn_artan"
+                    
+                    elif request.GET.get("filter")=="s_artan":
+                        kj_list=kj_list.order_by("status__name")
+                        status_filter="s_azalan"
+                    elif  request.GET.get("filter")=="s_azalan":
+                        kj_list=kj_list.order_by("-status__name")
+                        status_filter="s_artan"
+
 
             if request.method == "POST":
                 message={"Status":"200"}
@@ -210,7 +235,7 @@ def http_kj_kurgu(request):
                     object.save()
 
                 return HttpResponse(json.dumps(message), content_type="application/json")
-            return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses,"tarih_filter":tarih_filter})
+            return render(request,"kurgu/kj_kurgu.html",{"kj_list":kj_list,"statuses":statuses,"c_tarih_filter":c_tarih_filter,"y_tarih_filter":y_tarih_filter,"company_name_filter":company_name_filter,"status_filter":status_filter})
         else:
             return HttpResponseRedirect("/")
     else:
@@ -238,18 +263,42 @@ def http_kj_muhasebe(request):
             kj_list=KJ.objects.all().order_by("-record_date")
             status_accounting = KJStatus.objects.all()
             users = User.objects.all()
-            tarih_filter="artan"
-
+            c_tarih_filter="c_artan"
+            y_tarih_filter="y_artan"
+            company_name_filter="cn_artan"
+            status_filter="s_artan"
             if request.method=="GET":
                 if request.GET.get("filter"):
-                    if request.GET.get("filter")=="artan":
-                        kj_list=kj_list.order_by("record_date")
-                        tarih_filter="azalan"
-                    elif  request.GET.get("filter")=="azalan":
-                        kj_list=kj_list.order_by("-record_date")
-                        tarih_filter="artan"
 
-            return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users,"tarih_filter":tarih_filter})
+                    if request.GET.get("filter")=="c_artan":
+                        kj_list=kj_list.order_by("record_date")
+                        c_tarih_filter="c_azalan"
+                    elif  request.GET.get("filter")=="c_azalan":
+                        kj_list=kj_list.order_by("-record_date")
+                        c_tarih_filter="c_artan"
+
+                    elif request.GET.get("filter")=="y_artan":
+                        kj_list=kj_list.order_by("play_date")
+                        y_tarih_filter="y_azalan"
+                    elif  request.GET.get("filter")=="y_azalan":
+                        kj_list=kj_list.order_by("-play_date")
+                        y_tarih_filter="y_artan"
+
+                    elif request.GET.get("filter")=="cn_artan":
+                        kj_list=kj_list.order_by("company")
+                        company_name_filter="cn_azalan"
+                    elif  request.GET.get("filter")=="cn_azalan":
+                        kj_list=kj_list.order_by("-company")
+                        company_name_filter="cn_artan"
+                    
+                    elif request.GET.get("filter")=="s_artan":
+                        kj_list=kj_list.order_by("status__name")
+                        status_filter="s_azalan"
+                    elif  request.GET.get("filter")=="s_azalan":
+                        kj_list=kj_list.order_by("-status__name")
+                        status_filter="s_artan"
+                    
+            return render(request,"kurgu/kj_muhasebe.html",{"kj_list":kj_list,"status_accounts":status_accounting,"users":users,"c_tarih_filter":c_tarih_filter,"y_tarih_filter":y_tarih_filter,"company_name_filter":company_name_filter,"status_filter":status_filter})
         else:
             return HttpResponseRedirect("/")
     else:
