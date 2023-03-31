@@ -41,7 +41,7 @@ class KJ(models.Model):
     videos = models.BooleanField(default=False,verbose_name="Görseller")
     kj_detials = models.BooleanField(default=False,verbose_name="Görseller")
     banner = models.BooleanField(default=False,verbose_name="Afiş")
-    presentation = models.TextField(default='',verbose_name="Sunum")
+    presentation = models.DateField(default=None,null=True,verbose_name="Sunum tarihi")
     subtitle = models.BooleanField(default=False,verbose_name="Altyazı")
     youtube = models.BooleanField(default=False,verbose_name="Youtube")
     is_sent = models.BooleanField(default=False,verbose_name="Firmaya gönderim")

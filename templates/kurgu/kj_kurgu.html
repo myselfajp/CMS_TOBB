@@ -29,6 +29,7 @@
             <th>   Youtube  </th>
             <th>Montaj</th>
             <th>   Not   </th>
+            <th>   Sunum_Tarihi   </th>
           </tr>
         </thead>
         
@@ -101,7 +102,8 @@
             {% endif %}
 
             <td><textarea style="text-align: center;" type="text"  class="{{kj.id}}" name="presentation" >{{ kj.note }}</textarea></td>
-
+            <td><input style="text-align: center;" type="text" name="presentesion_date" placeholder="gün/ay/yıl" class="{{kj.id}}" maxlength="10" value="{{kj.presentation|date:'d/m/Y'}}"  ></td>
+            
           </tr>
           {% endfor %}
         </table>

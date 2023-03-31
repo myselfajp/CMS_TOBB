@@ -30,6 +30,25 @@ for (var i = 0; i < inputs.length; i++) {
 }
 
 
+function addDash3(input) {
+  var val = input.value;
+  if ((val.length == 2 || val.length == 5) & ! (val.indexOf("/") == 1) ) {
+    val = val + '/';
+    input.value = val;
+  }
+}
+
+// تمام ورودی‌های مربوطه را به دست آورید
+var inputs = document.getElementsByName('presentesion_date');
+
+// برای هر ورودی، یک رویداد `oninput` تعریف کنید تا هنگامی که کاربر مقدار را تغییر می‌دهد، تابع `addDash` را صدا بزند.
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].onkeyup = function() {
+    addDash3(this);
+  };
+}
+
+
 function addDash2(input) {
   var val = input.value;
   if ((val.length == 2 || val.length == 5) & ! (val.indexOf("/") == 1) ) {
