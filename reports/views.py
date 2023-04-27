@@ -438,24 +438,9 @@ def http_send_agreement(request,company_id):
     if request.method == "POST":
             agreement.user=request.user
             agreement.company_name=company
-            if request.POST.get("fullname"):
-                agreement.person_name=request.POST.get("fullname")
-            if request.POST.get("tel"):
-                agreement.person_number = request.POST.get("tel")
-            if request.POST.get("adres"):
-                agreement.record_place = request.POST.get("adres")
-            if request.POST.get("whatsapp"):
-                agreement.whatsapp = request.POST.get("whatsapp")
-            if request.POST.get("mail"):
-                agreement.mail = request.POST.get("mail")
-            if request.POST.get("created_date"):
-                agreement.created_date = request.POST.get("created_date")
-            if request.POST.get("record_date"):
-                agreement.record_date = request.POST.get("record_date")
             try:
                 agreement.save()
                 message="kayd edildi"
-
             except Exception as e:
                 print(e)
                 message="Hata oluştu,bilgileri tam girdiğinizden emin olunuz"
