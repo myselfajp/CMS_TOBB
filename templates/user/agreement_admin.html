@@ -31,23 +31,23 @@
     <br>
   
     <h4>Firma unvanı</h4>
-    <input name="company_name" value="{{agreement.company_name.name}}" style="width: 800px;" required>
+    <input name="company_name" value="{{agreement.company_name.name}}" style="width: 800px;" >
     <br>
 
     <h4>İsim Soyisim</h4>
     {% if agreement.person_name %}
-    <input name="person_name" value="{{agreement.person_name}}" style="width: 200px;" required>
+    <input name="person_name" value="{{agreement.person_name}}" style="width: 200px;" >
     {% else %}
-    <input name="person_name" value="" style="width: 200px;" required>
+    <input name="person_name" value="" style="width: 200px;" >
     {% endif %}
     <br>
     <br>
 
     <h4>Telefon numarası</h4>
     {% if agreement.person_number %}
-    <input name="person_number" value="{{agreement.person_number}}" style="width: 200px;" required>
+    <input name="person_number" value="{{agreement.person_number}}" style="width: 200px;" >
     {% else %}
-    <input name="person_number" value="" style="width: 200px;" required>
+    <input name="person_number" value="" style="width: 200px;" >
     {% endif %}
     <br>
     <br>
@@ -89,11 +89,11 @@
     <br>
 
     <h4>Sözleşme günü/saatı</h4>
-    <input type="datetime-local" name="created_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.created_date|date:'Y-m-d'}}T{{agreement.created_date|date:'H:i:s'}}" style="width: 200px;" required> 
+    <input type="datetime-local" name="created_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.created_date|date:'Y-m-d'}}T{{agreement.created_date|date:'H:i:s'}}" style="width: 200px;" > 
     <br>
 
     <h4>Çekim günü/saatı</h4>
-    <input type="datetime-local" name="record_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.record_date|date:'Y-m-d'}}T{{agreement.record_date|date:'H:i:s'}}" style="width: 200px;" required>
+    <input type="datetime-local" name="record_date" datetime-local="MM-DD-YYYY HH:mm" value="{{agreement.record_date|date:'Y-m-d'}}T{{agreement.record_date|date:'H:i:s'}}" style="width: 200px;" >
     <br>
 
     <div class="btn-block">
