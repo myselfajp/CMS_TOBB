@@ -295,7 +295,7 @@ def http_crawler_google(request):
     if request.method == "POST":
         from serpapi import GoogleSearch
         try:
-            api_key= AccountReport.objects.filter(user_type="api_key",owner=request.user,number__gte=10)[0]
+            api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
             if not api_key.status:
                 message = "Data arama limiti dolmuştur."
                 return render(request,"google_map.html",{"message":message,"cities":cities})
@@ -403,7 +403,7 @@ def http_crawler_google(request):
 
             else:
                 try:
-                    api_key= AccountReport.objects.filter(user_type="api_key",owner=request.user,number__gte=10)[0]
+                    api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
                     api_key_name = api_key.user
                     api_key_limit = api_key.number
                     if not api_key.status:
