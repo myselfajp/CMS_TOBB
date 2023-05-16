@@ -297,12 +297,14 @@ def http_crawler_google(request):
         try:
             api_key= AccountReport.objects.filter(user_type="api_key",number__gte=10)[0]
             if not api_key.status:
+                print("1")
                 message = "Data arama limiti dolmuştur."
                 return render(request,"google_map.html",{"message":message,"cities":cities})
 
             api_key_name = api_key.user
             api_key_limit = api_key.number
         except:
+            print("2")
             message = "Data arama limiti dolmuştur."
             return render(request,"google_map.html",{"message":message,"cities":cities})
     
@@ -407,9 +409,12 @@ def http_crawler_google(request):
                     api_key_name = api_key.user
                     api_key_limit = api_key.number
                     if not api_key.status:
+                        print("3")
                         message = "Data arama limiti dolmuştur."
                         return render(request,"google_map.html",{"message":message,"cities":cities})
                 except:
+                    print("4")
+
                     message = "Data arama limiti dolmuştur."
                     break
         g_s_r=GoogleSearchReport()
