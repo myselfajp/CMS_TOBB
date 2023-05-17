@@ -206,7 +206,7 @@ def http_crawler_tobb(request,city_slug):
                     title = all_feild[1].text.strip()
                     address = all_feild[3].text.strip()
                     contact = all_feild[4].text.strip()
-                    tel = contact[contact.index("T:")+2:contact.index("/")].replace("-","").replace(" ","").strip()
+                    tel = contact[contact.index("T:")+2:contact.index("/")].replace("-","").replace(" ","").replace(")","").replace("(","").strip()
                     if "www" in contact:
                         site = contact[contact.index("www"):].strip()
                     elif "@" in contact:
