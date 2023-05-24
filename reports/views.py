@@ -153,6 +153,9 @@ def http_companies(request):
                     filters["data_type_filter"]["value"]="1"
                     filters["data_type_filter"]["name"]="Bahattin"
                 elif dt=="2":
+                    companies = Companies.objects.filter(Q(user__username="admin") | Q(user=request.user)).order_by("-last_status")
+                    sectors = [x.sector for x in companies if x.sector]
+                    sectors = list(dict.fromkeys(sectors))
                     companies = companies.filter(fount__name="GoogleMaps")
                     filters["data_type_filter"]["value"]="2"
                     filters["data_type_filter"]["name"]="Google"
@@ -390,6 +393,10 @@ def http_company_azexport(request,company_id):
 def http_company(request,company_id):
     if request.method == 'POST':
         company = Companies.objects.get(id=company_id)
+        
+        if company.fount.name == "GoogleMaps":
+            company.user=request.user
+
         company.note=request.POST.get('note')
         company.full_name = request.POST.get('fullname')
         new_status=request.POST.get('status_add')
