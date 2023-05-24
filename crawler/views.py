@@ -371,7 +371,7 @@ def http_crawler_google(request):
                         tel_code=tel[0]
                         tel_number="".join(tel[1:])
                         print(x)
-                        company.user = request.user
+                        company.user = User.objects.get(username="admin")
                         company.name = x["title"]
                         company.sector = f"{city.name}-{location}-{word}"
                         company.full_name =""
