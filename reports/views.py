@@ -146,6 +146,7 @@ def http_companies(request):
             for x in cc:
                 x.user=user_to
                 x.note=''
+                x.full_name = ''
                 x.status.add(yy)
                 x.last_status = yy
                 x.save()
