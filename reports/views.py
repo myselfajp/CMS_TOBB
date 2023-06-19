@@ -141,7 +141,14 @@ def http_companies(request):
             for k,v in all_posts:
                 if k[:4]=="take":
                     companies_to.append(v)
-            Companies.objects.filter(id__in=companies_to).update(user=user_to,note='',status=Status.objects.get(name="Yeni"))
+            cc = Companies.objects.filter(id__in=companies_to)
+            yy=Status.objects.get(name="Yeni")
+            for x in cc:
+                x.user=user_to
+                x.note=''
+                x.status.add(yy)
+                x.last_status = yy
+                x.save()
         #--------------------------------------------------------------------------------------------------------------
 
         #----------------------------------------------------------filters--------------------------------------------
@@ -317,14 +324,14 @@ def http_azexport(request):
                     companies_to.append(v)
             Azexport.objects.filter(id__in=companies_to).update(user=user_to)
 
-            if request.POST.get('clear'):
-                user_to=users.get(id=request.POST.get('transfer_to'))
-                companies_to=[]
-                all_posts=request.POST.items()
-                for k,v in all_posts:
-                    if k[:4]=="take":
-                        companies_to.append(v)
-                Azexport.objects.filter(id__in=companies_to).update(user=user_to,note='',status=Status.objects.get(name="Yeni"))
+        if request.POST.get('clear'):
+            user_to=users.get(id=request.POST.get('transfer_to'))
+            companies_to=[]
+            all_posts=request.POST.items()
+            for k,v in all_posts:
+                if k[:4]=="take":
+                    companies_to.append(v)
+            Azexport.objects.filter(id__in=companies_to).update(user=user_to,note='',status=Status.objects.get(name="Yeni"))
         #--------------------------------------------------------------------------------------------------------------
 
         #----------------------------------------------------------filters--------------------------------------------
