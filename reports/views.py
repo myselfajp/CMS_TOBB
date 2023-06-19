@@ -133,7 +133,15 @@ def http_companies(request):
                 if k[:4]=="take":
                     companies_to.append(v)
             Companies.objects.filter(id__in=companies_to).update(user=user_to)
-
+            
+        if request.POST.get('clear'):
+            user_to=users.get(id=request.POST.get('transfer_to'))
+            companies_to=[]
+            all_posts=request.POST.items()
+            for k,v in all_posts:
+                if k[:4]=="take":
+                    companies_to.append(v)
+            Companies.objects.filter(id__in=companies_to).update(user=user_to,note='',status=Status.objects.get(name="Yeni"))
         #--------------------------------------------------------------------------------------------------------------
 
         #----------------------------------------------------------filters--------------------------------------------
@@ -309,6 +317,14 @@ def http_azexport(request):
                     companies_to.append(v)
             Azexport.objects.filter(id__in=companies_to).update(user=user_to)
 
+            if request.POST.get('clear'):
+                user_to=users.get(id=request.POST.get('transfer_to'))
+                companies_to=[]
+                all_posts=request.POST.items()
+                for k,v in all_posts:
+                    if k[:4]=="take":
+                        companies_to.append(v)
+                Azexport.objects.filter(id__in=companies_to).update(user=user_to,note='',status=Status.objects.get(name="Yeni"))
         #--------------------------------------------------------------------------------------------------------------
 
         #----------------------------------------------------------filters--------------------------------------------
