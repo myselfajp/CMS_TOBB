@@ -12,9 +12,8 @@ import csv
 
 
 def create_account_tobb():
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    check = requests.get("https://rekteam.com/check",headers=headers).text
-    if check=='{"response": "ok"}':
+    check =True
+    if check:
 
         driver = webdriver.Firefox()
         driver.set_window_position(-10000,0)
