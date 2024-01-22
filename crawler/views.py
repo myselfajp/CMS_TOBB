@@ -2,14 +2,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from selenium.webdriver.common.by import By
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from .models import *
+from .utils import *
+import threading
 import requests
 import time
 import csv
-
 
 def create_account_tobb():
     check =True
@@ -483,7 +484,6 @@ def http_azexport(request,city_slug):
         if num>1955:break
     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
 
-
 def http_azerbaycan_yp(request,city_slug):
     site="https://www.azerbaijanyp.com/company/"
     for page_number in range(7,21000):
@@ -572,4 +572,54 @@ def http_azerbaycan_yp(request,city_slug):
         # break
 
     return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
-    
+
+def firmaTurkiye(request,city_slug):
+    print("robot started")
+    for url,city in Collect(city_slug):
+        obj = getOne(url,city)
+        if obj:
+
+            company = Companies()
+            company.user = request.user
+            if x := obj.get("address") : company.address = x
+            if x := obj.get("sector") :company.sector = x
+            if x := obj.get("name") :
+                company.name = x
+                company.short_name = x[0:11]
+            if x := obj.get("tel") :company.phone = x
+            if x := obj.get("site") :company.site = x
+            if x := obj.get("note") :company.note = x
+
+            company.fount = Fount.objects.get(name="firmaturkiye.com")
+            company.city = Cities.objects.get(name=city_slug)
+            company.last_status = Status.objects.get(name="Yeni")
+            try:
+                company.save()
+                company.status.add(Status.objects.get(name="Yeni"))
+                company.save()
+                print("added.")
+
+            except Exception as e:
+                print(e)
+                pass
+
+
+class firmaTurkiyeThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.request = None
+        self.city = None
+
+    def run(self):
+        firmaTurkiye(self.request,self.city)
+
+def Http_firmaTurkiye(request,city_slug):
+    if request.user.is_superuser:
+        text_thread = firmaTurkiyeThread()
+        text_thread.request = request
+        text_thread.city = city_slug
+        
+        text_thread.start()
+        return HttpResponse('<h1>Robot işe başladı, bu sayfayı kapatabilirsiniz!</h1>')
+    else:
+        return redirect("/")
