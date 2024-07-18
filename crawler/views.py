@@ -99,49 +99,48 @@ def create_account_tobb():
 
 @login_required
 def http_excel(request, city_slug):
-    file = open("EXCEL.csv")
-    csvreader = csv.reader(file)
-    rows = []
-    count = 0
-    for row in csvreader:
-        company = Companies()
-        user = request.user
-        sector = row[0]
-        name = row[1]
-        short_name = row[1][0:11]
-        phone = str(row[2])
-        site = row[3]
-        address = row[4]
-        fount = Fount.objects.get(name="EXCEL")
-        city = Cities.objects.get(slug=city_slug)
-        last_status = Status.objects.get(name="Yeni")
-        try:
-            print(count)
-            count += 1
-            rows.append(
-                Companies(
-                    user=user,
-                    sector=sector,
-                    name=name,
-                    short_name=short_name,
-                    phone=phone,
-                    site=site,
-                    fount=fount,
-                    city=city,
-                    last_status=last_status,
-                    address=address,
+    # Specify the encoding when opening the file
+    with open("EXCEL.csv", encoding="utf-8") as file:
+        csvreader = csv.reader(file)
+        rows = []
+        count = 0
+        for row in csvreader:
+            try:
+                company = Companies()
+                user = request.user
+                sector = row[0]
+                name = row[1]
+                short_name = row[1][0:11]
+                phone = str(row[2])
+                site = row[3]
+                address = row[4]
+                fount = Fount.objects.get(name="EXCEL")
+                city = Cities.objects.get(slug=city_slug)
+                last_status = Status.objects.get(name="Yeni")
+
+                print(count)
+                count += 1
+                rows.append(
+                    Companies(
+                        user=user,
+                        sector=sector,
+                        name=name,
+                        short_name=short_name,
+                        phone=phone,
+                        site=site,
+                        fount=fount,
+                        city=city,
+                        last_status=last_status,
+                        address=address,
+                    )
                 )
-            )
+            except Exception as e:
+                print(f"Error processing row {count}: {e}")
 
-            # company.status.add(Status.objects.get(name="Yeni"))
-            # company.save()
-        except:
-            pass
-    objs = Companies.objects.bulk_create(rows)
-    # print(row)
+        # Bulk create to improve performance
+        Companies.objects.bulk_create(rows)
 
-    file.close()
-    return HttpResponse(f"<h1 align='center' >Finish</h1><br><a href='/'>Home</a>")
+    return HttpResponse(f"<h1 align='center'>Finish</h1><br><a href='/'>Home</a>")
 
 
 @login_required
