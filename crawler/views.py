@@ -110,7 +110,7 @@ def http_excel(request, city_slug):
                 user = request.user
                 sector = row[0]
                 name = row[1]
-                short_name = row[1][0:11]
+                short_name = row[1][0:5] + str(count)
                 phone = str(row[2])
                 site = row[3]
                 address = row[4]
