@@ -73,19 +73,24 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-DATABASES = {  
-    'default': {  
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'anonim',  
-        'USER': 'root',  
-        'PASSWORD': '',  
-        'HOST': '127.0.0.1',  
-        'PORT': '3306',
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }  
-    }  
-}  
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "anonim_db",
+        "USER": "anonim_user",
+        "PASSWORD": "StrongP@ssw0rd!",
+        "HOST": "127.0.0.1",   # از localhost به 127.0.0.1 تغییر بده که از TCP استفاده کند
+        "PORT": "3306",
+        "OPTIONS": {
+            "charset": "utf8mb4",
+            "init_command": "SET NAMES utf8mb4 COLLATE utf8mb4_tr_0900_ai_ci",
+        },
+        "TEST": {  # برای تست‌های Django
+            "CHARSET": "utf8mb4",
+            "COLLATION": "utf8mb4_tr_0900_ai_ci",
+        },
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

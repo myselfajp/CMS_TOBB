@@ -12,14 +12,25 @@ import requests
 import time
 import csv
 
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+
+GECKO = "/snap/bin/geckodriver"
+FIREFOX_BIN = "/snap/firefox/current/usr/lib/firefox/firefox"
+
+opts = Options()
+opts.binary_location = FIREFOX_BIN
+svc = Service(GECKO)
+
 
 def create_account_tobb():
     check = True
     if check:
+                
 
-        driver = webdriver.Firefox()
-        driver.set_window_position(-10000, 0)
-        driver.minimize_window()
+
+
+        driver = webdriver.Firefox(service=svc, options=opts)
 
         # -----get user and number from database
         account = AccountReport.objects.get(user_type="account")
@@ -162,9 +173,7 @@ def http_crawler_tobb(request, city_slug):
         # login if account created
         if account:
             try:
-                driver = webdriver.Firefox()
-                driver.set_window_position(-10000, 0)
-                driver.minimize_window()
+                driver = webdriver.Firefox(service=svc, options=opts)
 
                 driver.get("https://sanayi.tobb.org.tr/")
 
@@ -212,7 +221,6 @@ def http_crawler_tobb(request, city_slug):
 
     # ---------------------------------------------------------------------------------------------------------get sectors of saved in city
     for subsector in list_of_subsectors[subsector_start_save:]:
-
         try:
             driver.get(subsector)
             page_0 = BeautifulSoup(driver.page_source, "html.parser")
@@ -235,97 +243,100 @@ def http_crawler_tobb(request, city_slug):
 
         for sector in list_of_sectors[sector_start_save:]:
 
-            try:
-                driver.get(sector)
-                limit += 1
-                page = BeautifulSoup(driver.page_source, "html.parser")
-                table = page.find_all("table")[-2].find_all("tr")
 
-                for row in table[1:]:
-                    all_feild = row.find_all("td")
-                    title = all_feild[1].text.strip()
-                    address = all_feild[3].text.strip()
-                    contact = all_feild[4].text.strip()
-                    tel = (
-                        contact[contact.index("T:") + 2 : contact.index("/")]
-                        .replace("-", "")
-                        .replace(" ", "")
-                        .replace(")", "")
-                        .replace("(", "")
-                        .strip()
-                    )
-                    if "www" in contact:
-                        site = contact[contact.index("www") :].strip()
-                    elif "@" in contact:
-                        try:
-                            site = contact[
-                                contact.index("@")
-                                + 1 : contact.index("/", contact.index("@"))
-                            ].strip()
-                            site = "www." + site
-                        except:
-                            site = contact[contact.index("@") + 1 :].strip()
-                            site = "www." + site
-                    else:
-                        site = "bulunmadı"
-                    population = all_feild[5].text.strip()
+            driver.get(sector)
+            limit += 1
+            page = BeautifulSoup(driver.page_source, "html.parser")
+            table = page.find_all("table")[-2].find_all("tr")
 
-                    company = Companies()
-                    company.user = request.user
-                    company.sector = sub_sector_name
-                    company.name = title
-                    company.short_name = title[0:11]
-                    if tel[0] == "0":
-                        tel = tel[1:]
-                    company.phone = tel
-                    company.site = site
-                    company.address = address
-                    company.personels_caount = population
-                    company.note = ""
-                    company.fount = Fount.objects.get(name="TOBB")
-                    company.city = Cities.objects.get(slug=city_slug)
-                    company.last_status = Status.objects.get(name="Yeni")
+            for row in table[1:]:
+                print("4")
+
+                all_feild = row.find_all("td")
+                title = all_feild[1].text.strip()
+                address = all_feild[3].text.strip()
+                contact = all_feild[4].text.strip()
+                tel = (
+                    contact[contact.index("T:") + 2 : contact.index("/")]
+                    .replace("-", "")
+                    .replace(" ", "")
+                    .replace(")", "")
+                    .replace("(", "")
+                    .strip()
+                )
+                if "www" in contact:
+                    site = contact[contact.index("www") :].strip()
+                elif "@" in contact:
                     try:
-                        if not tel[0:3] in ["444", "850"]:
-                            company.save()
-                            company.status.add(Status.objects.get(name="Yeni"))
-                            company.save()
+                        site = contact[
+                            contact.index("@")
+                            + 1 : contact.index("/", contact.index("@"))
+                        ].strip()
+                        site = "www." + site
                     except:
-                        pass
-                if limit > 95:
-                    driver.close()
-                    check = True
-                    # login------------------------------------------------
-                    while check:
-                        account = create_account_tobb()
-                        if account:
-                            try:
-                                driver = webdriver.Firefox()
-                                driver.set_window_position(-10000, 0)
-                                driver.minimize_window()
-                                driver.get("https://sanayi.tobb.org.tr/")
+                        site = contact[contact.index("@") + 1 :].strip()
+                        site = "www." + site
+                else:
+                    site = "bulunmadı"
+                population = all_feild[5].text.strip()
 
-                                username_feild = driver.find_element(By.NAME, "user")
-                                password_feild = driver.find_element(By.NAME, "pass")
-                                login = driver.find_element(By.NAME, "giris")
+                company = Companies()
+                company.user = request.user
+                company.sector = sub_sector_name
+                company.name = title
+                company.short_name = title[0:11]
+                if tel[0] == "0":
+                    tel = tel[1:]
+                company.phone = tel
+                company.site = site
+                company.address = address
+                company.personels_caount = population
+                company.note = ""
+                company.fount = Fount.objects.get(name="TOBB")
+                company.city = Cities.objects.get(slug=city_slug)
+                company.last_status = Status.objects.get(name="Yeni")
 
-                                username_feild.send_keys(account["user"])
-                                password_feild.send_keys(account["pass"])
-                                login.click()
+                try:
+                    if not tel[0:3] in ["444", "850"]:
+                        company.save()
+                        company.status.add(Status.objects.get(name="Yeni"))
+                        company.save()
 
-                                limit = 0
-                                check = False
-                            except:
-                                driver.close()
-                                pass
-                    # login------------------------------------------------
-                city.sub_sector_report = subsector_start
-                city.sector_report = sector_start
-                city.save()
+                except Exception as e:
+                    print(e)
 
-                sector_start += 1
-            except:
-                pass
+            if limit > 95:
+                driver.close()
+                check = True
+                # login------------------------------------------------
+                while check:
+                    account = create_account_tobb()
+                    if account:
+                        try:
+                            driver = webdriver.Firefox(service=svc, options=opts)
+                            driver.get("https://sanayi.tobb.org.tr/")
+
+                            username_feild = driver.find_element(By.NAME, "user")
+                            password_feild = driver.find_element(By.NAME, "pass")
+                            login = driver.find_element(By.NAME, "giris")
+
+                            username_feild.send_keys(account["user"])
+                            password_feild.send_keys(account["pass"])
+                            login.click()
+
+                            limit = 0
+                            check = False
+                        except:
+                            driver.close()
+                            pass
+                # login------------------------------------------------
+            city.sub_sector_report = subsector_start
+            city.sector_report = sector_start
+            city.save()
+
+            sector_start += 1
+
+                
 
         subsector_start += 1
         sector_start = 0
