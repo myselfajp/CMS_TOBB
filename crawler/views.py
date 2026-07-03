@@ -1,9 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from selenium.webdriver.common.by import By
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from selenium import webdriver
 from bs4 import BeautifulSoup
 from .models import *
 from .utils import *
@@ -12,100 +10,43 @@ import requests
 import time
 import csv
 
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
-
-GECKO = "/snap/bin/geckodriver"
-FIREFOX_BIN = "/snap/firefox/current/usr/lib/firefox/firefox"
-
-opts = Options()
-opts.binary_location = FIREFOX_BIN
-svc = Service(GECKO)
-
-
-def create_account_tobb():
-    check = True
-    if check:
-                
-
-
-
-        driver = webdriver.Firefox(service=svc, options=opts)
-
-        # -----get user and number from database
-        account = AccountReport.objects.get(user_type="account")
-        account.number += 1
-        account.save()
-        # get user and number from database-----
-
-        try:
-            username = f"{account.user}{account.number}"
-            # ---------------------------------------------------------get an email from mohmal
-            driver.get("https://www.mohmal.com/en")
-            driver.find_element(By.ID, "rand").click()
-            mail = (
-                driver.find_element(By.ID, "email")
-                .find_element(By.CLASS_NAME, "email")
-                .text
-            )
-            time.sleep(7)
-            # get an email from mohmal---------------------------------------------------------
-
-            # -----------------------------------------------------------signup in tobb
-            driver.get("https://sanayi.tobb.org.tr/firma_kayit3.php")
-
-            business_feild = driver.find_element(By.NAME, "firma_unvani")
-            name_feild = driver.find_element(By.NAME, "yetkili")
-            post_feild = driver.find_element(By.NAME, "posta_adresi")
-            tel02 = driver.find_element(By.NAME, "tel_2")
-            tel03 = driver.find_element(By.NAME, "tel_3")
-            faks02 = driver.find_element(By.NAME, "faks_2")
-            faks03 = driver.find_element(By.NAME, "faks_3")
-            mail_feild = driver.find_element(By.NAME, "email")
-            status = driver.find_element(By.NAME, "statu")
-            username_feild = driver.find_element(By.NAME, "kullanici")
-            submit = driver.find_element(By.NAME, "gonder")
-
-            business_feild.send_keys("AliParsa")
-            name_feild.send_keys("AliParsa")
-            post_feild.send_keys("AliParsa")
-            tel02.send_keys("000")
-            tel03.send_keys("0000")
-            faks02.send_keys("000")
-            faks03.send_keys("0000")
-            mail_feild.send_keys(mail)
-            username_feild.send_keys(username)
-            status.click()
-            submit.click()
-            # signup in tobb-----------------------------------------------------------
-
-            # -------------------------------------------------back to mohmal for get password
-            time.sleep(7)
-            driver.get("https://www.mohmal.com/en/refresh")
-            time.sleep(7)
-            driver.find_element(By.CLASS_NAME, "subject").click()
-            time.sleep(7)
-            inbox = (
-                BeautifulSoup(driver.page_source, "html.parser")
-                .find("iframe")
-                .attrs["src"]
-            )
-            driver.get("https://www.mohmal.com" + inbox)
-            password = (
-                BeautifulSoup(driver.page_source, "html.parser")
-                .find_all("td")[-1]
-                .text.strip()
-            )
-            driver.close()
-            # back to mohmal for get password-------------------------------------------------
-
-            return {"user": username, "pass": password}
-        except:
-            driver.close()
-            return False
-    else:
-        driver.close()
-        return False
+# TOBB'un yeni sitesi (sanayi.org.tr) artik hesap/login gerektirmiyor; asagidaki
+# fonksiyonlar crawler/utils.py icindeki genel (public) SVT API yardimcilarini kullanir.
+# Firma unvani arama LIKE '%terim%' calistigi icin, TOBB'un resmi 53 sektor
+# siniflandirmasini (apiv2/sektor-kodus) baz alarak firma isimlerinde gecmesi
+# muhtemel anahtar kelimelerle genis bir tarama listesi olusturuldu.
+SANAYI_ARAMA_TERIMLERI = [
+    # Gıda / içecek / tütün
+    "GIDA", "İÇECEK", "SÜT", "UN ", "YEM", "ŞEKERLEME", "ÇİKOLATA", "UNLU MAMUL",
+    "ET ÜRÜNLERİ", "BALIK", "MEYVE", "SEBZE", "BİTKİSEL YAĞ", "MEŞRUBAT", "TÜTÜN",
+    # Tekstil / giyim / deri
+    "TEKSTİL", "GİYİM", "KONFEKSİYON", "ÖRME", "TRİKO", "DOKUMA", "İPLİK", "HALI",
+    "DERİ", "AYAKKABI", "ÇANTA",
+    # Ağaç / mobilya / kağıt / matbaa
+    "MOBİLYA", "AHŞAP", "KERESTE", "KAĞIT", "KARTON", "AMBALAJ", "MATBAA", "BASKI",
+    # Kimya / ilaç / plastik / kauçuk
+    "KİMYA", "İLAÇ", "ECZA", "KOZMETİK", "BOYA", "PLASTİK", "KAUÇUK", "LASTİK",
+    "TEMİZLİK ÜRÜNLERİ",
+    # Mineral / metal
+    "CAM", "SERAMİK", "ÇİMENTO", "MERMER", "METAL", "ÇELİK", "DEMİR", "ALÜMİNYUM",
+    "DÖKÜM", "GALVANİZ", "KAPLAMA",
+    # Makine / elektronik / elektrik / bilişim
+    "MAKİNE", "MAKİNA", "ELEKTRONİK", "ELEKTRİK", "BİLGİSAYAR", "YAZILIM",
+    "TELEKOMÜNİKASYON", "OPTİK",
+    # Otomotiv / ulaşım / gemi / havacılık
+    "OTOMOTİV", "OTO YEDEK PARÇA", "TAŞIT", "GEMİ", "TERSANE", "HAVACILIK",
+    "SAVUNMA SANAYİ",
+    # Enerji / su / çevre
+    "ENERJİ", "SOLAR", "GÜNEŞ ENERJİSİ", "SU ARITMA", "GERİ DÖNÜŞÜM", "ATIK",
+    # İnşaat / madencilik
+    "İNŞAAT", "YAPI MALZEME", "MADEN", "HAFRİYAT",
+    # Ticaret / hizmet / diğer
+    "PAZARLAMA", "İTHALAT İHRACAT", "LOJİSTİK", "NAKLİYAT", "TURİZM",
+    "DANIŞMANLIK", "MÜHENDİSLİK", "SAĞLIK", "TIBBİ CİHAZ", "OYUNCAK", "SPOR",
+    "TAKI", "KUYUMCULUK", "ISI SOĞUTMA", "KLİMA", "ASANSÖR", "VİNÇ", "POMPA",
+    "VALF", "RULMAN", "KALIP", "YAY", "CIVATA", "BAĞLANTI ELEMANLARI",
+    "PRES", "TORNA", "KAYNAK", "İZOLASYON", "YALITIM", "PROFİL", "BORU",
+]
 
 
 @login_required
@@ -156,197 +97,56 @@ def http_excel(request, city_slug):
 
 @login_required
 def http_crawler_tobb(request, city_slug):
-
-    # -------------get last sector saved by this city slug
+    """
+    sanayi.org.tr (yeni TOBB Sanayi Bilgi Sistemi) artik hesap acmadan/login
+    olmadan herkese acik. Firma unvani arama uc noktasini bir dizi anahtar
+    kelimeyle tarar, bulunan her firma icin iletisim+kapasite detayini ceker
+    ve adres/oda bilgisine gore secilen sehre ait olanlari kaydeder.
+    """
     city = Cities.objects.get(slug=city_slug)
-    subsector_start = city.sub_sector_report
-    sector_start = city.sector_report
-    # get last sector saved by this city slug-------------
 
-    # ------------------------------------------------login
-    check = True
-    while check:
+    def run():
+        saved = 0
+        seen_total = 0
+        for detail in collect_sanayi_by_search(SANAYI_ARAMA_TERIMLERI):
+            seen_total += 1
+            if not matches_city(detail, city.name):
+                continue
 
-        # call def for create new account
-        account = create_account_tobb()
+            name = (detail.get("name") or "").strip()
+            if not name:
+                continue
 
-        # login if account created
-        if account:
+            company = Companies()
+            company.user = request.user
+            company.sector = "Sanayi Veri Tabanı"
+            company.name = name
+            company.short_name = name[0:11]
+            company.phone = (detail.get("tel") or "")[:20]
+            company.site = detail.get("site")
+            company.address = detail.get("address")
+            company.personels_caount = detail.get("personel_sayisi")
+            company.note = f"Faks: {detail.get('faks')}" if detail.get("faks") else ""
+            company.fount = Fount.objects.get(name="TOBB")
+            company.city = city
+            company.last_status = Status.objects.get(name="Yeni")
+
             try:
-                driver = webdriver.Firefox(service=svc, options=opts)
+                company.save()
+                company.status.add(Status.objects.get(name="Yeni"))
+                company.save()
+                saved += 1
+            except Exception as e:
+                print(e)
 
-                driver.get("https://sanayi.tobb.org.tr/")
+        print(f"[sanayi.org.tr] {city.name}: {seen_total} firma tarandı, {saved} kayıt eklendi.")
 
-                username_feild = driver.find_element(By.NAME, "user")
-                password_feild = driver.find_element(By.NAME, "pass")
-                login = driver.find_element(By.NAME, "giris")
-
-                username_feild.send_keys(account["user"])
-                password_feild.send_keys(account["pass"])
-                login.click()
-
-                limit = 0
-                check = False
-            except:
-                driver.close()
-                pass
-    # login------------------------------------------------
-
-    # ---------------------------------------------------------------get sub sectors of saved in city
-    try:
-        time.sleep(3)
-        driver.get("https://sanayi.tobb.org.tr/yeni_il08_0.php")
-        city_button = driver.find_element(
-            By.XPATH, f"//select[@name='il']/option[@value={city_slug}]"
-        )
-        city_button.click()
-        driver.find_element(By.NAME, "arama").click()
-
-        time.sleep(3)
-        page = BeautifulSoup(driver.page_source, "html.parser")
-        list_of_subsectors = page.find_all("center")[9:-2]
-        list_of_subsectors = [
-            f"https://sanayi.tobb.org.tr/yeni_il_urunlistesi02.php?il={city_slug}&sektor_kodu="
-            + x.find("a").text
-            for x in list_of_subsectors
-        ]
-    except Exception as e:
-        return HttpResponse(
-            f"<h1 align='center' >error 2</h1> <br> <p align='center'>{e}</p><br><a href='/' align='center'>login</a>"
-        )
-    # get sub sectors of saved in city---------------------------------------------------------------
-
-    subsector_start_save = subsector_start
-    sector_start_save = sector_start
-
-    # ---------------------------------------------------------------------------------------------------------get sectors of saved in city
-    for subsector in list_of_subsectors[subsector_start_save:]:
-        try:
-            driver.get(subsector)
-            page_0 = BeautifulSoup(driver.page_source, "html.parser")
-            list_of_sectors = page_0.find_all("td", attrs={"align": "left"})[1:]
-            list_of_sectors = [
-                "https://sanayi.tobb.org.tr/" + x.find("a").attrs["href"]
-                for x in list_of_sectors
-            ]
-            sub_sector_name = (
-                page_0.find("td", attrs={"bgcolor": "#ffffff"})
-                .find("center")
-                .find_all("h2")[1]
-                .text.strip()
-            )
-            sub_sector_name = sub_sector_name[sub_sector_name.index("-") + 1 :].replace(
-                ";", "."
-            )
-        except:
-            continue
-
-        for sector in list_of_sectors[sector_start_save:]:
+    threading.Thread(target=run, daemon=True).start()
+    return HttpResponse(
+        "<h1 align='center'>Robot işe başladı, bu sayfayı kapatabilirsiniz!</h1><br><a href='/'>Home</a>"
+    )
 
 
-            driver.get(sector)
-            limit += 1
-            page = BeautifulSoup(driver.page_source, "html.parser")
-            table = page.find_all("table")[-2].find_all("tr")
-
-            for row in table[1:]:
-                print("4")
-
-                all_feild = row.find_all("td")
-                title = all_feild[1].text.strip()
-                address = all_feild[3].text.strip()
-                contact = all_feild[4].text.strip()
-                tel = (
-                    contact[contact.index("T:") + 2 : contact.index("/")]
-                    .replace("-", "")
-                    .replace(" ", "")
-                    .replace(")", "")
-                    .replace("(", "")
-                    .strip()
-                )
-                if "www" in contact:
-                    site = contact[contact.index("www") :].strip()
-                elif "@" in contact:
-                    try:
-                        site = contact[
-                            contact.index("@")
-                            + 1 : contact.index("/", contact.index("@"))
-                        ].strip()
-                        site = "www." + site
-                    except:
-                        site = contact[contact.index("@") + 1 :].strip()
-                        site = "www." + site
-                else:
-                    site = "bulunmadı"
-                population = all_feild[5].text.strip()
-
-                company = Companies()
-                company.user = request.user
-                company.sector = sub_sector_name
-                company.name = title
-                company.short_name = title[0:11]
-                if tel[0] == "0":
-                    tel = tel[1:]
-                company.phone = tel
-                company.site = site
-                company.address = address
-                company.personels_caount = population
-                company.note = ""
-                company.fount = Fount.objects.get(name="TOBB")
-                company.city = Cities.objects.get(slug=city_slug)
-                company.last_status = Status.objects.get(name="Yeni")
-
-                try:
-                    if not tel[0:3] in ["444", "850"]:
-                        company.save()
-                        company.status.add(Status.objects.get(name="Yeni"))
-                        company.save()
-
-                except Exception as e:
-                    print(e)
-
-            if limit > 95:
-                driver.close()
-                check = True
-                # login------------------------------------------------
-                while check:
-                    account = create_account_tobb()
-                    if account:
-                        try:
-                            driver = webdriver.Firefox(service=svc, options=opts)
-                            driver.get("https://sanayi.tobb.org.tr/")
-
-                            username_feild = driver.find_element(By.NAME, "user")
-                            password_feild = driver.find_element(By.NAME, "pass")
-                            login = driver.find_element(By.NAME, "giris")
-
-                            username_feild.send_keys(account["user"])
-                            password_feild.send_keys(account["pass"])
-                            login.click()
-
-                            limit = 0
-                            check = False
-                        except:
-                            driver.close()
-                            pass
-                # login------------------------------------------------
-            city.sub_sector_report = subsector_start
-            city.sector_report = sector_start
-            city.save()
-
-            sector_start += 1
-
-                
-
-        subsector_start += 1
-        sector_start = 0
-
-    city.sub_sector_report = 0
-    city.sector_report = 0
-    city.save()
-    # get sectors of saved in city---------------------------------------------------------------------------------------------------------
-
-    driver.close()
 
 
 @csrf_exempt
